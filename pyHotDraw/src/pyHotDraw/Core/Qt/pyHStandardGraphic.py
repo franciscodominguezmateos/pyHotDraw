@@ -27,6 +27,12 @@ class pyHStandardGraphic:
         rx=self.t.sx*rx
         ry=self.t.sy*ry
         self.qPainter.drawRect(x0,h-y0,rx,-ry)
+    def drawRoundedRect(self,x0,y0,rx,ry):
+        h=self.v.height()
+        x0,y0=self.t.transform(x0,y0)
+        rx=self.t.sx*rx
+        ry=self.t.sy*ry
+        self.qPainter.drawRoundedRect(x0,h-y0,rx,-ry,20.0,20.0)
     def drawEllipse(self,x0,y0,rx,ry):
         h=self.v.height()
         x0,y0=self.t.transform(x0,y0)

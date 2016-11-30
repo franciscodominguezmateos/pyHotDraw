@@ -4,6 +4,7 @@ Created on 25/03/2013
 @author: paco
 '''
 from pyHotDraw.Figures.pyHRectangleFigure import pyHRectangleFigure
+from pyHotDraw.Figures.pyHRectangleRoundedFigure import pyHRectangleRoundedFigure
 from pyHotDraw.Figures.pyHDiamondFigure import pyHDiamondFigure
 from pyHotDraw.Figures.pyHEllipseFigure import pyHEllipseFigure
 from pyHotDraw.Figures.pyHImageFigure import pyHCameraFigure
@@ -18,8 +19,9 @@ from pyHotDraw.Tools.pyHLineCreationTool import pyHLineCreationTool
 from pyHotDraw.Tools.pyHSplineCreationTool import pyHSplineCreationTool
 from pyHotDraw.Tools.pyHSelectionTool import pyHSelectionTool
 from pyHotDraw.Tools.pyHViewTranslationTool import pyHViewTranslationTool
-from pyHotDraw.Tools import pyHConnectionImageTool.pyHConnectionTool
+from pyHotDraw.Tools.pyHConnectionTool import pyHConnectionTool
 from pyHotDraw.Tools.pyHConnectionImageFilterTool import pyHConnectionImageFilterTool
+from pyHotDraw.Figures import pyHRectangleRoundedFigure
 
 class pyHAbstractEditor(object):
     '''
@@ -166,11 +168,13 @@ class pyHAbstractEditor(object):
     def selectingFigures(self):
         self.setCurrentTool(pyHSelectionTool(self.getView()))
     def creatingLineConnection(self):
-        self.setCurrentTool(pyHConnectionImageTool(self.getView(),pyHConnectionFigure()))
+        self.setCurrentTool(pyHConnectionTool(self.getView(),pyHConnectionFigure()))
     def creatingLineImageFilterConnection(self):
         self.setCurrentTool(pyHConnectionImageFilterTool(self.getView(),pyHConnectionFigure()))
     def creatingRectangle(self):
         self.setCurrentTool(pyHCreationTool(self.getView(),pyHRectangleFigure(0,0,2,2)))
+    def creatingRectangleRounded(self):
+        self.setCurrentTool(pyHCreationTool(self.getView(),pyHRectangleRoundedFigure(0,0,2,2)))
     def creatingDiamond(self):
         self.setCurrentTool(pyHCreationTool(self.getView(),pyHDiamondFigure(0,0,2,2)))
     def creatingEllipse(self):

@@ -8,7 +8,7 @@ import copy
 from pyHotDraw.Core.Exceptions import pyHFigureNotFound
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 
-class pyHConnectionImageFilterTool(object):
+class pyHConnectionTool(object):
     '''
     classdocs
     '''
@@ -21,7 +21,7 @@ class pyHConnectionImageFilterTool(object):
     def getView(self):
         return self.view
     def onMouseDown(self,e):
-        print "mouseDown pyHConnectionImageFilterTool"
+        print "mouseDown pyHConnectionTool"
         self.figureClicked=False
         p=pyHPoint(e.getX(),e.getY())
         try:
@@ -40,7 +40,7 @@ class pyHConnectionImageFilterTool(object):
         except (pyHFigureNotFound):
                 print "No figure clicked"
     def onMouseUp(self,e):
-        print "mouseUp pyHConnectionImageFilterTool"
+        print "mouseUp pyHConnectionTool"
         p=pyHPoint(e.getX(),e.getY())
         try:
             f=self.view.findFigureReversed(p)
@@ -56,10 +56,10 @@ class pyHConnectionImageFilterTool(object):
             self.createdFigure.getConnectorEnd().getOwner().addChangedFigureObserver(self.createdFigure)
             self.figureClicked=False
         except (pyHFigureNotFound):
-                print "No figure found on mouseUP position in pyHConnectionImageFilterTool"
+                print "No figure found on mouseUP position in pyHConnectionTool"
                 self.view.getDrawing().removeFigure(self.createdFigure)
     def onMouseMove(self,e):
-        print "mouseMove pyHConnectionTool"
+        #print "mouseMove pyHConnectionTool"
         if(self.figureClicked and self.createdFigure.getLenght()>0):
             p=self.createdFigure.getLastPoint()
             p.setX(e.getX())

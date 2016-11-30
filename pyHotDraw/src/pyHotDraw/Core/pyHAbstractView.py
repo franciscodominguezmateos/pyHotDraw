@@ -4,7 +4,7 @@
 '''
 Created on 25/03/2013
 
-@author: paco
+@author: Francisco Dominguez
 '''
 from pyHotDraw.Core.pyHDrawing import pyHDrawing
 from pyHotDraw.Core.Exceptions import pyHHandleNotFound,pyHFigureNotFound

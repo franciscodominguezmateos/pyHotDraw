@@ -43,6 +43,7 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         e=pyHStandardEvent(x,y)
         self.editor.getCurrentTool().onMouseDown(e)
         self.editor.sb.setText("%0.2f,%0.2f - %0.2f,%0.2f" % (event.x(),event.y(),e.getX(),e.getY()))
+        self.update()
         
     def mouseReleaseEvent(self,event):
         h=self.height()
@@ -52,6 +53,7 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         y=math.ceil(y/1)*1
         e=pyHStandardEvent(x,y)
         self.editor.getCurrentTool().onMouseUp(e)
+        self.update()
              
     # this seem to be drag    
     def mouseMoveEvent(self,event):
@@ -63,7 +65,7 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         e=pyHStandardEvent(x,y)
         self.editor.getCurrentTool().onMouseMove(e)
         self.editor.sb.setText("%0.2f,%0.2f - %0.2f,%0.2f" % (event.x(),event.y(),e.getX(),e.getY()))
-        #self.update()
+        self.update()
     def mouseDoubleClickEvent(self,event):
         h=self.height()
         t=self.getTransform()
@@ -72,6 +74,8 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         y=math.ceil(y/1)*1
         e=pyHStandardEvent(x,y)
         self.editor.getCurrentTool().onMouseDobleClick(e)
+        self.update()
+
     def wheelEvent(self,event):
         h=self.height()
         t=self.getTransform()
@@ -89,6 +93,8 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
     def keyPressEvent(self,event):
         e=pyHStandardEvent(0,0,0,event.key())
         self.editor.getCurrentTool().onKeyPressed(e)
+        self.update()
+
        
   
 
