@@ -18,7 +18,7 @@ from pyHotDraw.Tools.pyHLineCreationTool import pyHLineCreationTool
 from pyHotDraw.Tools.pyHSplineCreationTool import pyHSplineCreationTool
 from pyHotDraw.Tools.pyHSelectionTool import pyHSelectionTool
 from pyHotDraw.Tools.pyHViewTranslationTool import pyHViewTranslationTool
-from pyHotDraw.Tools.pyHConnectionTool import pyHConnectionTool
+from pyHotDraw.Tools import pyHConnectionImageTool.pyHConnectionTool
 from pyHotDraw.Tools.pyHConnectionImageFilterTool import pyHConnectionImageFilterTool
 
 class pyHAbstractEditor(object):
@@ -166,7 +166,7 @@ class pyHAbstractEditor(object):
     def selectingFigures(self):
         self.setCurrentTool(pyHSelectionTool(self.getView()))
     def creatingLineConnection(self):
-        self.setCurrentTool(pyHConnectionTool(self.getView(),pyHConnectionFigure()))
+        self.setCurrentTool(pyHConnectionImageTool(self.getView(),pyHConnectionFigure()))
     def creatingLineImageFilterConnection(self):
         self.setCurrentTool(pyHConnectionImageFilterTool(self.getView(),pyHConnectionFigure()))
     def creatingRectangle(self):
