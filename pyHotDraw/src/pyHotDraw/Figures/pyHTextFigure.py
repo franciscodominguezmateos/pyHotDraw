@@ -3,7 +3,7 @@
 '''
 Created on 23/05/2015
 
-@author: paco
+@author: Francisco Dominguez
 '''
 from pyHRectangleFigure import pyHRectangleFigure
 class pyHTextFigure(pyHRectangleFigure):

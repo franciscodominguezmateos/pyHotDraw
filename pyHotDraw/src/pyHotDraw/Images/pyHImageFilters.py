@@ -181,7 +181,7 @@ class FlannMacher():
         index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
         search_params = dict(checks=50)     
         self.flann = cv2.FlannBasedMatcher(index_params,search_params)
-        self.detector = cv2.SIFT()     
+        self.detector = cv2.FastFeatureDetector()#sSIFT()     
     def process(self):
         img1 = cv2.cvtColor(self.imgcv1, cv2.COLOR_BGR2GRAY)  #queryimage # left image
         img2 = cv2.cvtColor(self.imgcv2, cv2.COLOR_BGR2GRAY)  #trainimage # right image
@@ -208,7 +208,7 @@ class FundamentalMatrix():
         index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
         search_params = dict(checks=50)     
         self.flann = cv2.FlannBasedMatcher(index_params,search_params)
-        self.detector = cv2.SIFT()     
+        self.detector = cv2.Feature2D_create("SIFT")#ORB() #FastFeatureDetector()#SIFT()     
     def process(self):
         img1 = cv2.cvtColor(self.imgcv1, cv2.COLOR_BGR2GRAY)  #queryimage # left image
         img2 = cv2.cvtColor(self.imgcv2, cv2.COLOR_BGR2GRAY)  #trainimage # right image
@@ -240,7 +240,7 @@ class HomographyMatrix():
         index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
         search_params = dict(checks=50)     
         self.flann = cv2.FlannBasedMatcher(index_params,search_params)
-        self.detector = cv2.SIFT()     
+        self.detector = cv2.FastFeatureDetector()#.SIFT()     
     def process(self):
         img1 = cv2.cvtColor(self.imgcv1, cv2.COLOR_BGR2GRAY)  #queryimage # left image
         img2 = cv2.cvtColor(self.imgcv2, cv2.COLOR_BGR2GRAY)  #trainimage # right image
