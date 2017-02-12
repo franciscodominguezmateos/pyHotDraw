@@ -279,12 +279,38 @@ class HomographyMatrix():
         pts1i=np.int32(pts1)
         pts2i=np.int32(pts2)
         return drawpoints(img1,img2,pts1i,pts2i)
+class Camera():
+    def __init__(self,K,dist=None,rvec=None,tvec=None):
+        self.rvec=rvec
+        self.tvec=tvec
+        self.K=K
+        self.dist=dist
+    def project3DPoints(self,pts3D):
+        imgPts, jacobian=cv2.projectPoints(pts3D, self.rvec, self.tvec, self.K, self.dist)
+        return imgPts
+    def undistort(self,imgcv):
+        u=Undistor(self.k,self.dist)
+        return u.process(imgcv)
 class PespectiveMatrix():
     def __init__(self,src,dst):
         self.src=src
         self.dst=dst
         self.M=cv2.getPerspectiveTransform(src,dst)
-        self.Minv = cv2.getPerspectiveTransform(dst, src)    
+        self.Minv = cv2.getPerspectiveTransform(dst, src)
+    def transform(self,src):
+        dst=cv2.perspectiveTransform(src, self.M)
+        return dst
+    def transformInv(self,pts):
+        dst=cv2.perspectiveTransform(src, self.Minv)
+        return dst
+    def warp(self,imgcv):
+        img_size=(imgcv.shape[1],imgcv.shape[0])
+        warped = cv2.warpPerspective(imgcv, self.M, img_size, flags=cv2.INTER_LINEAR)
+        return warped
+    def warpInv(self,imgcv):
+        img_size=(imgcv.shape[1],imgcv.shape[0])
+        warped = cv2.warpPerspective(imgcv, self.Minv, img_size, flags=cv2.INTER_LINEAR)
+        return warped
 class PerspectiveWarp():
     def __init__(self,perspectiveMatrix):
         self.M=perspectiveMatrix.M
@@ -298,7 +324,6 @@ class PerspectiveWarp():
             M=self.minval
         warped = cv2.warpPerspective(imgcv, M, img_size, flags=cv2.INTER_LINEAR)
         return warped
-
                     
 class HistogramColor():
     def __init__(self):
