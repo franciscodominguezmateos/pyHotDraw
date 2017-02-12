@@ -9,7 +9,15 @@ Created on 25/04/2015
 import numpy as np
 from math import sqrt
 import cv2
+from nose.util import src
 
+class Undistor():
+    def __init__(self,mtx,dist):
+        self.mtx=mtx
+        self.dist=dist
+    def process(self,imgcv):
+        ret= cv2.undistort(imgcv, self.mtx, self.dist, None, self.mtx)
+        return ret
 class GrayFilter():
     def process(self,imgcv):
         gray = cv2.cvtColor(imgcv, cv2.COLOR_BGR2GRAY)
@@ -271,7 +279,27 @@ class HomographyMatrix():
         pts1i=np.int32(pts1)
         pts2i=np.int32(pts2)
         return drawpoints(img1,img2,pts1i,pts2i)
+class PespectiveMatrix():
+    def __init__(self,src,dst):
+        self.src=src
+        self.dst=dst
+        self.M=cv2.getPerspectiveTransform(src,dst)
+        self.Minv = cv2.getPerspectiveTransform(dst, src)    
+class PerspectiveWarp():
+    def __init__(self,perspectiveMatrix):
+        self.M=perspectiveMatrix.M
+        self.Minv=perspectiveMatrix.Minv
+        self.inv=False
+    def process(self,imgcv):
+        img_size=(imgcv.shape[1],imgcv.shape[0])
+        if self.inv:
+            M=self.M
+        else:
+            M=self.minval
+        warped = cv2.warpPerspective(imgcv, M, img_size, flags=cv2.INTER_LINEAR)
+        return warped
 
+                    
 class HistogramColor():
     def __init__(self):
         pass

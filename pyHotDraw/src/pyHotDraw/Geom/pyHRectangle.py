@@ -5,7 +5,7 @@ Created on 31/03/2013
 
 @author: paco
 '''
-from PySide.QtCore import QRectF
+from PyQt4.QtCore import QRectF
 
 class pyHRectangle(QRectF):
     def getX(self):

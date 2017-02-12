@@ -8,7 +8,7 @@ Created on 17/04/2015
 '''
 import numpy as np
 import cv2
-from PySide import QtCore
+from PyQt4 import QtCore
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 from pyHAbstractFigure import pyHAbstractFigure
 from pyHRectangleFigure import pyHRectangleFigure

@@ -174,11 +174,12 @@ class pyHAbstractEditor(object):
     def creatingRectangle(self):
         self.setCurrentTool(pyHCreationTool(self.getView(),pyHRectangleFigure(0,0,2,2)))
     def creatingRectangleRounded(self):
-        self.setCurrentTool(pyHCreationTool(self.getView(),pyHRectangleRoundedFigure(0,0,2,2)))
+        rr=pyHRectangleRoundedFigure(0,0,15,200)
+        self.setCurrentTool(pyHCreationTool(self.getView(),rr))
     def creatingDiamond(self):
         self.setCurrentTool(pyHCreationTool(self.getView(),pyHDiamondFigure(0,0,2,2)))
     def creatingEllipse(self):
-        self.setCurrentTool(pyHCreationTool(self.getView(),pyHEllipseFigure(0,0,2,2)))
+        self.setCurrentTool(pyHCreationTool(self.getView(),pyHEllipseFigure(0,0,10,10)))
     def creatingImage(self):
         self.setCurrentTool(pyHCreationImageTool(self.getView()))
     def creatingCamera(self):
