@@ -9,7 +9,6 @@ Created on 25/04/2015
 import numpy as np
 from math import sqrt
 import cv2
-from nose.util import src
 
 class Undistor():
     def __init__(self,mtx,dist):
@@ -119,7 +118,27 @@ class FaceDetection():
                 #cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
                 cv2.circle(roi_color,(ex+ew/2,ey+eh/2),ew/2,(0,255,0),2)
         return frame
-
+class ColorSpace():
+    def __init__(self,colorSpaceName="RGB"):
+        self.colorSpace=colorSpaceName
+    def process(self,image):
+        color_space=self.colorSpace
+        # apply color conversion if other than 'RGB'
+        if color_space != 'RGB':
+            if color_space == 'HSV':
+                feature_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+            elif color_space == 'LUV':
+                feature_image = cv2.cvtColor(image, cv2.COLOR_RGB2LUV)
+            elif color_space == 'HLS':
+                feature_image = cv2.cvtColor(image, cv2.COLOR_RGB2HLS)
+            elif color_space == 'YUV':
+                feature_image = cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
+            #elif color_space == 'YCrCb':
+            #    feature_image = cv2.cvtColor(image, cv2.COLOR_RGB2YCrCb)
+        else:
+            feature_image = np.copy(image)
+        return feature_image
+        
 class OpticalFlow():
     def draw_flow(self,im,flow,step=16):
         """ Plot optical flow at same points spaced step pixels apart."""
@@ -300,7 +319,7 @@ class PespectiveMatrix():
     def transform(self,src):
         dst=cv2.perspectiveTransform(src, self.M)
         return dst
-    def transformInv(self,pts):
+    def transformInv(self,src):
         dst=cv2.perspectiveTransform(src, self.Minv)
         return dst
     def warp(self,imgcv):
@@ -347,5 +366,7 @@ class HistogramColor():
 class MixImages():
     def __init__(self):
         self.factor=0.5
+        self.imgcv1=None
+        self.imgcv2=None
     def process(self):
         return cv2.addWeighted(self.imgcv1,self.factor,self.imgcv2,1.0-self.factor,0)
