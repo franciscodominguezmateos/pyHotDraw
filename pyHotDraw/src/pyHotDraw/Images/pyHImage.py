@@ -19,6 +19,9 @@ class pyHImage():
         self.data=civ
     def setData(self,npArray):
         self.data=npArray
+    def setDataGray(self,npArray):
+        print("npArray=",npArray.dtype)
+        self.data=cv2.cvtColor(np.array(npArray,np.ubyte), cv2.COLOR_GRAY2BGR)
         #self.data=npArray.copy()
     def getData(self):
         return self.data
