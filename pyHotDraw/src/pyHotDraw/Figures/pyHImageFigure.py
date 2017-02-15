@@ -211,6 +211,7 @@ class pyHCameraFigure(pyHImageSourceFigure):
         super(pyHCameraFigure,self).__init__(x,y,w,h)
         #pyHImageSourceFigure.__init__(self, x, y, w, h)
         """Initialize camera."""
+        self.camID=camID
         self.capture = cv2.VideoCapture(camID)
         self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, 320)
         self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, 240)
@@ -220,7 +221,10 @@ class pyHCameraFigure(pyHImageSourceFigure):
     def displayVideoStream(self):
         """Read frame from camera and repaint QLabel widget.
         """
-        _, frame = self.capture.read()
+        ret, frame = self.capture.read()
+        if ret==False:
+            self.capture = cv2.VideoCapture(self.camID)            
+            ret, frame = self.capture.read()
         #save this image to previous image
         img=self.getImage().getData()
         self.getImagePrev().setData(img)
