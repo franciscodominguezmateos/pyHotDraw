@@ -31,7 +31,7 @@ class pyHMoveHandle(object):
     def onMouseUp(self,e):
         pass
     def onMouseMove(self,e):
-        print "mouseMove ppyHNullHandle"
+        print "mouseMove pyHMoveHandle"
         p=pyHPoint(e.getX(),e.getY())
         dx=e.getX()-self.anchorPoint.getX()
         dy=e.getY()-self.anchorPoint.getY()

@@ -12,8 +12,10 @@ import cv2
 import numpy as np
 from OpenCVQImage import OpenCVQImage
 from Highlighter import Highlighter
-from pydxfreader import dxfreader
-from pypltreader import pltreader
+#from pyDXFreader import dxfreader
+#from pyPLTreader import pltreader
+import dxfreader
+import pltreader
 from PySide import QtGui, QtCore
 from pyHotDraw.Core.PySide.pyHStandardView import pyHStandardView
 from pyHotDraw.Core.pyHAbstractEditor import pyHAbstractEditor
@@ -288,11 +290,21 @@ M05""")
         hl=Highlighter(self.gCodeEditor.document())
         dockWgGcodeEditor.setWidget(self.gCodeEditor)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea,dockWgGcodeEditor)
-        self.setView(pyHStandardView(self))
         
 #         scrollArea = QtGui.QScrollArea()
 #         scrollArea.setBackgroundRole(QtGui.QPalette.Dark)
 #         scrollArea.setWidget(self.getView())
+
+        dockWgGcodeConsole=QtGui.QDockWidget("G-Code Console",self)
+        self.gCodeConsole=QtGui.QTextEdit()
+        self.gCodeConsole.setViewportMargins(15,0,0,0)
+        self.gCodeConsole.setPlainText("Ok")
+        hl=Highlighter(self.gCodeConsole.document())
+        dockWgGcodeConsole.setWidget(self.gCodeConsole)
+        self.addDockWidget(QtCore.Qt.RightDockWidgetArea,dockWgGcodeConsole)
+        
+        self.setView(pyHStandardView(self))
+
         
         self.setCentralWidget(self.getView())
         self.setGeometry(300, 30,900,500)

@@ -66,6 +66,7 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         self.editor.getCurrentTool().onMouseMove(e)
         self.editor.sb.setText("%0.2f,%0.2f - %0.2f,%0.2f" % (event.x(),event.y(),e.getX(),e.getY()))
         self.update()
+        
     def mouseDoubleClickEvent(self,event):
         h=self.height()
         t=self.getTransform()

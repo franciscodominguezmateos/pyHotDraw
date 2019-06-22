@@ -135,7 +135,7 @@ class pyHAbstractEditor(object):
         if g.getFigures():
             v.selectFigure(g)
             v.getDrawing().addFigure(g)
-            #v.update()
+        v.update()
     def selectionUngroup(self):
         v=self.getView()
         fts=[]
@@ -152,7 +152,7 @@ class pyHAbstractEditor(object):
             selectedF.remove(f)
         for f in fts:
             v.selectFigure(f)
-        #v.update()
+        v.update()
     def moveFront(self):
         v=self.getView()
         selectedFigures=v.getSelectedFigures()

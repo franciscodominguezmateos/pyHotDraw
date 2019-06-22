@@ -17,7 +17,7 @@ class pyHNullHandle(object):
         '''
         Constructor
         '''
-        self.rf=pyHRectangleFigure(point.getX()-1,point.getY()-1,20,20)
+        self.rf=pyHRectangleFigure(point.getX()-1,point.getY()-1,2,2)
         self.point=point
         self.owner=owner
 #Figure methods

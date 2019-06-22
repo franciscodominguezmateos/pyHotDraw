@@ -15,8 +15,8 @@ class Highlighter(QtGui.QSyntaxHighlighter):
         #keywordFormat.setFontWeight(QtGui.QFont.Bold)
         keywordFormat.setForeground(QtGui.QColor(0,170,0))
 
-        keywordPatterns = ["\\bG00\\b", "\\bG01\\b", "\\bM02\\b",
-                "\\bM05\\b", "\\bG21\\b", "\\bG22\\b", "\\bG02\\b",
+        keywordPatterns = ["\\bG00\\b", "\\bG01\\b","\\bG0\\b", "\\bG1\\b", "\\bM02\\b",
+                "\\bM05\\b", "\\bG21\\b", "\\bG22\\b", "\\bG02\\b", "\\bG2\\b",
                 "\\bG03\\b", "\\bint\\b", "\\blong\\b", "\\bnamespace\\b",
                 "\\boperator\\b", "\\bprivate\\b", "\\bprotected\\b",
                 "\\bpublic\\b", "\\bshort\\b", "\\bsignals\\b", "\\bsigned\\b",

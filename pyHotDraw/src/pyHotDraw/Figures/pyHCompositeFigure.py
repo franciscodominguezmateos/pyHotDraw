@@ -14,6 +14,7 @@ class pyHCompositeFigure(pyHAbstractFigure):
         '''
         Constructor
         '''
+        pyHAbstractFigure.__init__(self)
         self.figures=[]
     def clearFigures(self):
         self.figures=[]

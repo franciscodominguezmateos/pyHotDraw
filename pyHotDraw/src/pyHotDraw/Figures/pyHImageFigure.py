@@ -213,8 +213,8 @@ class pyHCameraFigure(pyHImageSourceFigure):
         """Initialize camera."""
         self.camID=camID
         self.capture = cv2.VideoCapture(camID)
-        self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, 320)
-        self.capture.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, 240)
+        #self.capture.set(cv2.CV_CAP_PROP_FRAME_WIDTH, 320)
+        #self.capture.set(cv2.CV_CAP_PROP_FRAME_HEIGHT, 240)
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.displayVideoStream)
         self.timer.start(200)

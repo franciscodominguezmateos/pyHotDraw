@@ -10,8 +10,8 @@ import datetime as dt
 import serial
 import cv2
 import numpy as np
-from pydxfreader import dxfreader
-from pypltreader import pltreader
+#from pydxfreader import dxfreader
+#from pypltreader import pltreader
 from PyQt4 import QtGui, QtCore
 from pyHotDraw.Core.Qt.pyHStandardView import pyHStandardView
 from pyHotDraw.Core.pyHAbstractEditor import pyHAbstractEditor
@@ -52,12 +52,12 @@ class pyHStandardEditor(QtGui.QMainWindow,pyHAbstractEditor):
         d=self.getView().getDrawing()
         txt=pyHTextFigure(0,0,20,20,"Hola Caracola")
         d.addFigure(txt)
-        cam1=pyHCameraFigure(0,200,50,50,1)
-        d.addFigure(cam1)
+        #cam1=pyHCameraFigure(0,200,50,50,1)
+        #d.addFigure(cam1)
         imgc1=pyHImageDottedFigure(150,250,320,240)
         imgc1.setPoints([pyHPoint(20,20),pyHPoint(30,30)])
         d.addFigure(imgc1)
-        cam1.addChangedImageObserver(imgc1)
+        #cam1.addChangedImageObserver(imgc1)
         cam=pyHCameraFigure(0,100,50,50,0)
         d.addFigure(cam)
         img0=pyHImageFigure(50,10,320,240)
