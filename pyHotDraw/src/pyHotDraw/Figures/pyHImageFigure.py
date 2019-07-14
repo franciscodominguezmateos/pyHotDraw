@@ -9,11 +9,13 @@ Created on 17/04/2015
 import numpy as np
 import cv2
 from PyQt4 import QtCore
+from pyHotDraw.Core.Exceptions import pyHFigureNotFound
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 from pyHAbstractFigure import pyHAbstractFigure
 from pyHRectangleFigure import pyHRectangleFigure
 from pyHArrowFigure import pyHArrowFigure
 from pyHEllipseFigure import pyHEllipseFigure
+from pyHConnectionFigure import pyHConnectionFigure
 from pyHotDraw.Images.pyHImage import pyHImage
 from pyHotDraw.Images.pyHImageFilters import *
 class pyHImageFigure(pyHRectangleFigure):
@@ -118,6 +120,35 @@ class pyHImageFilterFigure(pyHArrowFigure):
         self.changedImageObservers=[]
         self.imageSink=None
         self.imageFilter=FaceDetection()
+        self.outputConnectionFigure=None
+        self.inputConnectionFigure=None
+    #TODO create a connectionFigure from filter to f
+    #     f must be a image observer
+    def getOutputConnectionFigure(self,f):
+        if self.outputConnectionFigure!=None:
+            raise Exception("outputConnectionFigure already exist")
+        if not 'imageChanged' in set(dir(f)):
+            raise pyHFigureNotFound("Figure is not an image observer")
+        cf=pyHConnectionFigure()
+        self.outputConnectionFigure=cf
+
+        fr=f.getDisplayBox()
+        fpc=fr.getCenterPoint()
+        cStart=self.findConnector(fpc) 
+        cStart.getOwner().addChangedFigureObserver(cf)
+        cf.setConnectorStart(cStart)
+        p0=cStart.findStart(cf)
+        cf.addPoint(p0)
+        
+        sr=self.getDisplayBox()
+        spc=sr.getCenterPoint()
+        cEnd=f.findConnector(spc)
+        cEnd.getOwner().addChangedFigureObserver(cf)
+        cf.setConnectorEnd(cEnd)
+        p1=cEnd.findEnd(self)
+        cf.addPoint(p1)
+        return cf
+           
     def setFilter(self,imageFilter):
         self.imageFilter=imageFilter
     def getImage(self):
@@ -191,6 +222,8 @@ class pyHImageSourceFigure(pyHEllipseFigure):
         self.changedImageObservers=[]
         self.hImg=pyHImage()
         self.hImgPrev=pyHImage()
+        self.width=w
+        self.height=h
     def setImage(self,hImg):
         self.hImgPrev=self.hImg
         self.hImg=hImg
@@ -213,8 +246,9 @@ class pyHCameraFigure(pyHImageSourceFigure):
         """Initialize camera."""
         self.camID=camID
         self.capture = cv2.VideoCapture(camID)
-        #self.capture.set(cv2.CV_CAP_PROP_FRAME_WIDTH, 320)
-        #self.capture.set(cv2.CV_CAP_PROP_FRAME_HEIGHT, 240)
+        #figure width and height same that image width and hegight. ????
+        self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+        self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.displayVideoStream)
         self.timer.start(200)
@@ -225,6 +259,7 @@ class pyHCameraFigure(pyHImageSourceFigure):
         if ret==False:
             self.capture = cv2.VideoCapture(self.camID)            
             ret, frame = self.capture.read()
+            print "displayVideoStream capture error"
         #save this image to previous image
         img=self.getImage().getData()
         self.getImagePrev().setData(img)

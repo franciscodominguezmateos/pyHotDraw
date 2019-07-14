@@ -3,7 +3,7 @@
 '''
 Created on 25/03/2013
 
-@author: paco
+@author: Francisco Dominguez
 '''
 from pyHotDraw.Geom.pyHRectangle import pyHRectangle
 from pyHotDraw.Handles.pyHPolylineHandle import pyHPolylineHandle

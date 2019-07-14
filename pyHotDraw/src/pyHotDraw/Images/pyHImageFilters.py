@@ -72,7 +72,7 @@ class Laplacian():
         return ret
 class FastFeatureDetector():
     def __init__(self):
-        self.fast=cv2.FastFeatureDetector()
+        self.fast=cv2.FastFeatureDetector_create()
     def process(self,imgcv):
         gray = cv2.cvtColor(imgcv, cv2.COLOR_BGR2GRAY)
         self.kp = self.fast.detect(gray, None)
@@ -168,7 +168,11 @@ class OpticalFlow():
             self.hsv = np.zeros_like(imgcv)[:,:,:3]
             self.hsv[...,1] = 255
         #Optical flow
-        flow = cv2.calcOpticalFlowFarneback(self.prvs,gray, 0.5, 3, 15, 3, 5, 1.2, 0)
+        #flow = cv2.calcOpticalFlowFarneback(self.prvs,gray, 0.5, 3, 15, 3, 5, 1.2, 0)
+        flow = cv2.calcOpticalFlowFarneback(self.prvs,gray,flow=None,
+                                        pyr_scale=0.5, levels=1, winsize=15,
+                                        iterations=2,
+                                        poly_n=5, poly_sigma=1.1, flags=0)
         mag, ang = cv2.cartToPolar(flow[...,0], flow[...,1])
         self.hsv[...,0] = ang*180/np.pi/2
         #self.hsv[...,2]=255

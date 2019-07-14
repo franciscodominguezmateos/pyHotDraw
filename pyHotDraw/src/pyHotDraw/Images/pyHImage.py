@@ -16,6 +16,9 @@ class pyHImage():
         #This is platform specific we have to change it
         #data return a openCv or numpy image format
         civ=cv2.imread(fileName)
+        if civ==None:
+            print "Image not found: "+fileName 
+            civ=cv2.imread('../images/im2.png')
         self.data=civ
     def setData(self,npArray):
         self.data=npArray

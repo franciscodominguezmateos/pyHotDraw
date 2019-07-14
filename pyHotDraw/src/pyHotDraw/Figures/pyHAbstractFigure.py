@@ -53,10 +53,8 @@ class pyHAbstractFigure(object):
         minD=1e90
         for c in self.getConnectors():
             r=c.getDisplayBox()
-            pc=pyHPoint(r.getX()+r.getWidth()/2,r.getY()+r.getHeight()/2) #central point of connector
-            dx=pc.getX()-p.getX()
-            dy=pc.getY()-p.getY()
-            d=math.sqrt(dx*dx+dy*dy)
+            pc=r.getCenterPoint() #central point of connector
+            d=p.distance(pc)
             if d<minD:
                 minD=d
                 closestConnector=c
