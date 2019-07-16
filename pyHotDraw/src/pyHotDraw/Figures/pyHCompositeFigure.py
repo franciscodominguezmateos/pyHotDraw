@@ -1,7 +1,7 @@
 '''
 Created on 25/03/2013
 
-@author: paco
+@author: Francisco Dominguez
 '''
 from pyHAbstractFigure import pyHAbstractFigure
 from pyHotDraw.Geom.pyHRectangle import pyHRectangle
@@ -22,8 +22,8 @@ class pyHCompositeFigure(pyHAbstractFigure):
         self.figures.append(f)
     def removeFigure(self,f):
         self.figures.remove(f)
-    def getLenght(self):
-        len(self.figures)
+    def getLength(self):
+        return len(self.figures)
     def getFigures(self):
         return self.figures
     def draw(self,g):
@@ -55,3 +55,4 @@ class pyHCompositeFigure(pyHAbstractFigure):
     #visitor methods
     def visit(self,visitor):
         return visitor.visitCompositeFigure(self)
+

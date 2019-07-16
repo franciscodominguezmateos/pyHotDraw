@@ -120,17 +120,28 @@ class pyHImageFilterFigure(pyHArrowFigure):
         self.changedImageObservers=[]
         self.imageSink=None
         self.imageFilter=FaceDetection()
-        self.outputConnectionFigure=None
+        #self.outputConnectionFigure=None #more than one output allowed
         self.inputConnectionFigure=None
+    def addPreviewFigure(self,drawing):
+        r=self.getDisplayBox()
+        pc=r.getCenterPoint()
+        img0=pyHImageFigure(pc.getX()-240/2,pc.getY()-r.getHeight()-320-10,320,240)
+        drawing.addFigure(img0)
+        #cam.addChangedImageObserver(img0)
+        cf=self.getOutputConnectionFigure(img0)
+        drawing.addFigure(cf)  
     #TODO create a connectionFigure from filter to f
     #     f must be a image observer
     def getOutputConnectionFigure(self,f):
-        if self.outputConnectionFigure!=None:
-            raise Exception("outputConnectionFigure already exist")
+        #if self.outputConnectionFigure!=None:
+        #    raise Exception("outputConnectionFigure already exist")
         if not 'imageChanged' in set(dir(f)):
             raise pyHFigureNotFound("Figure is not an image observer")
+        #this may not be necessary
+        self.addChangedImageObserver(f)
+        
         cf=pyHConnectionFigure()
-        self.outputConnectionFigure=cf
+        #self.outputConnectionFigure=cf
 
         fr=f.getDisplayBox()
         fpc=fr.getCenterPoint()
@@ -146,6 +157,33 @@ class pyHImageFilterFigure(pyHArrowFigure):
         cEnd.getOwner().addChangedFigureObserver(cf)
         cf.setConnectorEnd(cEnd)
         p1=cEnd.findEnd(self)
+        cf.addPoint(p1)
+        return cf
+    def getInputConnectionFigure(self,f):
+        if self.inputConnectionFigure!=None:
+            raise Exception("inputConnectionFigure already exist")
+        #if not 'imageChanged' in set(dir(f)):
+        #    raise pyHFigureNotFound("Figure is not an image observer")
+        #this may not be necessary
+        f.addChangedImageObserver(self)
+        
+        cf=pyHConnectionFigure()
+        self.inputConnectionFigure=cf
+
+        fr=f.getDisplayBox()
+        fpc=fr.getCenterPoint()
+        cEnd=self.findConnector(fpc) 
+        cEnd.getOwner().addChangedFigureObserver(cf)
+        cf.setConnectorEnd(cEnd)
+        p0=cEnd.findStart(cf)
+        cf.addPoint(p0)
+        
+        sr=self.getDisplayBox()
+        spc=sr.getCenterPoint()
+        cStart=f.findConnector(spc)
+        cStart.getOwner().addChangedFigureObserver(cf)
+        cf.setConnectorStart(cStart)
+        p1=cStart.findStart(self)
         cf.addPoint(p1)
         return cf
            
@@ -231,6 +269,39 @@ class pyHImageSourceFigure(pyHEllipseFigure):
         return self.hImg
     def getImagePrev(self):
         return self.hImgPrev
+    def addPreviewFigure(self,drawing):
+        r=self.getDisplayBox()
+        pc=r.getCenterPoint()
+        img0=pyHImageFigure(pc.getX()-240/2,pc.getY()-r.getHeight()-320-10,320,240)
+        drawing.addFigure(img0)
+        #cam.addChangedImageObserver(img0)
+        cf=self.getOutputConnectionFigure(img0)
+        drawing.addFigure(cf)  
+    def getOutputConnectionFigure(self,f):
+        if not 'imageChanged' in set(dir(f)):
+            raise pyHFigureNotFound("Figure is not an image observer")
+        #this may not be necessary
+        self.addChangedImageObserver(f)
+        
+        cf=pyHConnectionFigure()
+        self.outputConnectionFigure=cf
+
+        fr=f.getDisplayBox()
+        fpc=fr.getCenterPoint()
+        cStart=self.findConnector(fpc) 
+        cStart.getOwner().addChangedFigureObserver(cf)
+        cf.setConnectorStart(cStart)
+        p0=cStart.findStart(cf)
+        cf.addPoint(p0)
+        
+        sr=self.getDisplayBox()
+        spc=sr.getCenterPoint()
+        cEnd=f.findConnector(spc)
+        cEnd.getOwner().addChangedFigureObserver(cf)
+        cf.setConnectorEnd(cEnd)
+        p1=cEnd.findEnd(self)
+        cf.addPoint(p1)
+        return cf
 #Observer pattern methods
     def addChangedImageObserver(self,fo):  
         self.changedImageObservers.append(fo)
@@ -247,8 +318,8 @@ class pyHCameraFigure(pyHImageSourceFigure):
         self.camID=camID
         self.capture = cv2.VideoCapture(camID)
         #figure width and height same that image width and hegight. ????
-        self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
-        self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
+        #self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+        #self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.displayVideoStream)
         self.timer.start(200)

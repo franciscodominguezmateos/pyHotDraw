@@ -32,7 +32,7 @@ class Blur():
         return ret
 class Gaussian():
     def process(self,imgcv):
-        ret= cv2.GaussianBlur(imgcv,(5,5),0)
+        ret= cv2.GaussianBlur(imgcv,(9,9),0)
         return ret
 class Median():
     def process(self,imgcv):
@@ -105,7 +105,8 @@ class FaceDetection():
     def __init__(self):
         self.face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
         self.eye_cascade  = cv2.CascadeClassifier('haarcascade_eye.xml')     
-    def process(self,frame):
+    def process(self,frameI):
+        frame=frameI.copy()
         #Face detection
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = self.face_cascade.detectMultiScale(gray, 1.3, 5)
@@ -239,7 +240,7 @@ class FundamentalMatrix():
         index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
         search_params = dict(checks=50)     
         self.flann = cv2.FlannBasedMatcher(index_params,search_params)
-        self.detector = cv2.Feature2D_create("SIFT")#ORB() #FastFeatureDetector()#SIFT()     
+        self.detector = cv2.DescriptorExtractor_create("SIFT")#ORB() #FastFeatureDetector()#SIFT()     
     def process(self):
         img1 = cv2.cvtColor(self.imgcv1, cv2.COLOR_BGR2GRAY)  #queryimage # left image
         img2 = cv2.cvtColor(self.imgcv2, cv2.COLOR_BGR2GRAY)  #trainimage # right image

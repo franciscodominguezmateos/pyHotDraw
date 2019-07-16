@@ -17,3 +17,7 @@ class pyHPoint(QPointF):
         dx=self.x()-p.getX()
         dy=self.y()-p.getY()
         return math.sqrt(dx*dx+dy*dy)
+    def __sub__(self,p):
+        return pyHPoint(self.getX()-p.getX(),self.getY()-p.getY())
+    def __add__(self,p):
+        return pyHPoint(self.getX()+p.getX(),self.getY()+p.getY())

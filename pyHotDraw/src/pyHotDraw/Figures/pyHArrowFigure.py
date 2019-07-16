@@ -42,6 +42,7 @@ class pyHArrowFigure(pyHAbstractFigure):
         g.drawLine(self.x0+self.w/2,self.y0+self.h  ,self.x0+self.w/2,self.y0)
         g.drawLine(self.x0         ,self.y0+self.h/2-self.h/4,self.x0+self.w/2,self.y0+self.h/2-self.h/4)
         g.drawLine(self.x0         ,self.y0+self.h/2+self.h/4,self.x0+self.w/2,self.y0+self.h/2+self.h/4)
+        g.drawLine(self.x0         ,self.y0+self.h/2+self.h/4,self.x0         ,self.y0+self.h/2-self.h/4)
     #visitor method
     def visit(self,visitor):
         return visitor.visitEllipseFigure(self)

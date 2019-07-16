@@ -69,6 +69,15 @@ class pyHConnectionFigure(pyHAbstractFigure):
         return self.connectorStart
 #Observer pattern method, self is a Observer of connector owners
     def figureChanged(self,figure):
+        fs=self.getConnectorStart().getOwner()
+        fe=self.getConnectorEnd().getOwner()
+        rs=fs.getDisplayBox()
+        re=fe.getDisplayBox()
+        spc=rs.getCenterPoint()
+        epc=re.getCenterPoint()
+        self.connectorStart=fs.findConnector(epc)
+        self.connectorEnd=fe.findConnector(spc)
+        
         ps=self.getConnectorStart().findStart(self)
         pe=self.getConnectorEnd().findEnd(self)
         self.points[0].setX(ps.getX())

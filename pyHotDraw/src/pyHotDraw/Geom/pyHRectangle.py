@@ -17,9 +17,14 @@ class pyHRectangle(QRectF):
         return self.width()
     def getHeight(self):
         return self.height()
+    def getOriginPoint(self):
+        return pyHPoint(self.getX(),self.getY())
     def getCenterPoint(self):
         r=self
         return pyHPoint(r.getX()+r.getWidth()/2,r.getY()+r.getHeight()/2)
+    def getEndPoint(self):
+        r=self
+        return pyHPoint(r.getX()+r.getWidth(),r.getY()+r.getHeight())
     def setX(self,x):
         QRectF.setX(self,x)
     def setY(self,y):
