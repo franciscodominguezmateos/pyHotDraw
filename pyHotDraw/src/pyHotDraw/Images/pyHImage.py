@@ -12,25 +12,35 @@ class pyHImage():
     '''
     classdocs
     '''
-    def __init__(self,fileName='../images/im2.png'):
+    def __init__(self,fileName='../images/im2.png',scale=1):
         #This is platform specific we have to change it
         #data return a openCv or numpy image format
         civ=cv2.imread(fileName)
-        if civ==None:
+        if civ is None:
             print "Image not found: "+fileName 
             civ=cv2.imread('../images/im2.png')
+        nw=int(civ.shape[1]*scale)
+        nh=int(civ.shape[0]*scale)
+        civ=cv2.resize(civ,(nw,nh))
         self.data=civ
+    # in GBR format
     def setData(self,npArray):
         self.data=npArray
+    def setDataRGB(self,npArray):
+        self.data=cv2.cvtColor(np.asarray(npArray,np.uint8), cv2.COLOR_RGB2BGR)
     def setDataGray(self,npArray):
         self.data=cv2.cvtColor(np.asarray(npArray,np.uint8), cv2.COLOR_GRAY2BGR)
         #self.data=npArray.copy()
     def getData(self):
         return self.data
+    def getRGBData(self):
+        return cv2.cvtColor(self.getData(), cv2.COLOR_BGR2RGB)
     def getWidth(self):
         return self.data.shape[1]
     def getHeight(self):
         return self.data.shape[0]
+    def getAspectRatio(self):
+        return float(self.getWidth())/float(self.getHeight())
     def convertQImageToMat(self,qImg):
         '''  Converts a QImage into an opencv MAT format  '''
         incomingImage = qImg.convertToFormat(QImage.Format.Format_RGB32)

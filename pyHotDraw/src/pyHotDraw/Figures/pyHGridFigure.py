@@ -18,12 +18,18 @@ class pyHGridFigure(pyHCompositeFigure):
         self.width =cols*cellWidth
         self.height=rows*cellHeight
         self.rf=pyHRectangleFigure(x,y,self.width,self.height)
+        #draw cells updown or buttonup
+        self.updown=True
         
+    # this method change f location in order to be inserted in the grid
     def addFigure(self,f):
         l=self.getLength()
         nextCol=l % self.cols
         nextRow=l // self.cols
-        gridPos=pyHPoint(nextCol*self.cellWidth,nextRow*self.cellHeight)
+        if self.updown:
+            gridPos=pyHPoint(nextCol*self.cellWidth,self.height-self.cellHeight-nextRow*self.cellHeight)
+        else:
+            gridPos=pyHPoint(nextCol*self.cellWidth,nextRow*self.cellHeight)
         sr=self.rf.getDisplayBox()
         drawPos=sr.getOriginPoint()+gridPos
         fr=f.getDisplayBox()

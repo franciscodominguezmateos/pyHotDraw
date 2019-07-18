@@ -21,10 +21,11 @@ from pyHotDraw.Images.pyHImageFilters import *
 class pyHImageFigure(pyHRectangleFigure):
     def __init__(self,x0,y0,w,h,img=None):
         super(pyHImageFigure,self).__init__(x0,y0,w,h)
-        if img!=None:
-            self.img=img
-        else:
+        if img is None:
             self.setImage(pyHImage())
+        else:
+            self.img=img
+        self.border=True
         self.imageSourceFigure=None
     def setImageSourceFigure(self,imageSourceFigure):
         if self.imageSourceFigure!=None:
@@ -37,7 +38,8 @@ class pyHImageFigure(pyHRectangleFigure):
     def getImage(self):
         return self.img
     def draw(self,g):
-        super(pyHImageFigure,self).draw(g)
+        if self.border:
+            super(pyHImageFigure,self).draw(g)
         #pyHAbstractFigure.draw(self,g)
         g.drawImage(self.x0,self.y0,self.w,self.h,self.img)
     def imageChanged(self,fImageSource):
