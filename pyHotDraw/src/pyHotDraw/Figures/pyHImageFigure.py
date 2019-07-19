@@ -38,10 +38,10 @@ class pyHImageFigure(pyHRectangleFigure):
     def getImage(self):
         return self.img
     def draw(self,g):
-        if self.border:
-            super(pyHImageFigure,self).draw(g)
         #pyHAbstractFigure.draw(self,g)
         g.drawImage(self.x0,self.y0,self.w,self.h,self.img)
+        if self.border:
+            super(pyHImageFigure,self).draw(g)
     def imageChanged(self,fImageSource):
         self.setImage(fImageSource.getImage())
     #visitor method
@@ -121,7 +121,7 @@ class pyHImageFilterFigure(pyHArrowFigure):
         super(pyHImageFilterFigure,self).__init__(x0,y0,w,h)
         self.changedImageObservers=[]
         self.imageSink=None
-        self.imageFilter=FaceDetection()
+        self.imageFilter=FaceShapeDetection()
         #self.outputConnectionFigure=None #more than one output allowed
         self.inputConnectionFigure=None
     def addPreviewFigure(self,drawing):

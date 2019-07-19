@@ -9,6 +9,7 @@ Created on 25/04/2015
 import numpy as np
 from math import sqrt
 import cv2
+import dlib
 
 class Undistor():
     def __init__(self,mtx,dist):
@@ -119,6 +120,92 @@ class FaceDetection():
                 #cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
                 cv2.circle(roi_color,(ex+ew/2,ey+eh/2),ew/2,(0,255,0),2)
         return frame
+# TODO usign dlib face shape detector
+class FaceShapeDetection():
+    def __init__(self):
+        self.predictor_path="shape_predictor_68_face_landmarks.dat"
+        self.detector = dlib.get_frontal_face_detector()
+        self.sp       = dlib.shape_predictor(self.predictor_path)
+        #from https://www.pyimagesearch.com/2017/04/03/facial-landmarks-dlib-opencv-python/    
+    def shape_to_np(self,shape, dtype="int"):
+        # initialize the list of (x, y)-coordinates
+        coords = np.zeros((68, 2), dtype=dtype)
+     
+        # loop over the 68 facial landmarks and convert them
+        # to a 2-tuple of (x, y)-coordinates
+        for i in range(0, 68):
+            coords[i] = (shape.part(i).x, shape.part(i).y)
+     
+        # return the list of (x, y)-coordinates
+        return coords
+    
+    def draw_shape(self,image,shape_dlib):
+        shape=self.shape_to_np(shape_dlib)
+            # loop over the (x, y)-coordinates for the facial landmarks
+        # and draw them on the image
+        for (x, y) in shape:
+            cv2.circle(image, (x, y), 3, (0, 0, 255), 2)
+        for i,(x,y) in enumerate(shape[:16]):
+            x1,y1=shape[i+1]
+            cv2.line(image,(x,y),(x1,y1),(255,255,0),2)
+        # left eyebrow
+        for i,(x,y) in enumerate(shape[17:21]):
+            x1,y1=shape[17+i+1]
+            cv2.line(image,(x,y),(x1,y1),(255,255,0),2)
+        # right eyebrow
+        for i,(x,y) in enumerate(shape[22:26]):
+            x1,y1=shape[22+i+1]
+            cv2.line(image,(x,y),(x1,y1),(255,255,0),2)
+        # nose
+        for i,(x,y) in enumerate(shape[27:30]):
+            x1,y1=shape[27+i+1]
+            cv2.line(image,(x,y),(x1,y1),(255,255,0),2)
+        for i,(x,y) in enumerate(shape[31:35]):
+            x1,y1=shape[31+i+1]
+            cv2.line(image,(x,y),(x1,y1),(255,255,0),2)
+        # left eye
+        for i,(x,y) in enumerate(shape[36:41]):
+            x1,y1=shape[36+i+1]
+            cv2.line(image,(x,y),(x1,y1),(255,255,0),2)
+        x,y=shape[36]
+        cv2.line(image,(x1,y1),(x,y),(255,255,0),2)
+        # right eye
+        for i,(x,y) in enumerate(shape[42:47]):
+            x1,y1=shape[42+i+1]
+            cv2.line(image,(x,y),(x1,y1),(255,255,0),2)
+        x,y=shape[42]
+        cv2.line(image,(x1,y1),(x,y),(255,255,0),2)
+        # mouth
+        # upper lip
+        for i,(x,y) in enumerate(shape[48:59]):
+            x1,y1=shape[48+i+1]
+            cv2.line(image,(x,y),(x1,y1),(255,255,0),2)
+        x,y=shape[48]
+        cv2.line(image,(x1,y1),(x,y),(255,255,0),2)
+        # lower lip
+        for i,(x,y) in enumerate(shape[60:67]):
+            x1,y1=shape[60+i+1]
+            cv2.line(image,(x,y),(x1,y1),(255,0,255),2)
+        x,y=shape[60]
+        cv2.line(image,(x1,y1),(x,y),(255,0,255),2)
+        return image  
+    def process(self,frameI):
+        img=cv2.cvtColor(frameI, cv2.COLOR_BGR2RGB)
+        #Face detection
+        dets = self.detector(img, 1)
+        #print("Number of faces detected: {}".format(len(dets)))
+        
+        # Now process each face we found.
+        for k, dr in enumerate(dets):
+    
+            #print center_row,center_col,center_row_g,center_col_g
+            #print center_row_g,center_col_g
+            # Get the landmarks/parts for the face in box d.
+            shape = self.sp(img, dr)
+            # Draw the face landmarks on the screen so we can see what face is currently being processed.
+            #win.clear_overlay()
+            self.draw_shape(img,shape)
+        return cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 class ColorSpace():
     def __init__(self,colorSpaceName="RGB"):
         self.colorSpace=colorSpaceName

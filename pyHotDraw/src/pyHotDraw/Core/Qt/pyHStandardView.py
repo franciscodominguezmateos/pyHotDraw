@@ -91,6 +91,7 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         t.ty-=ym-ey
         print "ts",t.sx,t.sy,t.tx,t.ty
         self.update()
+        
     def keyPressEvent(self,event):
         e=pyHStandardEvent(0,0,0,event.key())
         self.editor.getCurrentTool().onKeyPressed(e)

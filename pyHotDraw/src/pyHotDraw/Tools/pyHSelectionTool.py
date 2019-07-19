@@ -1,7 +1,7 @@
 '''
 Created on 25/03/2013
 
-@author: paco
+@author: Francisco Dominguez
 '''
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 from pyHotDraw.Core.Exceptions import pyHHandleNotFound,pyHFigureNotFound
@@ -24,7 +24,7 @@ class pyHSelectionTool(object):
         p=pyHPoint(e.getX(),e.getY())
         try:
             h=self.view.findHandle(p)
-            print "handle encontrado"
+            print "Handle found"
             self.delegateTool=h
         except (pyHHandleNotFound):
             try:
@@ -32,14 +32,14 @@ class pyHSelectionTool(object):
                 if not self.view.isThisFigureInSelectedFigures(f):
                     self.getView().clearSelectedFigures()
                     self.getView().selectFigure(f)
-                    print "figura encontrada"
+                    print "Found NOT selected figure"
                     self.delegateTool=pyHFigureMoveTool(self.view)
                 else:
-                    print "figura deseleccionada"
+                    print "Found selected figure"
                     self.getView().getSelectionFigure().removeFigure(f)
                     self.delegateTool=pyHAbstractTool(self.view)
             except (pyHFigureNotFound):
-                print "seleccionando Area"
+                print "Selecting Area"
                 self.delegateTool=pyHAreaSelectionTool(self.view)
         self.delegateTool.onMouseDown(e)
     def onMouseUp(self,e):
