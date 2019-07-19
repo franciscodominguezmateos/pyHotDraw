@@ -123,9 +123,15 @@ class FaceDetection():
 # TODO usign dlib face shape detector
 class FaceShapeDetection():
     def __init__(self):
+        # These files must be on the same folder of the .py source where this class is used source
         self.predictor_path="shape_predictor_68_face_landmarks.dat"
+        face_rec_model_path="dlib_face_recognition_resnet_model_v1.dat"
         self.detector = dlib.get_frontal_face_detector()
         self.sp       = dlib.shape_predictor(self.predictor_path)
+        self.facerec  = dlib.face_recognition_model_v1(face_rec_model_path)
+        self.detections=None
+        self.shapes=[]
+        self.descriptors=[]
         #from https://www.pyimagesearch.com/2017/04/03/facial-landmarks-dlib-opencv-python/    
     def shape_to_np(self,shape, dtype="int"):
         # initialize the list of (x, y)-coordinates
@@ -139,8 +145,7 @@ class FaceShapeDetection():
         # return the list of (x, y)-coordinates
         return coords
     
-    def draw_shape(self,image,shape_dlib):
-        shape=self.shape_to_np(shape_dlib)
+    def draw_shape(self,image,shape):
             # loop over the (x, y)-coordinates for the facial landmarks
         # and draw them on the image
         for (x, y) in shape:
@@ -192,20 +197,32 @@ class FaceShapeDetection():
     def process(self,frameI):
         img=cv2.cvtColor(frameI, cv2.COLOR_BGR2RGB)
         #Face detection
-        dets = self.detector(img, 1)
+        self.dections = self.detector(img, 1)
         #print("Number of faces detected: {}".format(len(dets)))
         
         # Now process each face we found.
-        for k, dr in enumerate(dets):
+        self.shapes=[]
+        self.descriptors=[]
+        for k, dr in enumerate(self.dections):
     
             #print center_row,center_col,center_row_g,center_col_g
             #print center_row_g,center_col_g
             # Get the landmarks/parts for the face in box d.
-            shape = self.sp(img, dr)
+            shape_dlib = self.sp(img, dr)
+            shape=self.shape_to_np(shape_dlib)
             # Draw the face landmarks on the screen so we can see what face is currently being processed.
             #win.clear_overlay()
             self.draw_shape(img,shape)
+            face_descriptor = np.array(self.facerec.compute_face_descriptor(img, shape_dlib))
+            self.descriptors.append(face_descriptor)
+            self.shapes.append(shape)
         return cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+    def getShapes(self):
+        return self.shapes
+    def getDetections(self):
+        return self.dections
+    def getDescriptors(self):
+        return self.descriptors
 class ColorSpace():
     def __init__(self,colorSpaceName="RGB"):
         self.colorSpace=colorSpaceName
