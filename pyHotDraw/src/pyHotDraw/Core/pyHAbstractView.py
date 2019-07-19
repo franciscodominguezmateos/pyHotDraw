@@ -139,6 +139,7 @@ class pyHAbstractView(object):
             hs=f.getHandles()
             for h in hs:
                 if h.containPoint(p):
+                    h.setView(self)
                     return h
         raise pyHHandleNotFound("Handle not found at point %d,%d" % (p.getX(),p.getY()))
     def findFigure(self,p):

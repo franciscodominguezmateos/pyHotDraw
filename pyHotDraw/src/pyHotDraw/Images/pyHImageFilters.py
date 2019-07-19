@@ -251,7 +251,7 @@ class OpticalFlow():
         self.prvs=None
     def process(self,imgcv):
         gray = np.uint8(cv2.cvtColor(imgcv, cv2.COLOR_BGR2GRAY))
-        if self.prvs==None:
+        if self.prvs is None:
             self.prvs=gray.copy()
             self.hsv = np.zeros_like(imgcv)[:,:,:3]
             self.hsv[...,1] = 255
