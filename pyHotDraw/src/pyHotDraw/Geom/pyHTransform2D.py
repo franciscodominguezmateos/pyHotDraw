@@ -18,5 +18,6 @@ class pyHTransform2D:
         return (x-tx)/sx,(y-ty)/sy
     def scale(self,x,y):
         return x*self.sx,y*self.sy
-
+    def iscale(self,x,y):
+        return x/self.sx,y/self.sy
 

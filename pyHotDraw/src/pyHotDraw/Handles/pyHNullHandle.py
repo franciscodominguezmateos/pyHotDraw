@@ -7,7 +7,9 @@ Created on 31/03/2013
 '''
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 from pyHotDraw.Figures.pyHRectangleFigure import pyHRectangleFigure
-class pyHNullHandle(object):
+from pyHotDraw.Handles.pyHAbstractHandle import pyHAbstractHandle
+
+class pyHNullHandle(pyHAbstractHandle):
     '''
     classdocs
     '''
@@ -17,13 +19,22 @@ class pyHNullHandle(object):
         '''
         Constructor
         '''
-        self.rf=pyHRectangleFigure(point.getX()-1,point.getY()-1,2,2)
+        pyHAbstractHandle.__init__(self)
         self.point=point
         self.owner=owner
+        w=self.width
+        h=self.height
+        self.rf=pyHRectangleFigure(self.point.getX()-w/2,self.point.getY()-h/2,w,h)
+    def setView(self,v):
+        pyHAbstractHandle.setView(self, v)
+        h,w=self.getHandleSize()
+        self.rf=pyHRectangleFigure(self.point.getX()-w/2,self.point.getY()-h/2,w,h)
 #Figure methods
     def containPoint(self,p):
         return self.rf.containPoint(p)
     def draw(self,g):
+        h,w=self.getHandleSize()
+        self.rf=pyHRectangleFigure(self.point.getX()-w/2,self.point.getY()-h/2,w,h)
         self.rf.draw(g)
 #Tool methods
     def onMouseDown(self,e):

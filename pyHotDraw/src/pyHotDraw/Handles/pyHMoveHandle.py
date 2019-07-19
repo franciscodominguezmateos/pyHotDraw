@@ -7,7 +7,9 @@ Created on 31/03/2013
 '''
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 from pyHotDraw.Figures.pyHRectangleFigure import pyHRectangleFigure
-class pyHMoveHandle(object):
+from pyHotDraw.Handles.pyHAbstractHandle import pyHAbstractHandle
+
+class pyHMoveHandle(pyHAbstractHandle):
     '''
     classdocs
     '''
@@ -24,6 +26,8 @@ class pyHMoveHandle(object):
     def containPoint(self,p):
         return self.rf.containPoint(p)
     def draw(self,g):
+        h,w=self.getHandleSize()
+        self.rf=pyHRectangleFigure(self.point.getX()-w/2,self.point.getY()-h/2,w,h)
         self.rf.draw(g)
 #Tool methods
     def onMouseDown(self,e):

@@ -76,12 +76,20 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         self.update()
         
     def wheelEvent(self,event):
+        h=self.height()
+        t=self.getTransform()
+        ex,ey=event.x(),h-event.y()
+        x,y=t.itransform(event.x(),h-event.y())
         d=event.delta()/1200.0
         t=self.getTransform()
         t.sx+=d
         t.sy+=d
+        xm,ym=t.transform(x,y)
+        t.tx-=xm-ex
+        t.ty-=ym-ey
         print "ts",t.sx,t.sy,t.tx,t.ty
         self.update()
+        
     def keyPressEvent(self,event):
         e=pyHStandardEvent(0,0,0,event.key())
         #self.editor.getCurrentTool().onKeyPressed(self,e)

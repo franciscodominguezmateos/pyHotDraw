@@ -7,7 +7,9 @@ Created on 31/03/2013
 '''
 from pyHotDraw.Figures.pyHRectangleFigure import pyHRectangleFigure
 from pyHotDraw.Figures.pyHEllipseFigure import pyHEllipseFigure
-class pyHSplineHandle(object):
+from pyHotDraw.Handles.pyHAbstractHandle import pyHAbstractHandle
+
+class pyHSplineHandle(pyHAbstractHandle):
     '''
     classdocs
     '''
@@ -15,6 +17,7 @@ class pyHSplineHandle(object):
         '''
         Constructor
         '''
+        pyHAbstractHandle.__init__(self)
         pos=i % 3
         if i==0 or i==3:
             #curve points
@@ -25,10 +28,16 @@ class pyHSplineHandle(object):
         self.owner=owner
         self.point=point
         self.i=i #index of point
+    def setView(self,v):
+        pyHAbstractHandle.setView(self, v)
+        h,w=self.getHandleSize()
+        self.rf=pyHRectangleFigure(self.point.getX()-w/2,self.point.getY()-h/2,w,h)
 #Figure methods
     def containPoint(self,p):
         return self.rf.containPoint(p)
     def draw(self,g):
+        h,w=self.getHandleSize()
+        self.rf=pyHRectangleFigure(self.point.getX()-w/2,self.point.getY()-h/2,w,h)
         i=self.i
         pos=i % 3
         self.rf.draw(g)

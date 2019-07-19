@@ -111,6 +111,7 @@ class pyHAbstractView(object):
         self.drawing.draw(g) 
         for f in self.getSelectedFigures():
             for h in f.getHandles():
+                h.setView(self)
                 h.draw(g)   
 #Selection methods
     def clearSelectedFigures(self):
