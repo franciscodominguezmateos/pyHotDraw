@@ -24,8 +24,7 @@ class pyHAreaSelectionTool(object):
         r=self.r.getDisplayBox()
         self.getView().getDrawing().removeFigure(self.r)
         self.getView().selectFiguresInRectangle(r)
-        self.getView().update()
-
+        #self.getView().update()
     def onMouseMove(self,e):
         r=self.r.getDisplayBox()
         w=e.getX()-r.getX()

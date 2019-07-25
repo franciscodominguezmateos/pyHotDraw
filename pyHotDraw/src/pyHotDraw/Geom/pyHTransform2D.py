@@ -20,4 +20,7 @@ class pyHTransform2D:
         return x*self.sx,y*self.sy
     def iscale(self,x,y):
         return x/self.sx,y/self.sy
-
+    # Transformation composition, could be a product but I prefer an addition operator
+    # transformation composition is not transitive
+    def __add__(self,p):
+        return pyHTransform2D(self.sx*p.sx,self.sy*p.sy,self.tx*p.sx+p.tx,self.ty*p.sy+p.ty)

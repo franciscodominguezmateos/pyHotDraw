@@ -212,10 +212,10 @@ class FaceShapeDetection():
             shape=self.shape_to_np(shape_dlib)
             # Draw the face landmarks on the screen so we can see what face is currently being processed.
             #win.clear_overlay()
-            self.draw_shape(img,shape)
             face_descriptor = np.array(self.facerec.compute_face_descriptor(img, shape_dlib))
             self.descriptors.append(face_descriptor)
             self.shapes.append(shape)
+            self.draw_shape(img,shape)
         return cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     def getShapes(self):
         return self.shapes

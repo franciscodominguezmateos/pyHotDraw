@@ -16,6 +16,10 @@ class pyHStandardGraphic:
         #qp.setPen(QtGui.QPen(QtCore.Qt.green, 3, QtCore.Qt.DashDotLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin))
         self.t=v.getTransform()
         self.v=v
+    def getTransformation(self):
+        return self.t
+    def setTransformation(self,t):
+        self.t=t
     def drawLine(self,x0,y0,x1,y1):
         h=self.v.height()
         x0,y0=self.t.transform(x0,y0)
