@@ -33,10 +33,10 @@ class pyHCompositeFigure(pyHAbstractFigure):
         for f in self.getFigures():
             f.move(x,y)
     def getDisplayBox(self):
-        minX=10e100
-        minY=10e100
-        maxX=0
-        maxY=0
+        minX= 10e100
+        minY= 10e100
+        maxX=-10e100
+        maxY=-10e100
         for f in self.getFigures():
             r=f.getDisplayBox()
             x0=r.getX()

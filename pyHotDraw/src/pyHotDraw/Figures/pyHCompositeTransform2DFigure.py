@@ -1,5 +1,5 @@
 '''
-Created on 16 Jul 2019
+Created on 25 Jul 2019
 
 @author: Francisco Dominguez
 This is like a drawing but you can put in any place of the main drawing and scale it too
@@ -27,10 +27,9 @@ class pyHCompositeTransform2DFigure(pyHCompositeFigure):
         # restore transformation
         g.setTransformation(oldt)
     def move(self,dx,dy):
-        #pyHCompositeFigure.move(self,dx,dy)
         self.t=self.t+pyHTransform2D(1,1,dx,dy) 
     def getDisplayBox(self):
         r=pyHCompositeFigure.getDisplayBox(self)
-        rx,ry=self.t.transform(r.getX(),r.getX())
+        rx,ry=self.t.transform(r.getX(),r.getY())
         rw,rh=self.t.scale(r.getWidth(),r.getHeight())
         return pyHRectangle(rx,ry,rw,rh)

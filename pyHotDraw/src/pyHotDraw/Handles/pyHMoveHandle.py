@@ -19,9 +19,11 @@ class pyHMoveHandle(pyHAbstractHandle):
         '''
         Constructor
         '''
-        self.rf=pyHRectangleFigure(point.getX()-1,point.getY()-1,2,2)
         self.point=point
         self.owner=owner
+        w=self.width
+        h=self.height
+        self.rf=pyHRectangleFigure(self.point.getX()-w/2,self.point.getY()-h/2,w,h)
 #Figure methods
     def containPoint(self,p):
         return self.rf.containPoint(p)
