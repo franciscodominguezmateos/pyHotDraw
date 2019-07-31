@@ -41,8 +41,8 @@ class pyHLocatorConnector(pyHAbstractConnector):
         connectors=[]
         for i in range(n):
             alpha=2*math.pi/n*i
-            x=math.cos(alpha)
-            y=math.sin(alpha)
+            x=math.cos(alpha)-0.5
+            y=math.sin(alpha)-0.5
             connectors.append(pyHLocatorConnector(f,pyHRelativeLocator(x,y)))
         return connectors 
     @classmethod

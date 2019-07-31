@@ -7,7 +7,8 @@ Created on 26/03/2013
 '''
 from pyHotDraw.Geom.pyHRectangle import pyHRectangle
 from pyHAbstractFigure import pyHAbstractFigure
-
+from pyHotDraw.Connectors.pyHLocatorConnector import pyHLocatorConnector
+from pyHotDraw.Locators.pyHCenterLocator import pyHCenterLocator
 class pyHEllipseFigure(pyHAbstractFigure):
     '''
     classdocs
@@ -21,6 +22,11 @@ class pyHEllipseFigure(pyHAbstractFigure):
         self.y0=y0
         self.w=w
         self.h=h
+#Connector methods
+    def getConnectors(self):
+        connectors=[]
+        connectors.append(pyHLocatorConnector(self,pyHCenterLocator()))
+        return connectors 
     def getDisplayBox(self):
         return pyHRectangle(self.x0,self.y0,self.w,self.h)
     def setDisplayBox(self,r):

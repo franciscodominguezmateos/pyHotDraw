@@ -8,14 +8,12 @@ Created on 31/07/2019
 from math import cos,sin,pi
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 from pyHotDraw.Figures.pyHPolylineFigure import pyHPolylineFigure
-from zope.interface import ro
-from wx.lib.agw import ribbon
 
-class pyHStartFigure(pyHPolylineFigure):
+class pyHStarFigure(pyHPolylineFigure):
     '''
     classdocs
     '''
-    def __init__(self,x,y,ri,ro,n):
+    def __init__(self,x,y,ri,ro,n=5):
         '''
         x,y= star center position
         ri= inner radious
@@ -40,4 +38,7 @@ class pyHStartFigure(pyHPolylineFigure):
                 ys*=self.ri
             p=pyHPoint(self.x+xs,self.y+ys)
             self.addPoint(p)
+            
+    def containPoint(self,p):
+        return self.getDisplayBox().contains(p)
         

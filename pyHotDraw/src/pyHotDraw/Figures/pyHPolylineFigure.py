@@ -60,7 +60,9 @@ class pyHPolylineFigure(pyHAbstractFigure):
                 continue
             vq=pq-p0
             d=vn.cross(vq).mag
-            if abs(d)<=1:
+            # maxDist is distance from pq to segment
+            maxDist=16
+            if abs(d)<=maxDist:
                 #project vq on vn
                 l=vn.dot(vq)
                 if l>=0:

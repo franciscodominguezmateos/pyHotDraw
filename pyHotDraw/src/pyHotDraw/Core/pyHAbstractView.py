@@ -27,7 +27,7 @@ class pyHAbstractView(object):
         self.editor=e
         self.clearSelectedFigures()
         self.setDrawing(pyHDrawing(self))
-        self.transform=pyHTransform2D(0.5,0.5)
+        self.transform=pyHTransform2D(1.0,1.0)
     def getTransform(self):
         return self.transform
     def setTransform(self,t):
@@ -100,6 +100,31 @@ class pyHAbstractView(object):
             for x in dirange(0,xs,-10):
                 g.drawLine(x,ys,x,ye)
             for y in dirange(0,ys,-10):
+                g.drawLine(xs,y,xe,y)
+        xi=xg*100
+        yi=xg*100
+        g.setColor(180,180,190)
+        if xi>3 and yi>3:
+            for x in drange(0,xe,100):
+                g.drawLine(x,ys,x,ye)
+            for y in drange(0,ye,100):
+                g.drawLine(xs,y,xe,y)
+            for x in dirange(0,xs,-100):
+                g.drawLine(x,ys,x,ye)
+            for y in dirange(0,ys,-100):
+                g.drawLine(xs,y,xe,y)
+        xi=xg*1000
+        yi=xg*1000
+        if xi>3 and yi>3:
+            g.setColor(125,200,125)
+            for x in drange(0,xe,1000):
+                g.drawLine(x,ys,x,ye)
+            for x in dirange(0,xs,-1000):
+                g.drawLine(x,ys,x,ye)
+            g.setColor(125,125,200)
+            for y in drange(0,ye,1000):
+                g.drawLine(xs,y,xe,y)
+            for y in dirange(0,ys,-1000):
                 g.drawLine(xs,y,xe,y)
         g.setColor(0,0,128)
         g.drawLine(xs,0,xe,0)

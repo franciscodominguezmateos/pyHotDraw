@@ -19,8 +19,10 @@ class pyHPolylineHandle(pyHAbstractHandle):
         Constructor
         '''
         pyHAbstractHandle.__init__(self)
-        self.rf=pyHRectangleFigure(point.getX()-1,point.getY()-1,2,2)
         self.point=point
+        w=self.width
+        h=self.height
+        self.rf=pyHRectangleFigure(self.point.getX()-w/2,self.point.getY()-h/2,w,h)
     def setView(self,v):
         pyHAbstractHandle.setView(self, v)
         h,w=self.getHandleSize()

@@ -83,9 +83,9 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         ex,ey=event.x(),h-event.y()
         x,y=t.itransform(event.x(),h-event.y())
         d=event.delta()/1200.0
-        t=self.getTransform()
-        t.sx+=d
-        t.sy+=d
+        mag=int(math.log10(t.sx))
+        t.sx+=d*10**mag
+        t.sy+=d*10**mag
         xm,ym=t.transform(x,y)
         t.tx-=xm-ex
         t.ty-=ym-ey
