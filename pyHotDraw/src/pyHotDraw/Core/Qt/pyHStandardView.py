@@ -34,7 +34,7 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         super(pyHStandardView, self).update()
 
 #Platform specific mouse and key manipulation see any pyHStandardGraphic.py  
-    def getButton(self,event):  
+    def getPyHButton(self,event):  
         if event.button() == QtCore.Qt.LeftButton:
             return pyHStandardEvent.LeftButton
         if event.button() == QtCore.Qt.RightButton:
@@ -45,9 +45,9 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         h=self.height()
         t=self.getTransform()
         x,y=t.itransform(event.x(),h-event.y())
-        x=math.floor(x/1)*1
-        y=math.ceil(y/1)*1
-        e=pyHStandardEvent(x,y,self.getButton(event))
+        #x=math.floor(x/1)*1
+        #y=math.ceil(y/1)*1
+        e=pyHStandardEvent(x,y,self.getPyHButton(event))
         self.editor.getCurrentTool().onMouseDown(e)
         self.editor.sb.setText("%0.2f,%0.2f - %0.2f,%0.2f" % (event.x(),event.y(),e.getX(),e.getY()))
         self.update()
@@ -56,9 +56,9 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         h=self.height()
         t=self.getTransform()
         x,y=t.itransform(event.x(),h-event.y())
-        x=math.floor(x/1)*1
-        y=math.ceil(y/1)*1
-        e=pyHStandardEvent(x,y,self.getButton(event))
+        #x=math.floor(x/1)*1
+        #y=math.ceil(y/1)*1
+        e=pyHStandardEvent(x,y,self.getPyHButton(event))
         self.editor.getCurrentTool().onMouseUp(e)
         self.update()
              
@@ -67,9 +67,9 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         h=self.height()
         t=self.getTransform()
         x,y=t.itransform(event.x(),h-event.y())
-        x=math.floor(x/1)*1
-        y=math.ceil(y/1)*1
-        e=pyHStandardEvent(x,y,self.getButton(event))
+        #x=math.floor(x/1)*1
+        #y=math.ceil(y/1)*1
+        e=pyHStandardEvent(x,y,self.getPyHButton(event))
         self.editor.getCurrentTool().onMouseMove(e)
         self.editor.sb.setText("%0.2f,%0.2f - %0.2f,%0.2f" % (event.x(),event.y(),e.getX(),e.getY()))
         self.update()
@@ -78,9 +78,9 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         h=self.height()
         t=self.getTransform()
         x,y=t.itransform(event.x(),h-event.y())
-        x=math.floor(x/1)*1
-        y=math.ceil(y/1)*1
-        e=pyHStandardEvent(x,y,self.getButton(event))
+        #x=math.floor(x/1)*1
+        #y=math.ceil(y/1)*1
+        e=pyHStandardEvent(x,y,self.getPyHButton(event))
         self.editor.getCurrentTool().onMouseDobleClick(e)
         self.update()
 

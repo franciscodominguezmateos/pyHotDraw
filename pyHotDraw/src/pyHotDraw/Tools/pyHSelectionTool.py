@@ -24,7 +24,7 @@ class pyHSelectionTool(object):
         return self.view
     def onMouseDown(self,e):
         p=pyHPoint(e.getX(),e.getY())
-        if e.getButton()==pyHStandardEvent.LeftButton:
+        if e.getPyHButton()==pyHStandardEvent.LeftButton:
             try:
                 h=self.view.findHandle(p)
                 print "Handle found"
@@ -44,7 +44,7 @@ class pyHSelectionTool(object):
                 except (pyHFigureNotFound):
                     print "Selecting Area"
                     self.delegateTool=pyHAreaSelectionTool(self.view)
-        if e.getButton()==pyHStandardEvent.RightButton:
+        if e.getPyHButton()==pyHStandardEvent.RightButton:
             self.delegateTool=pyHViewTranslationTool(self.view)
         self.delegateTool.onMouseDown(e)
     def onMouseUp(self,e):

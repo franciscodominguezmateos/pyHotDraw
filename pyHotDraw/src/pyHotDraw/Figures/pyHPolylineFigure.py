@@ -14,6 +14,8 @@ class pyHPolylineFigure(pyHAbstractFigure):
     def __init__(self):
         pyHAbstractFigure.__init__(self)
         self.points=[]
+        # maxDist is distance from pq to segment
+        self.maxDist=2       
     def clearPoints(self):
         self.points=[]
     def addPoint(self,p):
@@ -49,6 +51,10 @@ class pyHPolylineFigure(pyHAbstractFigure):
                 maxY=p.getY()
         return pyHRectangle(minX-1,minY-1,maxX-minX+1,maxY-minY+1)
     def containPoint(self,q):
+        for p in self.points:
+            if p.distance(q)<self.maxDist:
+                print p.distance(q)
+                return True
         for i in range(len(self.points)-1):
             p0=vector(self.points[i].getX(),self.points[i].getY())
             p1=vector(self.points[i+1].getX(),self.points[i+1].getY())
@@ -60,9 +66,7 @@ class pyHPolylineFigure(pyHAbstractFigure):
                 continue
             vq=pq-p0
             d=vn.cross(vq).mag
-            # maxDist is distance from pq to segment
-            maxDist=16
-            if abs(d)<=maxDist:
+            if abs(d)<=self.maxDist:
                 #project vq on vn
                 l=vn.dot(vq)
                 if l>=0:

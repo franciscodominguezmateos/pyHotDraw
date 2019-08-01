@@ -18,7 +18,7 @@ class pyHStandardEvent:
         return self.x
     def getY(self):
         return self.y
-    def getButton(self):
+    def getPyHButton(self):
         return self.button
     def getKey(self):
         return self.key

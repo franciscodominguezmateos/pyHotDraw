@@ -62,6 +62,8 @@ class pyHAbstractFigure(object):
 #Observer pattern methods
     def addChangedFigureObserver(self,fo):  
         self.changedFigureObservers.append(fo)
+    def removeChangedFigureObserver(self,fo):
+        self.changedFigureObservers.remove(fo)
     def notifyFigureChanged(self):
         for fo in self.changedFigureObservers:
             fo.figureChanged(self)        
