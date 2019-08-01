@@ -82,14 +82,17 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         t=self.getTransform()
         ex,ey=event.x(),h-event.y()
         x,y=t.itransform(event.x(),h-event.y())
+        #.delta() is -120 or 120
         d=event.delta()/1200.0
-        mag=int(math.log10(t.sx))
-        t.sx+=d*10**mag
-        t.sy+=d*10**mag
+        #mag=int(math.log10(t.sx))
+        #t.sx+=d*10**mag
+        #t.sy+=d*10**mag
+        t.sx+=d*t.sx
+        t.sy+=d*t.sy
         xm,ym=t.transform(x,y)
         t.tx-=xm-ex
         t.ty-=ym-ey
-        print "ts",t.sx,t.sy,t.tx,t.ty
+        print "ts",t.sx,t.sy,t.tx,t.ty,event.delta()
         self.update()
         
     def keyPressEvent(self,event):

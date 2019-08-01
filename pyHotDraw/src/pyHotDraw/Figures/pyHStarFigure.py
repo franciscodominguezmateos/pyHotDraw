@@ -26,6 +26,9 @@ class pyHStarFigure(pyHPolylineFigure):
         self.n=n
         self.x=x
         self.y=y
+        self.fill()
+        
+    def fill(self):
         for i in range(2*self.n+1):
             a=pi/self.n*i
             xs=cos(a+pi/2)# first tip start at 90 degrees i mean poining up

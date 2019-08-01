@@ -28,10 +28,15 @@ class pyHAbstractView(object):
         self.clearSelectedFigures()
         self.setDrawing(pyHDrawing(self))
         self.transform=pyHTransform2D(1.0,1.0)
+        self.background=None
     def getTransform(self):
         return self.transform
     def setTransform(self,t):
         self.transform=t
+    def setBackground(self,b):
+        self.background=b
+    def getBackground(self):
+        return self.background
     def setTransformFitToDrawing(self):
         r=self.getDrawing().getDisplayBox()
         self.setTransformFitToRectangle(r)
@@ -132,6 +137,8 @@ class pyHAbstractView(object):
         g.drawLine(0,ys,0,ye)
         g.setColor(0,0,0)
     def draw(self,g):
+        if self.background!=None:
+            self.background.draw(g)
         self.drawGrid(g)
         self.drawing.draw(g) 
         for f in self.getSelectedFigures():

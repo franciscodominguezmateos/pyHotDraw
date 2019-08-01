@@ -23,8 +23,12 @@ class pyHViewTranslationTool(object):
         pass
     def onMouseMove(self,e):
         t=self.view.getTransform()
-        t.tx+=e.getX()-self.p.getX()
-        t.ty+=e.getY()-self.p.getY()
+        dx=e.getX()-self.p.getX()
+        dy=e.getY()-self.p.getY()
+        # translation is in pixels
+        dxp,dyp=t.scale(dx,dy)
+        t.tx+=dxp
+        t.ty+=dyp
     def onMouseDobleClick(self,e):
         v=self.getView()
         p=pyHPoint(e.getX(),e.getY())
