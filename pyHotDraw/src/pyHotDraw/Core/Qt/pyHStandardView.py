@@ -33,14 +33,21 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
     def update(self):
         super(pyHStandardView, self).update()
 
-#Platform specific mouse and key manipulation see any pyHStandardGraphic.py            
+#Platform specific mouse and key manipulation see any pyHStandardGraphic.py  
+    def getButton(self,event):  
+        if event.button() == QtCore.Qt.LeftButton:
+            return pyHStandardEvent.LeftButton
+        if event.button() == QtCore.Qt.RightButton:
+            return pyHStandardEvent.RightButton
+        if event.button() == QtCore.Qt.MiddleButton:
+            return pyHStandardEvent.MiddleButton
     def mousePressEvent(self,event):
         h=self.height()
         t=self.getTransform()
         x,y=t.itransform(event.x(),h-event.y())
         x=math.floor(x/1)*1
         y=math.ceil(y/1)*1
-        e=pyHStandardEvent(x,y)
+        e=pyHStandardEvent(x,y,self.getButton(event))
         self.editor.getCurrentTool().onMouseDown(e)
         self.editor.sb.setText("%0.2f,%0.2f - %0.2f,%0.2f" % (event.x(),event.y(),e.getX(),e.getY()))
         self.update()
@@ -51,7 +58,7 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         x,y=t.itransform(event.x(),h-event.y())
         x=math.floor(x/1)*1
         y=math.ceil(y/1)*1
-        e=pyHStandardEvent(x,y)
+        e=pyHStandardEvent(x,y,self.getButton(event))
         self.editor.getCurrentTool().onMouseUp(e)
         self.update()
              
@@ -62,7 +69,7 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         x,y=t.itransform(event.x(),h-event.y())
         x=math.floor(x/1)*1
         y=math.ceil(y/1)*1
-        e=pyHStandardEvent(x,y)
+        e=pyHStandardEvent(x,y,self.getButton(event))
         self.editor.getCurrentTool().onMouseMove(e)
         self.editor.sb.setText("%0.2f,%0.2f - %0.2f,%0.2f" % (event.x(),event.y(),e.getX(),e.getY()))
         self.update()
@@ -73,7 +80,7 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         x,y=t.itransform(event.x(),h-event.y())
         x=math.floor(x/1)*1
         y=math.ceil(y/1)*1
-        e=pyHStandardEvent(x,y)
+        e=pyHStandardEvent(x,y,self.getButton(event))
         self.editor.getCurrentTool().onMouseDobleClick(e)
         self.update()
 

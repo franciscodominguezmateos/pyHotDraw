@@ -33,8 +33,12 @@ class pyHAbstractView(object):
         return self.transform
     def setTransform(self,t):
         self.transform=t
+    # if background changes update view
     def setBackground(self,b):
+        b.addChangedFigureObserver(self)
         self.background=b
+    def figureChanged(self,f):
+        self.update()
     def getBackground(self):
         return self.background
     def setTransformFitToDrawing(self):

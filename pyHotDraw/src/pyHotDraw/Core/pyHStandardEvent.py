@@ -5,11 +5,14 @@ Created on 25/03/2013
 '''
 
 class pyHStandardEvent:
+    LeftButton=0
+    RightButton=1
+    MiddleButton=2
     def __init__(self,x,y,button=0,key=0):
         self.x=x
         self.y=y
-        self.button=0
-        self.key=0
+        self.button=button
+        self.key=key
         pass
     def getX(self):
         return self.x
