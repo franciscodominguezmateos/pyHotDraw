@@ -29,7 +29,8 @@ class pyHPolylineHandle(pyHAbstractHandle):
         self.rf=pyHRectangleFigure(self.point.getX()-w/2,self.point.getY()-h/2,w,h)
 #Figure methods
     def containPoint(self,p):
-        return self.rf.containPoint(p)
+        b=self.rf.containPoint(p)
+        return b
     def draw(self,g):
         h,w=self.getHandleSize()
         self.rf=pyHRectangleFigure(self.point.getX()-w/2,self.point.getY()-h/2,w,h)

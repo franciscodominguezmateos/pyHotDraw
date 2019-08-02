@@ -19,8 +19,13 @@ class pyHAbstractFigure(object):
         return self.attributes[k]
     def setAttribute(self,k,v):
         self.attributes[k]=v
-    def setColor(self,c):
-        self.setAttribute("COLOR",c)
+    # example of overload on methodhs in python
+    def setColor(self,c,g=None,b=None,a=255):
+        if g==None and b==None:
+            self.setAttribute("COLOR",c)
+        else:
+            r=c
+            self.setAttribute("COLOR",pyHAttributeColor(r,g,b,a))
     def getDisplayBox(self):
         pass
     def setDisplayBox(self,r):

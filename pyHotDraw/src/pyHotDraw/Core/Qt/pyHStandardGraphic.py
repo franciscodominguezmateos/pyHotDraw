@@ -10,6 +10,7 @@ import cv2
 from PyQt4 import QtGui,QtCore
 from PyQt4.QtCore import QRectF
 from PyQt4.QtGui import QImage
+
 class pyHStandardGraphic:
     def __init__(self,qp,v):
         self.qPainter=qp
@@ -63,12 +64,32 @@ class pyHStandardGraphic:
     def drawText(self,x,y,rx,ry,text):
         h=self.v.height()
         x0,y0=self.t.transform(x,y)
-        self.qPainter.drawText(x0,h-y0,text)
+        rx,ry=self.t.scale(rx,ry)
+        f=self.qPainter.font()
+        m=self.qPainter.fontMetrics()
+        tw=m.width(text)
+        th=m.height()
+        ch=(ry-th)/2
+        rate=rx/tw
+        print tw,th,"->",
+        f.setPointSizeF(f.pointSizeF()*rate)
+        self.qPainter.setFont(f)
+        m=self.qPainter.fontMetrics()
+        ts=m.size(0,text) #m.width(text)
+        tw=ts.width()
+        th=ts.height()*0.45
+        #th=m.height()
+        if ry>th: ch=(ry-th)/2
+        else: ch=0
+        print tw,th,ch,ry
+        self.qPainter.drawText(x0,h-(y0+ch),text)
+        #self.qPainter.drawRect(x0,h-y0,m.width(text),-m.height())
     def drawImage(self,x,y,rx,ry,hImg):
         h=self.v.height()
         x0,y0=self.t.transform(x,y)
-        rx=self.t.sx*rx
-        ry=self.t.sy*ry
+        #rx=self.t.sx*rx
+        #ry=self.t.sy*ry
+        rx,ry=self.t.scale(rx,ry)
         #self.qPainter.drawRect(x0,h-y0,rx,-ry)
         r=QRectF(x0,h-y0-ry,rx,ry)
         qImg=hImg.convertMatToQImage(rx,ry)

@@ -16,13 +16,11 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
     def __init__(self,e):      
         super(pyHStandardView, self).__init__()
         pyHAbstractView.__init__(self,e)
-        self.setFocusPolicy(QtCore.Qt.ClickFocus)
+        #self.setFocusPolicy(QtCore.Qt.ClickFocus)
         #self.setMouseTracking(True)
         self.initUI()
-        
     def initUI(self):      
         self.setMinimumSize(1, 30)     
-
     def paintEvent(self, e):     
         qp = QtGui.QPainter()
         qp.begin(self)
@@ -49,7 +47,7 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         #y=math.ceil(y/1)*1
         e=pyHStandardEvent(x,y,self.getPyHButton(event))
         self.editor.getCurrentTool().onMouseDown(e)
-        self.editor.sb.setText("%0.2f,%0.2f - %0.2f,%0.2f" % (event.x(),event.y(),e.getX(),e.getY()))
+        self.editor.sb.setText("[x%0.2f] %0.0f,%0.0f - %0.2f,%0.2f" % (t.sx,event.x(),event.y(),e.getX(),e.getY()))
         self.update()
         
     def mouseReleaseEvent(self,event):
@@ -71,7 +69,7 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         #y=math.ceil(y/1)*1
         e=pyHStandardEvent(x,y,self.getPyHButton(event))
         self.editor.getCurrentTool().onMouseMove(e)
-        self.editor.sb.setText("%0.2f,%0.2f - %0.2f,%0.2f" % (event.x(),event.y(),e.getX(),e.getY()))
+        self.editor.sb.setText("[x%0.2f] %0.0f,%0.0f - %0.2f,%0.2f" % (t.sx,event.x(),event.y(),e.getX(),e.getY()))
         self.update()
         
     def mouseDoubleClickEvent(self,event):
@@ -82,6 +80,7 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         #y=math.ceil(y/1)*1
         e=pyHStandardEvent(x,y,self.getPyHButton(event))
         self.editor.getCurrentTool().onMouseDobleClick(e)
+        self.editor.sb.setText("[x%0.2f] %0.0f,%0.0f - %0.2f,%0.2f" % (t.sx,event.x(),event.y(),e.getX(),e.getY()))
         self.update()
 
     def wheelEvent(self,event):
@@ -89,6 +88,7 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         t=self.getTransform()
         ex,ey=event.x(),h-event.y()
         x,y=t.itransform(event.x(),h-event.y())
+        e=pyHStandardEvent(x,y)
         #.delta() is -120 or 120
         d=event.delta()/1200.0
         #mag=int(math.log10(t.sx))
@@ -100,6 +100,7 @@ class pyHStandardView(QtGui.QWidget,pyHAbstractView):
         t.tx-=xm-ex
         t.ty-=ym-ey
         print "ts",t.sx,t.sy,t.tx,t.ty,event.delta()
+        self.editor.sb.setText("[x%0.2f] %0.0f,%0.0f - %0.2f,%0.2f" % (t.sx,event.x(),event.y(),e.getX(),e.getY()))
         self.update()
         
     def keyPressEvent(self,event):
