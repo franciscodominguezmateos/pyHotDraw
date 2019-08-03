@@ -8,8 +8,6 @@ from pyHotDraw.Figures.pyHRectangleRoundedFigure import pyHRectangleRoundedFigur
 from pyHotDraw.Figures.pyHDiamondFigure import pyHDiamondFigure
 from pyHotDraw.Figures.pyHEllipseFigure import pyHEllipseFigure
 from pyHotDraw.Figures.pyHImageFigure import pyHCameraFigure
-from pyHotDraw.Images.pyHImage import pyHImage
-from pyHotDraw.Figures.pyHImageFigure import pyHImageFigure
 from pyHotDraw.Figures.pyHConnectionFigure import pyHConnectionFigure
 from pyHotDraw.Figures.pyHCompositeFigure import pyHCompositeFigure
 from pyHotDraw.Tools.pyHCreationTool import pyHCreationTool
@@ -21,7 +19,7 @@ from pyHotDraw.Tools.pyHSelectionTool import pyHSelectionTool
 from pyHotDraw.Tools.pyHViewTranslationTool import pyHViewTranslationTool
 from pyHotDraw.Tools.pyHConnectionTool import pyHConnectionTool
 from pyHotDraw.Tools.pyHConnectionImageFilterTool import pyHConnectionImageFilterTool
-from pyHotDraw.Figures import pyHRectangleRoundedFigure
+
 
 class pyHAbstractEditor(object):
     '''
@@ -60,7 +58,6 @@ class pyHAbstractEditor(object):
         v.update()
     def paste(self):
         v=self.getView()
-        s=v.getSelectedFigures()
         for f in self.clipBoard:
             v.getDrawing().addFigure(f)
         v.update()

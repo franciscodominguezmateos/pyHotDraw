@@ -67,21 +67,20 @@ class pyHStandardGraphic:
         rx,ry=self.t.scale(rx,ry)
         f=self.qPainter.font()
         m=self.qPainter.fontMetrics()
+        # before resizing
         tw=m.width(text)
         th=m.height()
         ch=(ry-th)/2
         rate=rx/tw
-        print tw,th,"->",
         f.setPointSizeF(f.pointSizeF()*rate)
         self.qPainter.setFont(f)
+        # after resizing vertical center. triky!!!
         m=self.qPainter.fontMetrics()
         ts=m.size(0,text) #m.width(text)
         tw=ts.width()
-        th=ts.height()*0.45
-        #th=m.height()
+        th=ts.height()*0.55 # 55??? it works
         if ry>th: ch=(ry-th)/2
         else: ch=0
-        print tw,th,ch,ry
         self.qPainter.drawText(x0,h-(y0+ch),text)
         #self.qPainter.drawRect(x0,h-y0,m.width(text),-m.height())
     def drawImage(self,x,y,rx,ry,hImg):
