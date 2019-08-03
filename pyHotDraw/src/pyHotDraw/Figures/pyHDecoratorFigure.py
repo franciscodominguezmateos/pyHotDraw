@@ -3,7 +3,7 @@
 '''
 Created on 29/03/2013
 
-@author: paco
+@author: Francisco Dominguez
 '''
 
 class pyHDecoratorFigure(object):

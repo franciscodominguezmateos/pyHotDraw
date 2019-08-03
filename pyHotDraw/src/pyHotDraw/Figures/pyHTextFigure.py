@@ -6,6 +6,7 @@ Created on 23/05/2015
 @author: Francisco Dominguez
 '''
 from pyHRectangleFigure import pyHRectangleFigure
+from pyHotDraw.Figures.pyHAbstractFigure import pyHAbstractFigure
 class pyHTextFigure(pyHRectangleFigure):
     '''
     Polimorfic constructor text can be int, float o str
@@ -26,10 +27,15 @@ class pyHTextFigure(pyHRectangleFigure):
         return self.text
     def setInt(self,i):
         self.setText(" %d "%i)
+    def getInt(self):
+        return int(self.text)
     def setFloat(self,f):
         self.setText(" %0.2f "%f)
+    def getFloat(self):
+        return float(self.text)
     def draw(self,g):
         if self.border: super(pyHTextFigure,self).draw(g)
+        pyHAbstractFigure.draw(self,g)
         g.drawText(self.x0,self.y0,self.w,self.h,self.text)
     #visitor method
     def visit(self,visitor):

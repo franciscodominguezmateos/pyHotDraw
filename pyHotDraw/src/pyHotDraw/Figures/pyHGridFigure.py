@@ -42,7 +42,6 @@ class pyHGridFigure(pyHCompositeFigure):
         self.rf.draw(g)
     def move(self,dx,dy):
         self.rf.move(dx,dy)
-        pyHCompositeFigure.move(self,dx,dy)
-        
+        pyHCompositeFigure.move(self,dx,dy)     
     def getDisplayBox(self):
         return self.rf.getDisplayBox()
