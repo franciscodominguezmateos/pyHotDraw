@@ -7,14 +7,16 @@ Created on 25/03/2013
 @author: paco
 '''              
 import math
-from PyQt4 import QtGui,QtCore
+from PyQt5 import QtGui,QtWidgets,QtCore
+from PyQt5.QtCore import Qt
 from pyHotDraw.Core.pyHAbstractView import pyHAbstractView
 from pyHotDraw.Core.pyHStandardEvent import pyHStandardEvent
 from pyHStandardGraphic import pyHStandardGraphic
 
-class pyHStandardView(QtGui.QWidget,pyHAbstractView):
+class pyHStandardView(pyHAbstractView,QtWidgets.QWidget):
     def __init__(self,e):      
-        super(pyHStandardView, self).__init__()
+        parent=None
+        QtWidgets.QWidget.__init__(self)
         pyHAbstractView.__init__(self,e)
         #self.setFocusPolicy(QtCore.Qt.ClickFocus)
         #self.setMouseTracking(True)

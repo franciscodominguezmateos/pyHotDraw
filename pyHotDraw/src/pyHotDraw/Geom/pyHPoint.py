@@ -6,7 +6,7 @@ Created on 31/03/2013
 @author: paco
 '''
 import math
-from PyQt4.QtCore import QPointF
+from PyQt5.QtCore import QPointF
 
 class pyHPoint(QPointF):
     def getX(self):
