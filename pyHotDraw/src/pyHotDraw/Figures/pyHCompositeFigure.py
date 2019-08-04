@@ -21,7 +21,8 @@ class pyHCompositeFigure(pyHAbstractFigure):
     def addFigure(self,f):
         self.figures.append(f)
     def removeFigure(self,f):
-        self.figures.remove(f)
+        if self.figures.count(f)!=0:
+            self.figures.remove(f)
     def getLength(self):
         return len(self.figures)
     def getFigures(self):
