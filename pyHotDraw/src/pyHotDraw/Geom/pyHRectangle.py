@@ -3,9 +3,9 @@
 '''
 Created on 31/03/2013
 
-@author: paco
+@author: Francisco Dominguez
 '''
-from PyQt4.QtCore import QRectF
+from PyQt5.QtCore import QRectF
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 
 class pyHRectangle(QRectF):

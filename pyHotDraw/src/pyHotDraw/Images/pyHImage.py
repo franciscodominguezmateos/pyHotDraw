@@ -7,7 +7,7 @@ Created on 17/04/2015
 '''
 import numpy as np
 import cv2
-from PyQt4.QtGui import QImage
+from PyQt5.QtGui import QImage
 class pyHImage():
     '''
     classdocs

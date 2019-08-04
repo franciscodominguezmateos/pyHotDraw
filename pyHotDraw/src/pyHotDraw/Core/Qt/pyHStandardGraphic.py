@@ -7,14 +7,14 @@ Created on 25/03/2013
 @author: paco
 '''
 import cv2
-from PyQt4 import QtGui,QtCore
-from PyQt4.QtCore import QRectF
-from PyQt4.QtGui import QImage
+from PyQt5 import QtGui,QtWidgets,QtCore
+from PyQt5.QtCore import QRectF
+from PyQt5.QtGui import QImage
 
 class pyHStandardGraphic:
     def __init__(self,qp,v):
         self.qPainter=qp
-        #qp.setPen(QtGui.QPen(QtCore.Qt.green, 3, QtCore.Qt.DashDotLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin))
+        #qp.setPen(QtWidgets.QPen(QtCore.Qt.green, 3, QtCore.Qt.DashDotLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin))
         self.t=v.getTransform()
         self.v=v
     def getTransformation(self):
@@ -103,7 +103,7 @@ class pyHStandardGraphic:
         #cvi=cv2.imread('../images/CAM00293.jpg')  
         self.qPainter.drawImage(r,qImg)
     def setColor(self,r,g,b,a=255):
-        #self.qPainter.pen().setColor(QtGui.QColor(r, g, b, a))
+        #self.qPainter.pen().setColor(QtWidgets.QColor(r, g, b, a))
         self.qPainter.setPen(QtGui.QPen(QtGui.QColor(r, g, b, a)))
     def setWidth(self,w):
         self.qPainter.pen().setWidthF(w)
