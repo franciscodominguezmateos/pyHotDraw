@@ -1,5 +1,5 @@
 eclipse.preferences.version=1
-encoding//src/Core/Qt/pyHotGraphSLAMEditor.py=utf-8
+encoding//src/Core/Qt4/pyHotGraphSLAMEditor.py=utf-8
 encoding//src/Figures/pyHLandmarkPredictionFigure.py=utf-8
 encoding//src/Figures/pyHMeasureNodeFigure.py=utf-8
 encoding//src/Figures/pyHMotionNodeFigure.py=utf-8
