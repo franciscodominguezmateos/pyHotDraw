@@ -13,7 +13,7 @@ import cv2
 
 from matrix import matrix
 from robot import make_data
-from PyQt4 import QtWidgets, QtCore
+from PyQt5 import QtGui,QtWidgets, QtCore
 from pyHotDraw.Core.Qt.pyHStandardView import pyHStandardView
 from pyHotDraw.Core.pyHAbstractEditor import pyHAbstractEditor
 from pyHotDraw.Tools.pyHSelectionTool import pyHSelectionTool
@@ -263,13 +263,13 @@ class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         
 #Redefinning abstract methods
     def createMenuBar(self):
-        return self.menuBar()
+        return QtWidgets.QMainWindow.menuBar(self)
     def addMenuAndToolBar(self,name):
         self.menu[name]=self.menuBar.addMenu(name)
         self.toolBar[name]=self.addToolBar(name)
         self.actionGroup[name]=QtWidgets.QActionGroup(self)
     def addAction(self,menuName,icon,name,container,sortCut,statusTip,connect,addToActionGroup=False):
-        a=QtWidgets.QAction(QtWidgets.QIcon(icon),name,container)
+        a=QtWidgets.QAction(QtGui.QIcon(icon),name,container)
         a.setObjectName(name)
         a.setShortcut(sortCut)
         a.setStatusTip(statusTip)
