@@ -15,7 +15,6 @@ from pyHStandardGraphic import pyHStandardGraphic
 
 class pyHStandardView(pyHAbstractView,QtWidgets.QWidget):
     def __init__(self,e):      
-        parent=None
         QtWidgets.QWidget.__init__(self)
         pyHAbstractView.__init__(self,e)
         #self.setFocusPolicy(QtCore.Qt.ClickFocus)

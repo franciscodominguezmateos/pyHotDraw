@@ -13,7 +13,7 @@ import cv2
 
 from matrix import matrix
 from robot import make_data
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtWidgets, QtCore
 from pyHotDraw.Core.Qt.pyHStandardView import pyHStandardView
 from pyHotDraw.Core.pyHAbstractEditor import pyHAbstractEditor
 from pyHotDraw.Tools.pyHSelectionTool import pyHSelectionTool
@@ -136,7 +136,7 @@ distance           = 20.0     # distance by which robot (intends to) move each i
 
 
 
-class pyHGraphSLAMEditor(QtGui.QMainWindow,pyHAbstractEditor):
+class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
     def __init__(self):
         super(pyHGraphSLAMEditor, self).__init__()
         pyHAbstractEditor.__init__(self)
@@ -175,10 +175,14 @@ class pyHGraphSLAMEditor(QtGui.QMainWindow,pyHAbstractEditor):
             for j in range(28):
                 if abs(Omega.value[i][j])>0.000001:
                     tf=pyHTextFigure(0,0,cellSize,cellSize,Omega.value[i][j])
+                    if i>19 or j>19:
+                        tf.setColor(0,0,255)
                 else:
                     tf=pyHTextFigure(0,0,cellSize,cellSize," ")
-                if i>19 or j>19:
-                    tf.setColor(0,0,255)
+                    if i>19 or j>19:
+                        tf.setColor(0,0,255,50)
+                    else:
+                        tf.setColor(0,0,0,50)
                 OmegaFigure.addFigure(tf)
         d.addFigure(OmegaFigure)
         txt=pyHTextFigure(45,100,20,3.5," pyHotGraphSLAM ",border=True)
@@ -263,9 +267,9 @@ class pyHGraphSLAMEditor(QtGui.QMainWindow,pyHAbstractEditor):
     def addMenuAndToolBar(self,name):
         self.menu[name]=self.menuBar.addMenu(name)
         self.toolBar[name]=self.addToolBar(name)
-        self.actionGroup[name]=QtGui.QActionGroup(self)
+        self.actionGroup[name]=QtWidgets.QActionGroup(self)
     def addAction(self,menuName,icon,name,container,sortCut,statusTip,connect,addToActionGroup=False):
-        a=QtGui.QAction(QtGui.QIcon(icon),name,container)
+        a=QtWidgets.QAction(QtWidgets.QIcon(icon),name,container)
         a.setObjectName(name)
         a.setShortcut(sortCut)
         a.setStatusTip(statusTip)
@@ -300,21 +304,21 @@ class pyHGraphSLAMEditor(QtGui.QMainWindow,pyHAbstractEditor):
         self.addAction("&Edit","../images/editPaste.png",'Paste',self,"Ctrl+V","Paste",self.paste)
         self.addAction("&Edit","../images/editUndo.png",'Paste',self,"Ctrl+V","Paste",self.selectingFigures)
         self.addAction("&Edit","../images/editRedo.png",'Paste',self,"Ctrl+V","Paste",self.selectingFigures)
-        dbUnits=QtGui.QComboBox(self)
+        dbUnits=QtWidgets.QComboBox(self)
         dbUnits.addItem("Milimetros")
         dbUnits.addItem("Pulgadas")
         dbUnits.addItem("Pixels")
         dbUnits.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
         # create a menu item for our context menu.
-        a = QtGui.QAction("A try...", self)
+        a = QtWidgets.QAction("A try...", self)
         dbUnits.addAction(a)
-        a = QtGui.QAction("A try...", self)
+        a = QtWidgets.QAction("A try...", self)
         dbUnits.addAction(a)
-        a = QtGui.QAction("A try...", self)
+        a = QtWidgets.QAction("A try...", self)
         dbUnits.addAction(a)
         self.toolBar["&Edit"].addWidget(dbUnits)
         self.addAction("&Edit","../images/zoom.png",'Zoom',self,"Ctrl+V","Zoom",self.selectingFigures)
-        sceneScaleCombo = QtGui.QComboBox()
+        sceneScaleCombo = QtWidgets.QComboBox()
         sceneScaleCombo.addItems(["50%", "75%", "100%", "125%", "150%", "200%", "250%", "300%", "350%", "400%"])
         sceneScaleCombo.setCurrentIndex(2)
         sceneScaleCombo.setEditable(True)
@@ -343,7 +347,7 @@ class pyHGraphSLAMEditor(QtGui.QMainWindow,pyHAbstractEditor):
         self.getView().update()
     def openFile(self):
         self.getView().getDrawing().clearFigures()
-        fileNames = QtGui.QFileDialog.getOpenFileName(self,("Open Image"), QtCore.QDir.currentPath(), ("Image Files (*.dxf)"))
+        fileNames = QtWidgets.QFileDialog.getOpenFileName(self,("Open Image"), QtCore.QDir.currentPath(), ("Image Files (*.dxf)"))
         if not fileNames:
             fileName="C:\\Users\\paco\\Desktop\\a4x2laser.dxf"
         else:
@@ -369,23 +373,23 @@ class pyHGraphSLAMEditor(QtGui.QMainWindow,pyHAbstractEditor):
         self.setView(pyHStandardView(self))
         self.getView().setTransform(pyHTransform2D(10,10,self.width()/2,self.height()/2))
 
-#         scrollArea = QtGui.QScrollArea()
-#         scrollArea.setBackgroundRole(QtGui.QPalette.Dark)
+#         scrollArea = QtWidgets.QScrollArea()
+#         scrollArea.setBackgroundRole(QtWidgets.QPalette.Dark)
 #         scrollArea.setWidget(self.getView())
         
         self.setCentralWidget(self.getView())
         self.setGeometry(300, 30,900,900)
         self.setWindowTitle('pyHotGraphSLAM')    
-        self.sb=QtGui.QLabel(self)
+        self.sb=QtWidgets.QLabel(self)
         self.sb.setText("x=0,y=0")
         self.statusBar().addPermanentWidget(self.sb)
-        self.sb1=QtGui.QLabel(self)
+        self.sb1=QtWidgets.QLabel(self)
         self.setCurrentTool(pyHSelectionTool(self.getView()))
         self.show()
 
                                    
 def main():
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     ex = pyHGraphSLAMEditor()
     
     ex.timeElapsed=dt.datetime.now()

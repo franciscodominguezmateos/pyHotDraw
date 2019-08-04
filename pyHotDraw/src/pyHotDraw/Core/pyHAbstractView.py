@@ -74,18 +74,20 @@ class pyHAbstractView(object):
     def drawingChanged(self,d):
         self.update()
     #to be provided for children classes
-    def width(self):
-        pass
+    #def width(self):
+    #    pass
     #to be provided for children classes
-    def height(self):
-        pass
+    #def height(self):
+    #    pass
     def drawGrid(self,g):
         g.setDotLine()
         g.setColor(220,220,230)
         t=self.getTransform()
         xs,ys=t.itransform(0,0)
         #print "xsys",xs,ys
-        xe,ye=t.itransform(self.width(),self.height())
+        w=self.width()
+        h=self.height()
+        xe,ye=t.itransform(w,h)
         #xe,ye=t.itransform(200,200)
         xg=t.sx
         yg=t.sy

@@ -7,7 +7,7 @@ Created on 25/03/2013
 @author: paco
 '''
 import cv2
-from PyQt5 import QtWidgets,QtCore
+from PyQt5 import QtGui,QtWidgets,QtCore
 from PyQt5.QtCore import QRectF
 from PyQt5.QtGui import QImage
 
@@ -104,7 +104,7 @@ class pyHStandardGraphic:
         self.qPainter.drawImage(r,qImg)
     def setColor(self,r,g,b,a=255):
         #self.qPainter.pen().setColor(QtWidgets.QColor(r, g, b, a))
-        self.qPainter.setPen(QtWidgets.QPen(QtWidgets.QColor(r, g, b, a)))
+        self.qPainter.setPen(QtGui.QPen(QtGui.QColor(r, g, b, a)))
     def setWidth(self,w):
         self.qPainter.pen().setWidthF(w)
     def setSolidLine(self):
