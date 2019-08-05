@@ -5,7 +5,7 @@ Created on 25/03/2013
 '''
 
 import copy
-from pyHotDraw.Core.Exceptions import pyHFigureNotFound
+from pyHotDraw.Core.pyHExceptions import pyHFigureNotFound
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 
 class pyHConnectionImageFilterTool(object):

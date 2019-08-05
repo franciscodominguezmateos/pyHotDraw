@@ -7,7 +7,7 @@ Created on 25/03/2013
 @author: Francisco Dominguez
 '''
 from pyHotDraw.Core.pyHDrawing import pyHDrawing
-from pyHotDraw.Core.Exceptions import pyHHandleNotFound,pyHFigureNotFound
+from pyHotDraw.Core.pyHExceptions import pyHHandleNotFound,pyHFigureNotFound
 from pyHotDraw.Geom.pyHTransform2D import pyHTransform2D
 from pyHotDraw.Figures.pyHCompositeFigure import pyHCompositeFigure
 

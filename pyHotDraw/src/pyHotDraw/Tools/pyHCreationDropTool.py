@@ -7,7 +7,7 @@ Created on 01/08/2019
 '''
 
 import copy
-from pyHotDraw.Core.Exceptions import pyHFigureNotFound
+from pyHotDraw.Core.pyHExceptions import pyHFigureNotFound
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 
 class pyHCreationDropTool(object):

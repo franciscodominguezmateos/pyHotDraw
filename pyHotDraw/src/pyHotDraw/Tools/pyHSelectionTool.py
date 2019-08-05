@@ -4,7 +4,7 @@ Created on 25/03/2013
 @author: Francisco Dominguez
 '''
 from pyHotDraw.Geom.pyHPoint import pyHPoint
-from pyHotDraw.Core.Exceptions import pyHHandleNotFound,pyHFigureNotFound
+from pyHotDraw.Core.pyHExceptions import pyHHandleNotFound,pyHFigureNotFound
 from pyHotDraw.Core.pyHStandardEvent import pyHStandardEvent
 from pyHotDraw.Tools.pyHAreaSelectionTool import pyHAreaSelectionTool
 from pyHotDraw.Tools.pyHAbstractTool import pyHAbstractTool

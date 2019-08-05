@@ -3,7 +3,7 @@ Created on 25/03/2013
 
 @author: paco
 '''
-from pyHotDraw.Core.Exceptions import pyHHandleNotFound,pyHFigureNotFound
+from pyHotDraw.Core.pyHExceptions import pyHHandleNotFound,pyHFigureNotFound
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 
 class pyHViewTranslationTool(object):
