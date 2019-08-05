@@ -375,7 +375,7 @@ class pyHGraphSLAMEditor(QtGui.QMainWindow,pyHAbstractEditor):
         
         self.setCentralWidget(self.getView())
         self.setGeometry(300, 30,900,900)
-        self.setWindowTitle('pyHotGraphSLAM')    
+        self.setWindowTitle('Qt4 - pyHotGraphSLAM')    
         self.sb=QtGui.QLabel(self)
         self.sb.setText("x=0,y=0")
         self.statusBar().addPermanentWidget(self.sb)

@@ -12,8 +12,8 @@ import cv2
 import numpy as np
 #from pydxfreader import dxfreader
 #from pypltreader import pltreader
-from PyQt5 import QtGui,QtWidgets, QtCore
-from pyHotDraw.Core.Qt5.pyHStandardView import pyHStandardView
+from PyQt4 import QtGui, QtCore
+from pyHotDraw.Core.Qt.pyHStandardView import pyHStandardView
 from pyHotDraw.Core.pyHAbstractEditor import pyHAbstractEditor
 from pyHotDraw.Tools.pyHSelectionTool import pyHSelectionTool
 from pyHotDraw.Figures.pyHPolylineFigure import pyHPolylineFigure
@@ -41,16 +41,14 @@ from pyHotDraw.Images.pyHImageFilters import FlannMacher
 from pyHotDraw.Images.pyHImageFilters import FundamentalMatrix
 from pyHotDraw.Images.pyHImageFilters import HomographyMatrix
 from pyHotDraw.Images.pyHImageFilters import HistogramColor
-from matplotlib.backends.qt_compat import QtWidgets
 
-class pyHStandardEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
+class pyHStandardEditor(QtGui.QMainWindow,pyHAbstractEditor):
     def __init__(self):
         super(pyHStandardEditor, self).__init__()
         pyHAbstractEditor.__init__(self)
         self.initActionMenuToolBars()
         self.statusBar()        
         self.initUI()
-        
         d=self.getView().getDrawing()
         txt=pyHTextFigure(0,0,20,20,"Hola Caracola")
         d.addFigure(txt)
@@ -195,13 +193,13 @@ class pyHStandardEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         
 #Redefinning abstract methods
     def createMenuBar(self):
-        return QtWidgets.QMainWindow.menuBar(self)
+        return self.menuBar()
     def addMenuAndToolBar(self,name):
         self.menu[name]=self.menuBar.addMenu(name)
         self.toolBar[name]=self.addToolBar(name)
-        self.actionGroup[name]=QtWidgets.QActionGroup(self)
+        self.actionGroup[name]=QtGui.QActionGroup(self)
     def addAction(self,menuName,icon,name,container,sortCut,statusTip,connect,addToActionGroup=False):
-        a=QtWidgets.QAction(QtGui.QIcon(icon),name,container)
+        a=QtGui.QAction(QtGui.QIcon(icon),name,container)
         a.setObjectName(name)
         a.setShortcut(sortCut)
         a.setStatusTip(statusTip)
@@ -225,21 +223,21 @@ class pyHStandardEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         self.addAction("&Edit","../images/editPaste.png",'Paste',self,"Ctrl+V","Paste",self.paste)
         self.addAction("&Edit","../images/editUndo.png",'Paste',self,"Ctrl+V","Paste",self.selectingFigures)
         self.addAction("&Edit","../images/editRedo.png",'Paste',self,"Ctrl+V","Paste",self.selectingFigures)
-        dbUnits=QtWidgets.QComboBox(self)
+        dbUnits=QtGui.QComboBox(self)
         dbUnits.addItem("Milimetros")
         dbUnits.addItem("Pulgadas")
         dbUnits.addItem("Pixels")
         dbUnits.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
         # create a menu item for our context menu.
-        a = QtWidgets.QAction("A try...", self)
+        a = QtGui.QAction("A try...", self)
         dbUnits.addAction(a)
-        a = QtWidgets.QAction("A try...", self)
+        a = QtGui.QAction("A try...", self)
         dbUnits.addAction(a)
-        a = QtWidgets.QAction("A try...", self)
+        a = QtGui.QAction("A try...", self)
         dbUnits.addAction(a)
         self.toolBar["&Edit"].addWidget(dbUnits)
         self.addAction("&Edit","../images/zoom.png",'Zoom',self,"Ctrl+V","Zoom",self.selectingFigures)
-        sceneScaleCombo = QtWidgets.QComboBox()
+        sceneScaleCombo = QtGui.QComboBox()
         sceneScaleCombo.addItems(["50%", "75%", "100%", "125%", "150%", "200%", "250%", "300%", "350%", "400%"])
         sceneScaleCombo.setCurrentIndex(2)
         sceneScaleCombo.setEditable(True)
@@ -276,7 +274,7 @@ class pyHStandardEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         self.getView().update()
     def openFile(self):
         self.getView().getDrawing().clearFigures()
-        fileNames = QtWidgets.QFileDialog.getOpenFileName(self,("Open Image"), QtCore.QDir.currentPath(), ("Image Files (*.dxf)"))
+        fileNames = QtGui.QFileDialog.getOpenFileName(self,("Open Image"), QtCore.QDir.currentPath(), ("Image Files (*.dxf)"))
         if not fileNames:
             fileName="C:\\Users\\paco\\Desktop\\a4x2laser.dxf"
         else:
@@ -301,17 +299,17 @@ class pyHStandardEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
     def initUI(self):                       
         self.setView(pyHStandardView(self))
         
-#         scrollArea = QtWidgets.QScrollArea()
-#         scrollArea.setBackgroundRole(QtWidgets.QPalette.Dark)
+#         scrollArea = QtGui.QScrollArea()
+#         scrollArea.setBackgroundRole(QtGui.QPalette.Dark)
 #         scrollArea.setWidget(self.getView())
         
         self.setCentralWidget(self.getView())
         self.setGeometry(300, 30,900,500)
         self.setWindowTitle('pyHotVision')    
-        self.sb=QtWidgets.QLabel(self)
+        self.sb=QtGui.QLabel(self)
         self.sb.setText("x=0,y=0")
         self.statusBar().addPermanentWidget(self.sb)
-        self.sb1=QtWidgets.QLabel(self)
+        self.sb1=QtGui.QLabel(self)
         self.setCurrentTool(pyHSelectionTool(self.getView()))
         self.show()
 
@@ -417,7 +415,7 @@ def scan(num_ports = 20, verbose=False):
 
                
 def main():
-    app = QtWidgets.QApplication(sys.argv)
+    app = QtGui.QApplication(sys.argv)
     ex = pyHStandardEditor()
     
     ex.timeElapsed=dt.datetime.now()

@@ -83,6 +83,23 @@ class pyHStandardGraphic:
         else: ch=0
         self.qPainter.drawText(x0,h-(y0+ch),text)
         #self.qPainter.drawRect(x0,h-y0,m.width(text),-m.height())
+    def convertQImageToMat(self,qImg):
+        '''  Converts a QImage into an opencv MAT format  '''
+        incomingImage = qImg.convertToFormat(QImage.Format.Format_RGB32)
+        width  = incomingImage.width()
+        height = incomingImage.height()
+        ptr = incomingImage.constBits()
+        arr = np.array(ptr).reshape(height, width, 4)  #  Copies the data
+        return arr        
+    # could be a class method
+    def convertMatToQImage(self,img,w=320,h=240):
+        opencvRgbImg=cv2.resize(img.getRGBData(),(int(w),int(h)))
+        d=opencvRgbImg.shape[2]
+        w=opencvRgbImg.shape[1]
+        h=opencvRgbImg.shape[0]
+        #qImg=QImage(opencvRgbImg.tostring(),opencvRgbImg.shape[1],opencvRgbImg.shape[0],QImage.Format.Format_RGB888)
+        qImg=QImage(opencvRgbImg.data,w,h,w*3,QImage.Format_RGB888)
+        return qImg
     def drawImage(self,x,y,rx,ry,hImg):
         h=self.v.height()
         x0,y0=self.t.transform(x,y)

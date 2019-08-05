@@ -7,15 +7,14 @@ Created on 25/03/2013
 @author: paco
 '''              
 import math
-from PyQt5 import QtGui,QtWidgets,QtCore
-from PyQt5.QtCore import Qt
+from PyQt4 import QtGui,QtCore
 from pyHotDraw.Core.pyHAbstractView import pyHAbstractView
 from pyHotDraw.Core.pyHStandardEvent import pyHStandardEvent
-from pyHotDraw.Core.Qt5.pyHStandardGraphic import pyHStandardGraphic
+from pyHStandardGraphic import pyHStandardGraphic
 
-class pyHStandardView(pyHAbstractView,QtWidgets.QWidget):
+class pyHStandardView(QtGui.QWidget,pyHAbstractView):
     def __init__(self,e):      
-        QtWidgets.QWidget.__init__(self)
+        super(pyHStandardView, self).__init__()
         pyHAbstractView.__init__(self,e)
         #self.setFocusPolicy(QtCore.Qt.ClickFocus)
         #self.setMouseTracking(True)
@@ -91,7 +90,7 @@ class pyHStandardView(pyHAbstractView,QtWidgets.QWidget):
         x,y=t.itransform(event.x(),h-event.y())
         e=pyHStandardEvent(x,y)
         #.delta() is -120 or 120
-        d=event.angleDelta().y()/1200.0
+        d=event.delta()/1200.0
         #mag=int(math.log10(t.sx))
         #t.sx+=d*10**mag
         #t.sy+=d*10**mag
@@ -100,7 +99,7 @@ class pyHStandardView(pyHAbstractView,QtWidgets.QWidget):
         xm,ym=t.transform(x,y)
         t.tx-=xm-ex
         t.ty-=ym-ey
-        print "ts",t.sx,t.sy,t.tx,t.ty,event.angleDelta().y()
+        print "ts",t.sx,t.sy,t.tx,t.ty,event.delta()
         self.editor.sb.setText("[x%0.2f] %0.0f,%0.0f - %0.2f,%0.2f" % (t.sx,event.x(),event.y(),e.getX(),e.getY()))
         self.update()
         
