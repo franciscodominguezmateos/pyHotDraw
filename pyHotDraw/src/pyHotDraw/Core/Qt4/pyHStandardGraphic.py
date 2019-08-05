@@ -7,14 +7,14 @@ Created on 25/03/2013
 @author: paco
 '''
 import cv2
-from PyQt5 import QtGui,QtWidgets,QtCore
-from PyQt5.QtCore import QRectF
-from PyQt5.QtGui import QImage
+from PyQt4 import QtGui,QtCore
+from PyQt4.QtCore import QRectF
+from PyQt4.QtGui import QImage
 
 class pyHStandardGraphic:
     def __init__(self,qp,v):
         self.qPainter=qp
-        #qp.setPen(QtWidgets.QPen(QtCore.Qt.green, 3, QtCore.Qt.DashDotLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin))
+        #qp.setPen(QtGui.QPen(QtCore.Qt.green, 3, QtCore.Qt.DashDotLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin))
         self.t=v.getTransform()
         self.v=v
     def getTransformation(self):
@@ -83,6 +83,23 @@ class pyHStandardGraphic:
         else: ch=0
         self.qPainter.drawText(x0,h-(y0+ch),text)
         #self.qPainter.drawRect(x0,h-y0,m.width(text),-m.height())
+    def convertQImageToMat(self,qImg):
+        '''  Converts a QImage into an opencv MAT format  '''
+        incomingImage = qImg.convertToFormat(QImage.Format.Format_RGB32)
+        width  = incomingImage.width()
+        height = incomingImage.height()
+        ptr = incomingImage.constBits()
+        arr = np.array(ptr).reshape(height, width, 4)  #  Copies the data
+        return arr        
+    # could be a class method
+    def convertMatToQImage(self,img,w=320,h=240):
+        opencvRgbImg=cv2.resize(img.getRGBData(),(int(w),int(h)))
+        d=opencvRgbImg.shape[2]
+        w=opencvRgbImg.shape[1]
+        h=opencvRgbImg.shape[0]
+        #qImg=QImage(opencvRgbImg.tostring(),opencvRgbImg.shape[1],opencvRgbImg.shape[0],QImage.Format.Format_RGB888)
+        qImg=QImage(opencvRgbImg.data,w,h,w*3,QImage.Format_RGB888)
+        return qImg
     def drawImage(self,x,y,rx,ry,hImg):
         h=self.v.height()
         x0,y0=self.t.transform(x,y)
@@ -91,7 +108,7 @@ class pyHStandardGraphic:
         rx,ry=self.t.scale(rx,ry)
         #self.qPainter.drawRect(x0,h-y0,rx,-ry)
         r=QRectF(x0,h-y0-ry,rx,ry)
-        qImg=hImg.convertMatToQImage(rx,ry)
+        qImg=self.convertMatToQImage(hImg,rx,ry)
         #r=QRectF(x0,h-y0-ry,qImg.width()/2,qImg.height()/2)
         #qImg=QImage('../images/im2.png')
         #mat=hImg.convertQImageToMat(qImg)
@@ -103,7 +120,7 @@ class pyHStandardGraphic:
         #cvi=cv2.imread('../images/CAM00293.jpg')  
         self.qPainter.drawImage(r,qImg)
     def setColor(self,r,g,b,a=255):
-        #self.qPainter.pen().setColor(QtWidgets.QColor(r, g, b, a))
+        #self.qPainter.pen().setColor(QtGui.QColor(r, g, b, a))
         self.qPainter.setPen(QtGui.QPen(QtGui.QColor(r, g, b, a)))
     def setWidth(self,w):
         self.qPainter.pen().setWidthF(w)
