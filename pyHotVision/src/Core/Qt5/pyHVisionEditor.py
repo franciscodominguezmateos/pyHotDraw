@@ -1,17 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
-Created on 25/03/2013
-
-@author: paco
+Created on 13/07/2019
+@author: Francisco Dominguez
 '''
 import sys
 import datetime as dt
-import serial
+import glob
 import cv2
 import numpy as np
-#from pydxfreader import dxfreader
-#from pypltreader import pltreader
 from PyQt5 import QtGui,QtWidgets, QtCore
 from pyHotDraw.Core.Qt5.pyHStandardView import pyHStandardView
 from pyHotDraw.Core.pyHAbstractEditor import pyHAbstractEditor
@@ -41,159 +38,90 @@ from pyHotDraw.Images.pyHImageFilters import FlannMacher
 from pyHotDraw.Images.pyHImageFilters import FundamentalMatrix
 from pyHotDraw.Images.pyHImageFilters import HomographyMatrix
 from pyHotDraw.Images.pyHImageFilters import HistogramColor
-from matplotlib.backends.qt_compat import QtWidgets
 
-class pyHStandardEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
+# def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
+#     # Make a copy of the image
+#     imcopy = np.copy(img)
+#     # Iterate through the bounding boxes
+#     for bbox in bboxes:
+#         # Draw a rectangle given bbox coordinates
+#         irec0=(int(bbox[0][0]),int(bbox[0][1]))
+#         irec1=(int(bbox[1][0]),int(bbox[1][1]))
+#         #cv2.rectangle(imcopy, irec0 , irec1, color, thick)
+#         cv2.rectangle(imcopy, bbox[0] , bbox[1], color, thick)
+#     # Return the image copy with boxes drawn
+#     return imcopy
+
+class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
     def __init__(self):
-        super(pyHStandardEditor, self).__init__()
+        super(pyHVisionEditor, self).__init__()
         pyHAbstractEditor.__init__(self)
         self.initActionMenuToolBars()
         self.statusBar()        
         self.initUI()
-        
         d=self.getView().getDrawing()
-        txt=pyHTextFigure(0,0,20,20,"Hola Caracola")
-        d.addFigure(txt)
-        #cam1=pyHCameraFigure(0,200,50,50,1)
-        #d.addFigure(cam1)
-        imgc1=pyHImageDottedFigure(150,250,320,240)
-        imgc1.setPoints([pyHPoint(20,20),pyHPoint(30,30)])
-        d.addFigure(imgc1)
-        #cam1.addChangedImageObserver(imgc1)
-        cam=pyHCameraFigure(0,100,50,50,0)
-        d.addFigure(cam)
-        img0=pyHImageFigure(50,10,320,240)
-        d.addFigure(img0)
-        cam.addChangedImageObserver(img0)
-        img1=pyHImageFigure(400,10,320,240)
-        d.addFigure(img1)
-        fimg=pyHImageFilterFigure(300,300,40,40)
-        d.addFigure(fimg)
-        cam.addChangedImageObserver(fimg)
-        fimg.addChangedImageObserver(img1)
-        #img2=pyHImageFigure(0,300,320,240)
-        #d.addFigure(img2)
-        img3=pyHImageFigure(400,10,320,240)
-        d.addFigure(img3)
-        fimg1=pyHImageFilterFigure(300,400,40,40)
-        d.addFigure(fimg1)
-        fimg1.setFilter(Gaussian())
-        cam.addChangedImageObserver(fimg1)
-        fimg1.addChangedImageObserver(img3)
         
-        fimgH=pyHImageFilterFigure(400,500,30,30)
-        d.addFigure(fimgH)
-        fimgH.setFilter(HistogramColor())
-        fimg1.addChangedImageObserver(fimgH)
-        imgH=pyHImageFigure(500,0,256,150)
-        d.addFigure(imgH)
-        fimgH.addChangedImageObserver(imgH)
-        fimg2=pyHImageFilterFigure(300,500,40,40)
+        txt=pyHTextFigure(0,400,20,20,"Hola Caracola")
+        d.addFigure(txt)
+        #cam1=pyHCameraFigure(0,200,50,50,0)
+        #d.addFigure(cam1)
+        cam=pyHCameraFigure(200,500,50,50,0)
+        d.addFigure(cam)
+        cam.addPreviewFigure(d)     
+        
+        fimg=pyHImageFilterFigure(500,500,40,40)
+        d.addFigure(fimg)
+        fimg.setFilter(Gaussian())
+        fimg.addPreviewFigure(d)
+        cf=fimg.getInputConnectionFigure(cam)
+        d.addFigure(cf)
+        
+        fimg1=pyHImageFilterFigure(800,500,40,40)
+        d.addFigure(fimg1)
+        fimg1.addPreviewFigure(d)
+        #cam.addChangedImageObserver(fimg1)
+        cf=fimg1.getInputConnectionFigure(cam)
+        d.addFigure(cf)
+        #fimg1.addChangedImageObserver(img3)
+#         
+#         fimgH=pyHImageFilterFigure(400,500,30,30)
+#         d.addFigure(fimgH)
+#         fimgH.setFilter(HistogramColor())
+#         fimg1.addChangedImageObserver(fimgH)
+#         imgH=pyHImageFigure(500,0,256,150)
+#         d.addFigure(imgH)
+#         fimgH.addChangedImageObserver(imgH)
+#         
+        fimg2=pyHImageFilterFigure(800,800,40,40)
         d.addFigure(fimg2)
         fimg2.setFilter(SobelX())
-        fimg1.addChangedImageObserver(fimg2)
-        img4=pyHImageFigure(0,300,320,240)
-        d.addFigure(img4)
-        fimg2.addChangedImageObserver(img4)
-        fimg2y=pyHImageFilterFigure(240,300,40,40)
+        fimg2.addPreviewFigure(d)
+        cf=fimg2.getInputConnectionFigure(fimg)
+        d.addFigure(cf)
+       
+        fimg2y=pyHImageFilterFigure(800,300,40,40)
         d.addFigure(fimg2y)
         fimg2y.setFilter(SobelY())
-        fimg1.addChangedImageObserver(fimg2y)
-        img4y=pyHImageFigure(240,300,320,240)
-        d.addFigure(img4y)
-        fimg2y.addChangedImageObserver(img4y)
+        fimg2y.addPreviewFigure(d)
+        cf=fimg2y.getInputConnectionFigure(fimg)
+        d.addFigure(cf)
 
-        img4=pyHImageFigure(10,600,320,240)
-        d.addFigure(img4)
         fimg4=pyHImageFilterFigure(0,600,40,40)
         d.addFigure(fimg4)
         fimg4.setFilter(OpticalFlow())
-        cam.addChangedImageObserver(fimg4)
-        fimg4.addChangedImageObserver(img4)
-
-#         img5=pyHImageFigure(400,600,320,240)
-#         d.addFigure(img5)
-#         fimg5=pyHImageFilterFigure(400,600,40,40)
-#         d.addFigure(fimg5)
-#         fimg5.setFilter(FastFeatureDetector())
-#         cam.addChangedImageObserver(fimg5)
-#         img5.setImageSourceFigure(fimg5)
-
-
-
-#         #imgCm1=pyHImage('/Users/paco/Pictures/sfm/urjcMostolesMobilLG440-15011301/CAM00295.jpg')
-#         imgCm1=pyHImage('/media/francisco/Packard Bell/Users/paco/Pictures/sfm/pistaTenis/CAM00698.jpg')
-#         #imgCm1=pyHImage('../images/im2.png')
-#         ifcm1=pyHImageDottedFigure(0,0,240,320,imgCm1)
-#         ifcm1.setPoints([pyHPoint(400,690),pyHPoint(1776,690),pyHPoint(1394,560),pyHPoint(737,560)])
-#         d.addFigure(ifcm1)
-#         
-#         fd=FeatureDetector("SIFT")
-#         imgCvCm1Fd=fd.process(imgCm1.data)
-#         #imgCm1=pyHImage('../images/im2.png')
-#         imgCm1Fd=pyHImage()
-#         imgCm1Fd.setData(imgCvCm1Fd)
-#         ifcm1Fd=pyHImageFigure(0,320,240,320,imgCm1Fd)
-#         d.addFigure(ifcm1Fd)
-#         
-#         #imgCm2=pyHImage('/Users/paco/Pictures/sfm/urjcMostolesMobilLG440-15011301/CAM00294.jpg')
-#         imgCm2=pyHImage('/media/francisco/Packard Bell/Users/paco/Pictures/sfm/pistaTenis/CAM00699.jpg')
-#         #imgCm1=pyHImage('../images/im2.png')
-#         ifcm2=pyHImageDottedFigure(240,0,240,320,imgCm2)
-#         ifcm2.setPoints([pyHPoint(400,690),pyHPoint(1776,690),pyHPoint(1394,560),pyHPoint(737,560)])
-#         d.addFigure(ifcm2)
-#         
-#         imgCvCm2Fd=fd.process(imgCm2.data)
-#         imgCm2Fd=pyHImage()
-#         imgCm2Fd.setData(cv2.addWeighted(imgCvCm1Fd,0.5,imgCvCm2Fd,0.5,0))
-#         ifcm2Fd=pyHImageFigure(0,0,240,320,imgCm2Fd)
-#         d.addFigure(ifcm2Fd)
-#         
+        fimg4.addPreviewFigure(d)
+        cf=fimg4.getInputConnectionFigure(fimg)
+        d.addFigure(cf)
         
-        #imgCm10=pyHImage('/media/francisco/Packard Bell/Users/paco/Dropbox/Tranquinet/I+D+I/Electronica/robotica/software/tracking/tranquiTrack/images/logitech/shot_0_000.bmp')
-        #imgCm11=pyHImage('/media/francisco/Packard Bell/Users/paco/Dropbox/Tranquinet/I+D+I/Electronica/robotica/software/tracking/tranquiTrack/images/logitech/shot_0_001.bmp')
-#         imgCm10=pyHImage('/Users/paco/Dropbox/Tranquinet/I+D+I/Electronica/robotica/software/tracking/tranquiTrack/images/logitech/shot_0_000.bmp')
-#         imgCm11=pyHImage('/Users/paco/Dropbox/Tranquinet/I+D+I/Electronica/robotica/software/tracking/tranquiTrack/images/logitech/shot_0_001.bmp')
-#         #fm=FlannMacher()
-#         fm=FundamentalMatrix()
-#         #fm=HomographyMatrix()
-#         fm.imgcv1=imgCm10.data
-#         fm.imgcv2=imgCm11.data
-#         #fm.imgcv1=cam1.getImage().data
-#         #fm.imgcv2=cam.getImage().data
-#         imgCm5=pyHImage()
-#         imgCm5.setData(fm.process())
-#         ifcm5=pyHImageFigure(0,0,640,240,imgCm5)
-#         d.addFigure(ifcm5)
-#         
-#         immf=pyHImagesMixedFigure(20,20,640,240,imgCm10)
-#         immf.setImage2(imgCm11)
-#         immf.setFilter(fm)
-#         immf.setImageSourceFigure1(cam)
-#         immf.setImageSourceFigure2(cam1)
-#         d.addFigure(immf)
-#         
-#         imsf=pyHImageSecFilterFigure(300,20,50,50)
-#         imsf.setFilter(fm)
-#         imfsec=pyHImageFigure(330,20,640,240)
-#         imsf.addChangedImageObserver(imfsec)
-#         cam.addChangedImageObserver(imsf)
-#         d.addFigure(imsf)
-#         d.addFigure(imfsec)
-        
-
-
-        
-        #imgCm3=pyHImage('../images/googleEarth_CampusMostoles15031101.png')
-        #ifcm3=pyHImageFigure(0,0,320*2,240*2,imgCm3)
-        #d.addFigure(ifcm3)
-        #imgCm4=pyHImage('../images/googleEarth_CampusMostolesZoom15031101.png')
-        #ifcm4=pyHImageFigure(0,0,320*2,240*2,imgCm4)
-        #d.addFigure(ifcm4)
+        fimg4=pyHImageFilterFigure(800,600,40,40)
+        d.addFigure(fimg4)
+        fimg4.setFilter(OpticalFlow())
+        fimg4.addPreviewFigure(d)
+        cf=fimg4.getInputConnectionFigure(fimg2y)
+        d.addFigure(cf)
         
         self.getView().setTransformFitToDrawing()
-        
-        #self.setupCamera()
+
         
 #Redefinning abstract methods
     def createMenuBar(self):
@@ -308,119 +236,18 @@ class pyHStandardEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
 #         scrollArea.setWidget(self.getView())
         
         self.setCentralWidget(self.getView())
-        self.setGeometry(300, 30,900,500)
-        self.setWindowTitle('pyHotVision')    
+        self.setGeometry(300, 30,1000,600)
+        self.setWindowTitle('Qt5 - pyHotVision Face Tool '+cv2.__version__)    
         self.sb=QtWidgets.QLabel(self)
         self.sb.setText("x=0,y=0")
         self.statusBar().addPermanentWidget(self.sb)
         self.sb1=QtWidgets.QLabel(self)
         self.setCurrentTool(pyHSelectionTool(self.getView()))
         self.show()
-
-              
-    def openDXF(self,fileName):
-        d=self.getView().getDrawing()
-        for et in dxfreader.getEtt(fileName):
-            if et["0"]=="LINE":
-                x0=float(et["10"])
-                y0=float(et["20"])
-                p0=pyHPoint(x0,y0)
-                x1=float(et["11"])
-                y1=float(et["21"])
-                p1=pyHPoint(x1,y1)
-                l=pyHPolylineFigure()
-                l.addPoint(p0)
-                l.addPoint(p1)
-                d.addFigure(l)
-            if et["0"]=="CIRCLE":
-                x0=float(et["10"])
-                y0=float(et["20"])
-                r =float(et["40"])
-                c=pyHEllipseFigure(x0-r,y0-r,2*r,2*r)
-                d.addFigure(c)
-            if et["0"]=="POINT":
-                x0=float(et["10"])
-                y0=float(et["20"])
-                r =2
-                c=pyHEllipseFigure(x0-r,y0-r,2*r,2*r)
-                d.addFigure(c)
-            if et["0"]=="ARC":
-                x0=float(et["10"])
-                y0=float(et["20"])
-                r =float(et["40"])
-                ans=float(et["50"])
-                ane=float(et["51"])
-                c=pyHArcFigure(x0-r,y0-r,2*r,2*r,ans,ane)
-                d.addFigure(c)
-            if et["0"]=="LWPOLYLINE":
-                xs=et["10"]
-                ys=et["20"]
-                c=pyHPolylineFigure()
-                for i,x in enumerate(xs):
-                    p=pyHPoint(float(x),float(ys[i]))
-                    c.addPoint(p)
-                d.addFigure(c)
-            if et["0"]=="SPLINE":
-                xs=et["10"]
-                ys=et["20"]
-                c=pyHSplineFigure()
-                for i,x in enumerate(xs):
-                    p=pyHPoint(float(x),float(ys[i]))
-                    c.addPoint(p)
-                d.addFigure(c)
-        self.fillTree()
-        
-    def openPLT(self,fileName):
-        d=self.getView().getDrawing()
-        f=pyHPolylineFigure()
-        for t in pltreader.getPLT(fileName):
-            if len(t)==3:
-                c,x,y=t
-                if pltreader.isPU(c):
-                    if f:
-                        if len(f.getPoints())>1:
-                            d.addFigure(f)
-                    f=pyHPolylineFigure()
-                    xf=float(x)*0.025
-                    yf=float(y)*0.025
-                    p=pyHPoint(xf,yf)
-                    f.addPoint(p)
-                elif pltreader.isPD(c):
-                    xf=float(x)*0.025
-                    yf=float(y)*0.025
-                    p=pyHPoint(xf,yf)
-                    f.addPoint(p)
-                    
-def scan(num_ports = 20, verbose=False):
-    #-- Lista de los dispositivos serie. Inicialmente vacia
-    dispositivos_serie = []
-    if verbose:
-        print "Escanenado %d puertos serie:" % num_ports
-    
-    #-- Escanear num_port posibles puertos serie
-    for i in range(num_ports):
-        if verbose:
-            sys.stdout.write("puerto %d: " % i)
-            sys.stdout.flush()
-        try:
-            #-- Abrir puerto serie
-            s = serial.Serial(i)
-            if verbose: print "OK --> %s" % s.portstr
-            #-- Si no hay errores, anadir el numero y nombre a la lista
-            dispositivos_serie.append( (i, s.portstr))
-            #-- Cerrar puerto
-            s.close()
-        #-- Si hay un error se ignora
-        except:
-            if verbose: 
-                print "NO"
-    #-- Devolver la lista de los dispositivos serie encontrados    
-    return dispositivos_serie
-
-               
+                                   
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    ex = pyHStandardEditor()
+    ex = pyHVisionEditor()
     
     ex.timeElapsed=dt.datetime.now()
     #ex.openDXF("a4x2laser.dxf")

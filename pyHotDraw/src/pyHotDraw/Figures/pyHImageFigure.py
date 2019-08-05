@@ -9,7 +9,7 @@ Created on 17/04/2015
 from threading import Timer
 import numpy as np
 import cv2
-#from PyQt4 import QtCore
+#from PyQt5 import QtCore
 from pyHotDraw.Core.pyHExceptions import pyHFigureNotFound
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 from pyHAbstractFigure import pyHAbstractFigure
@@ -326,12 +326,14 @@ class pyHCameraFigure(pyHImageSourceFigure):
 #         self.timer = QtCore.QTimer()
 #         self.timer.timeout.connect(self.displayVideoStream)
 #         self.timer.start(200)
-        self.timer = Timer(0.1,self.displayVideoStream)
+        self.timer = Timer(1,self.displayVideoStream)
         self.timer.start()
         
     def displayVideoStream(self):
         """Read frame from camera and repaint QLabel widget.
         """
+        self.timer = Timer(0.25,self.displayVideoStream)
+        self.timer.start()
         ret, frame = self.capture.read()
         if ret==False:
             self.capture = cv2.VideoCapture(self.camID)            
