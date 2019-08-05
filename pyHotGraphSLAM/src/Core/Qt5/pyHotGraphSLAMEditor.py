@@ -14,7 +14,7 @@ import cv2
 from matrix import matrix
 from robot import make_data
 from PyQt5 import QtGui,QtWidgets, QtCore
-from pyHotDraw.Core.Qt.pyHStandardView import pyHStandardView
+from pyHotDraw.Core.Qt5.pyHStandardView import pyHStandardView
 from pyHotDraw.Core.pyHAbstractEditor import pyHAbstractEditor
 from pyHotDraw.Tools.pyHSelectionTool import pyHSelectionTool
 from pyHotDraw.Tools.pyHCreationDropTool import pyHCreationDropTool
@@ -57,6 +57,45 @@ def setSubmatrix(Omega,Xi,pn,pm,dataOmega,dataXi):
 def buildInformationMatrix(data, N, num_landmarks, motion_noise, measurement_noise):
     # Set the dimension of the filter
     dim = 2 * (N + num_landmarks) 
+    # make the constraint information matrix and vector
+    Omega = matrix()
+    Omega.zero(dim, dim)
+    Omega.value[0][0] = 1.0
+    Omega.value[1][1] = 1.0
+
+    Xi = matrix()
+    Xi.zero(dim, 1)
+    Xi.value[0][0] = world_size / 2.0
+    Xi.value[1][0] = world_size / 2.0
+    
+    # process the data
+    for n in range(len(data)):
+        # n is the index of the robot pose in the matrix/vector
+        measurement = np.array(data[n][0])
+        motion      = np.array(data[n][1])
+        # integrate the measurements
+        for i in range(len(measurement)):
+            # m is the index of the landmark coordinate in the matrix/vector
+            lid=measurement[i][0] 
+            measurements=measurement[i][1:]
+            m =  (N + lid) 
+            # update the information maxtrix/vector based on the measurement
+            setSubmatrix(Omega,Xi,n,m,1.0 / measurement_noise,measurements/measurement_noise)
+        # update the information maxtrix/vector based on the robot motion
+        # next pose id
+        pid=motion[0] 
+        # delta motino from pose n to pose pid
+        dMotion=motion[1:]
+        m=pid # m is always next there is not closeloop
+        setSubmatrix(Omega,Xi,n,m,1.0/motion_noise,dMotion/motion_noise)
+    return Omega,Xi
+
+from pyLinearGraphSLAM import pyLinearGraphSLAM
+
+def buildInformationMatrixNew(data, N, num_landmarks, motion_noise, measurement_noise):
+    # Set the dimension of the filter
+    dim = 2 * (N + num_landmarks) 
+    lgs=pyLinearGraphSLAM(dim,2)
     # make the constraint information matrix and vector
     Omega = matrix()
     Omega.zero(dim, dim)

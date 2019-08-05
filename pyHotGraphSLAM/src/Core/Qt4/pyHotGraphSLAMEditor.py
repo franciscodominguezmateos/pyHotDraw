@@ -14,7 +14,7 @@ import cv2
 from matrix import matrix
 from robot import make_data
 from PyQt4 import QtGui, QtCore
-from pyHotDraw.Core.Qt.pyHStandardView import pyHStandardView
+from pyHotDraw.Core.Qt4.pyHStandardView import pyHStandardView
 from pyHotDraw.Core.pyHAbstractEditor import pyHAbstractEditor
 from pyHotDraw.Tools.pyHSelectionTool import pyHSelectionTool
 from pyHotDraw.Tools.pyHCreationDropTool import pyHCreationDropTool
