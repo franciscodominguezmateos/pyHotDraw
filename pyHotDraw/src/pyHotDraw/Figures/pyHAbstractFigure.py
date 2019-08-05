@@ -1,7 +1,7 @@
 '''
 Created on 25/03/2013
 
-@author: paco
+@author: Francisco Dominguez
 '''
 import math
 from pyHotDraw.Geom.pyHPoint import pyHPoint
@@ -76,3 +76,20 @@ class pyHAbstractFigure(object):
 from pyHotDraw.Locators.pyHRelativeLocator import pyHRelativeLocator
 from pyHotDraw.Connectors.pyHLocatorConnector import pyHLocatorConnector
 from pyHotDraw.Handles.pyHNullHandle import pyHNullHandle
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

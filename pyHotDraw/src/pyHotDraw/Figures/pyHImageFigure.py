@@ -6,9 +6,10 @@ Created on 17/04/2015
 @author: Francisco Dominguez
 +03/02/2016
 '''
+from threading import Timer
 import numpy as np
 import cv2
-from PyQt5 import QtCore
+#from PyQt4 import QtCore
 from pyHotDraw.Core.pyHExceptions import pyHFigureNotFound
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 from pyHAbstractFigure import pyHAbstractFigure
@@ -322,9 +323,12 @@ class pyHCameraFigure(pyHImageSourceFigure):
         #figure width and height same that image width and hegight. ????
         #self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
         #self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.displayVideoStream)
-        self.timer.start(200)
+#         self.timer = QtCore.QTimer()
+#         self.timer.timeout.connect(self.displayVideoStream)
+#         self.timer.start(200)
+        self.timer = Timer(0.1,self.displayVideoStream)
+        self.timer.start()
+        
     def displayVideoStream(self):
         """Read frame from camera and repaint QLabel widget.
         """

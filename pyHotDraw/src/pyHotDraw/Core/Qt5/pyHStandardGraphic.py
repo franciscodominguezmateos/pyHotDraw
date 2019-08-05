@@ -108,7 +108,7 @@ class pyHStandardGraphic:
         rx,ry=self.t.scale(rx,ry)
         #self.qPainter.drawRect(x0,h-y0,rx,-ry)
         r=QRectF(x0,h-y0-ry,rx,ry)
-        qImg=hImg.convertMatToQImage(rx,ry)
+        qImg=self.convertMatToQImage(hImg,rx,ry)
         #r=QRectF(x0,h-y0-ry,qImg.width()/2,qImg.height()/2)
         #qImg=QImage('../images/im2.png')
         #mat=hImg.convertQImageToMat(qImg)

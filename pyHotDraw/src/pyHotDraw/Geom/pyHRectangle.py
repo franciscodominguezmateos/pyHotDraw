@@ -11,10 +11,10 @@ from __builtin__ import False
 
 class pyHRectangle(object): #QRectF):
     def __init__(self,x,y,w,h):
-        self.x=x
-        self.y=y
-        self.w=w
-        self.h=h
+        self.setX(x)
+        self.setY(y)
+        self.setWidth(w)
+        self.setHeight(h)
     def getX(self):
         return self.x
     def getY(self):
@@ -32,13 +32,13 @@ class pyHRectangle(object): #QRectF):
         r=self
         return pyHPoint(r.getX()+r.getWidth(),r.getY()+r.getHeight())
     def setX(self,x):
-        self.x=x
+        self.x=float(x)
     def setY(self,y):
-        self.y=y
+        self.y=float(y)
     def setWidth(self,w):
-        self.w=w
+        self.w=float(w)
     def setHeight(self,h):
-        self.h=h
+        self.h=float(h)
     def move(self,dx,dy):
         x0=self.getX()
         y0=self.getY()
