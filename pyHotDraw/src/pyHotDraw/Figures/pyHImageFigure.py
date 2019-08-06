@@ -19,6 +19,7 @@ from pyHEllipseFigure import pyHEllipseFigure
 from pyHConnectionFigure import pyHConnectionFigure
 from pyHotDraw.Images.pyHImage import pyHImage
 from pyHotDraw.Images.pyHImageFilters import *
+from pyHotDraw.Figures.pyHTextFigure import pyHTextFigure
 class pyHImageFigure(pyHRectangleFigure):
     def __init__(self,x0,y0,w,h,img=None):
         super(pyHImageFigure,self).__init__(x0,y0,w,h)
@@ -117,14 +118,19 @@ class pyHImagesMixedFigure(pyHImageFigure):
         if fImageSource==self.imageSourceFigure2:
             self.setImage2(fImageSource.getImage())
 class pyHImageFilterFigure(pyHArrowFigure):
-    def __init__(self,x0,y0,w,h):
+    def __init__(self,x0,y0,w,h,text="ImageFilter"):
         #super(pyHImageFilterFigure,self).__init__(x0,y0,w,h)
         super(pyHImageFilterFigure,self).__init__(x0,y0,w,h)
         self.changedImageObservers=[]
         self.imageSink=None
         self.imageFilter=FaceShapeDetection()
         #self.outputConnectionFigure=None #more than one output allowed
+        self.textFigure=pyHTextFigure(x0,y0,w,h,text,border=False)
         self.inputConnectionFigure=None
+    def draw(self,g):
+        pyHArrowFigure.draw(self,g)
+        self.textFigure.setDisplayBox(self.getDisplayBox())
+        self.textFigure.draw(g)
     def addPreviewFigure(self,drawing):
         r=self.getDisplayBox()
         pc=r.getCenterPoint()
@@ -314,7 +320,7 @@ class pyHImageSourceFigure(pyHEllipseFigure):
         for fo in self.changedImageObservers:
             fo.imageChanged(self)        
 class pyHCameraFigure(pyHImageSourceFigure):
-    def __init__(self,x,y,w=50,h=40,camID=0):
+    def __init__(self,x,y,w=80,h=40,camID=0,text=" Camera "):
         super(pyHCameraFigure,self).__init__(x,y,w,h)
         #pyHImageSourceFigure.__init__(self, x, y, w, h)
         """Initialize camera."""
@@ -326,13 +332,19 @@ class pyHCameraFigure(pyHImageSourceFigure):
 #         self.timer = QtCore.QTimer()
 #         self.timer.timeout.connect(self.displayVideoStream)
 #         self.timer.start(200)
-        self.timer = Timer(1,self.displayVideoStream)
+        self.timer = Timer(0.2,self.displayVideoStream)
         self.timer.start()
+        self.textFigure=pyHTextFigure(x,y,w,h,text,border=False)
+        self.inputConnectionFigure=None
+    def draw(self,g):
+        super(pyHCameraFigure,self).draw(g)
+        self.textFigure.setDisplayBox(self.getDisplayBox())
+        self.textFigure.draw(g)
         
     def displayVideoStream(self):
         """Read frame from camera and repaint QLabel widget.
         """
-        self.timer = Timer(0.25,self.displayVideoStream)
+        self.timer = Timer(0.2,self.displayVideoStream)
         self.timer.start()
         ret, frame = self.capture.read()
         if ret==False:
