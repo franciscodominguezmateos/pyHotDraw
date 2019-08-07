@@ -38,7 +38,7 @@ from pyHotDraw.Images.pyHImageFilters import FlannMacher
 from pyHotDraw.Images.pyHImageFilters import FundamentalMatrix
 from pyHotDraw.Images.pyHImageFilters import HomographyMatrix
 from pyHotDraw.Images.pyHImageFilters import HistogramColor
-
+import pyHotDraw
 # def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
 #     # Make a copy of the image
 #     imcopy = np.copy(img)
@@ -51,6 +51,8 @@ from pyHotDraw.Images.pyHImageFilters import HistogramColor
 #         cv2.rectangle(imcopy, bbox[0] , bbox[1], color, thick)
 #     # Return the image copy with boxes drawn
 #     return imcopy
+
+
 
 class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
     def __init__(self):
@@ -180,7 +182,7 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         self.addMenuAndToolBar("&CAD")
         self.addAction("&CAD","../images/selectionTool.png",'Selection',self,"Ctrl+S","Selection Tool",self.selectingFigures,True)
         self.addAction("&CAD","../images/move.png",'View trasnlate',self,"Ctrl+v","View Translate Tool",self.viewTranslate,True)
-        self.addAction("&CAD","../images/bug.png",'Camera',self,"Ctrl+S","Create Camera",self.creatingCamera,True)
+        self.addAction("&CAD","../images/camera.png",'Camera',self,"Ctrl+S","Create Camera",self.creatingCamera,True)
         self.addAction("&CAD","../images/createRoundRectangle.png",'Create Image',self,"Ctrl+S","Selection Tool",self.creatingImage,True)
         self.addAction("&CAD","../images/createLineConnection.png",'Create Image Filter connection',self,"Ctrl+S","Create Image Filter connection Tool",self.creatingLineImageFilterConnection,True)
         self.addAction("&CAD","../images/createLineConnection.png",'Create connection',self,"Ctrl+S","Create connection Tool",self.creatingLineConnection,True)

@@ -7,12 +7,14 @@ Created on 25/03/2013
 '''
 import sys
 import datetime as dt
+import os
 import serial
 import cv2
 import numpy as np
 #from pydxfreader import dxfreader
 #from pypltreader import pltreader
 from PyQt5 import QtGui,QtWidgets, QtCore
+import pyHotDraw
 from pyHotDraw.Core.Qt5.pyHStandardView import pyHStandardView
 from pyHotDraw.Core.pyHAbstractEditor import pyHAbstractEditor
 from pyHotDraw.Tools.pyHSelectionTool import pyHSelectionTool
@@ -216,17 +218,18 @@ class pyHStandardEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         #print "a.objectName:"+a.objectName()
         
     def initActionMenuToolBars(self):
+        path=pyHotDraw.ICONS_PATH
         self.addMenuAndToolBar("&File")
-        self.addAction("&File","../images/fileNew.png",'New',self,"Ctrl+N","New document",self.newFile)
-        self.addAction("&File","../images/fileOpen.png",'Open',self,"Ctrl+O","Open document",self.openFile)
-        self.addAction("&File","../images/fileSave.png",'Save',self,"Ctrl+Q","Save document",self.selectingFigures)
+        self.addAction("&File",os.path.join(path,"fileNew.png"),'New',self,"Ctrl+N","New document",self.newFile)
+        self.addAction("&File",os.path.join(path,"fileOpen.png"),'Open',self,"Ctrl+O","Open document",self.openFile)
+        self.addAction("&File",os.path.join(path,"images/fileSave.png"),'Save',self,"Ctrl+Q","Save document",self.selectingFigures)
         self.addAction("&File","",'Exit',self,"Ctrl+Q","Exit application",self.close)
         self.addMenuAndToolBar("&Edit")
-        self.addAction("&Edit","../images/editCopy.png",'Copy',self,"Ctrl+C","Copy",self.copy)
-        self.addAction("&Edit","../images/editCut.png",'Cut',self,"Ctrl+X","Cut",self.cut)
-        self.addAction("&Edit","../images/editPaste.png",'Paste',self,"Ctrl+V","Paste",self.paste)
-        self.addAction("&Edit","../images/editUndo.png",'Paste',self,"Ctrl+V","Paste",self.selectingFigures)
-        self.addAction("&Edit","../images/editRedo.png",'Paste',self,"Ctrl+V","Paste",self.selectingFigures)
+        self.addAction("&Edit",os.path.join(path,"editCopy.png" ),'Copy',self,"Ctrl+C","Copy",self.copy)
+        self.addAction("&Edit",os.path.join(path,"editCut.png"  ),'Cut',self,"Ctrl+X","Cut",self.cut)
+        self.addAction("&Edit",os.path.join(path,"editPaste.png"),'Paste',self,"Ctrl+V","Paste",self.paste)
+        self.addAction("&Edit",os.path.join(path,"editUndo.png" ),'Paste',self,"Ctrl+V","Paste",self.selectingFigures)
+        self.addAction("&Edit",os.path.join(path,"editRedo.png" ),'Paste',self,"Ctrl+V","Paste",self.selectingFigures)
         dbUnits=QtWidgets.QComboBox(self)
         dbUnits.addItem("Milimetros")
         dbUnits.addItem("Pulgadas")
@@ -240,7 +243,7 @@ class pyHStandardEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         a = QtWidgets.QAction("A try...", self)
         dbUnits.addAction(a)
         self.toolBar["&Edit"].addWidget(dbUnits)
-        self.addAction("&Edit","../images/zoom.png",'Zoom',self,"Ctrl+V","Zoom",self.selectingFigures)
+        self.addAction("&Edit",path+"zoom.png",'Zoom',self,"Ctrl+V","Zoom",self.selectingFigures)
         sceneScaleCombo = QtWidgets.QComboBox()
         sceneScaleCombo.addItems(["50%", "75%", "100%", "125%", "150%", "200%", "250%", "300%", "350%", "400%"])
         sceneScaleCombo.setCurrentIndex(2)
@@ -248,24 +251,24 @@ class pyHStandardEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         sceneScaleCombo.currentIndexChanged.connect(self.onScaleChanged)
         self.toolBar["&Edit"].addWidget(sceneScaleCombo)
         self.addMenuAndToolBar("&CAD")
-        self.addAction("&CAD","../images/selectionTool.png",'Selection',self,"Ctrl+S","Selection Tool",self.selectingFigures,True)
-        self.addAction("&CAD","../images/move.png",'View trasnlate',self,"Ctrl+v","View Translate Tool",self.viewTranslate,True)
-        self.addAction("&CAD","../images/bug.png",'Camera',self,"Ctrl+S","Create Camera",self.creatingCamera,True)
-        self.addAction("&CAD","../images/createRoundRectangle.png",'Create Image',self,"Ctrl+S","Selection Tool",self.creatingImage,True)
-        self.addAction("&CAD","../images/createLineConnection.png",'Create Image Filter connection',self,"Ctrl+S","Create Image Filter connection Tool",self.creatingLineImageFilterConnection,True)
-        self.addAction("&CAD","../images/createLineConnection.png",'Create connection',self,"Ctrl+S","Create connection Tool",self.creatingLineConnection,True)
-        self.addAction("&CAD","../images/createPolygon.png",'Polyline',self,"Ctrl+S","Creatting Polyline",self.creatingPolyline,True)
-        self.addAction("&CAD","../images/createLine.png",'Line',self,"Ctrl+S","Selection Tool",self.creatingLine,True)
-        self.addAction("&CAD","../images/createRectangle.png",'Rectangle',self,"Ctrl+S","Create Rectangle Tool",self.creatingRectangle,True)
-        self.addAction("&CAD","../images/createRoundRectangle.png",'Round Rectangle',self,"Ctrl+S","Selection Tool",self.creatingRectangle,True)
-        self.addAction("&CAD","../images/createEllipse.png",'Ellipse',self,"Ctrl+S","Selection Tool",self.creatingEllipse,True)
-        self.addAction("&CAD","../images/createDiamond.png",'Ellipse',self,"Ctrl+S","Selection Tool",self.creatingDiamond,True)
-        self.addAction("&CAD","../images/createScribble.png",'Spline',self,"Ctrl+S","Spline Tool",self.creatingSpline,True)
-        self.addAction("&CAD","../images/jointPoints1.png",'Join',self,"Ctrl+S","Join points",self.join,False)
-        self.addAction("&CAD","../images/selectionGroup.png",'Selection Group',self,"Ctrl+S","Selection Group",self.selectionGroup,False)
-        self.addAction("&CAD","../images/selectionUngroup.png",'Selection Ungroup',self,"Ctrl+S","Selection Ungroup",self.selectionUngroup,False)
-        self.addAction("&CAD","../images/moveToBack.png",'Move to Back',self,"Ctrl+S","Move to Back",self.moveBack,False)
-        self.addAction("&CAD","../images/moveToFront.png",'Move to Front',self,"Ctrl+S","Move to Front",self.moveFront,False)
+        self.addAction("&CAD",os.path.join(path,"selectionTool.png"),'Selection',self,"Ctrl+S","Selection Tool",self.selectingFigures,True)
+        self.addAction("&CAD",os.path.join(path,"move.png"),'View trasnlate',self,"Ctrl+v","View Translate Tool",self.viewTranslate,True)
+        self.addAction("&CAD",os.path.join(path,"bug.png"),'Camera',self,"Ctrl+S","Create Camera",self.creatingCamera,True)
+        self.addAction("&CAD",os.path.join(path,"createRoundRectangle.png"),'Create Image',self,"Ctrl+S","Selection Tool",self.creatingImage,True)
+        self.addAction("&CAD",os.path.join(path,"createLineConnection.png"),'Create Image Filter connection',self,"Ctrl+S","Create Image Filter connection Tool",self.creatingLineImageFilterConnection,True)
+        self.addAction("&CAD",os.path.join(path,"createLineConnection.png"),'Create connection',self,"Ctrl+S","Create connection Tool",self.creatingLineConnection,True)
+        self.addAction("&CAD",os.path.join(path,"createPolygon.png"),'Polyline',self,"Ctrl+S","Creatting Polyline",self.creatingPolyline,True)
+        self.addAction("&CAD",os.path.join(path,"createLine.png"),'Line',self,"Ctrl+S","Selection Tool",self.creatingLine,True)
+        self.addAction("&CAD",os.path.join(path,"createRectangle.png"),'Rectangle',self,"Ctrl+S","Create Rectangle Tool",self.creatingRectangle,True)
+        self.addAction("&CAD",os.path.join(path,"createRoundRectangle.png"),'Round Rectangle',self,"Ctrl+S","Selection Tool",self.creatingRectangle,True)
+        self.addAction("&CAD",os.path.join(path,"createEllipse.png"),'Ellipse',self,"Ctrl+S","Selection Tool",self.creatingEllipse,True)
+        self.addAction("&CAD",os.path.join(path,"createDiamond.png"),'Ellipse',self,"Ctrl+S","Selection Tool",self.creatingDiamond,True)
+        self.addAction("&CAD",os.path.join(path,"createScribble.png"),'Spline',self,"Ctrl+S","Spline Tool",self.creatingSpline,True)
+        self.addAction("&CAD",os.path.join(path,"jointPoints1.png"),'Join',self,"Ctrl+S","Join points",self.join,False)
+        self.addAction("&CAD",os.path.join(path,"selectionGroup.png"),'Selection Group',self,"Ctrl+S","Selection Group",self.selectionGroup,False)
+        self.addAction("&CAD",os.path.join(path,"selectionUngroup.png"),'Selection Ungroup',self,"Ctrl+S","Selection Ungroup",self.selectionUngroup,False)
+        self.addAction("&CAD",os.path.join(path,"moveToBack.png"),'Move to Back',self,"Ctrl+S","Move to Back",self.moveBack,False)
+        self.addAction("&CAD",os.path.join(path,"moveToFront.png"),'Move to Front',self,"Ctrl+S","Move to Front",self.moveFront,False)
 
     def onScaleChanged(self,index):
         s=float(index)

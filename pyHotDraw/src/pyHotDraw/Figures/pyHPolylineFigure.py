@@ -5,7 +5,6 @@ Created on 25/03/2013
 
 @author: paco
 '''
-from visual import vector
 from pyHotDraw.Geom.pyHRectangle import pyHRectangle
 from pyHotDraw.Handles.pyHPolylineHandle import pyHPolylineHandle
 from pyHAbstractFigure import pyHAbstractFigure
@@ -56,23 +55,23 @@ class pyHPolylineFigure(pyHAbstractFigure):
                 print p.distance(q)
                 return True
         for i in range(len(self.points)-1):
-            p0=vector(self.points[i].getX(),self.points[i].getY())
-            p1=vector(self.points[i+1].getX(),self.points[i+1].getY())
-            pq=vector(q.getX(),q.getY())
+            p0=self.points[i]
+            p1=self.points[i+1]
+            pq=q
             vs=p1-p0
-            vLen=vs.mag
+            vLen=vs.mag()
             vn=vs.norm()
-            if vn.mag==0:
+            if vn.mag()==0:
                 continue
             vq=pq-p0
-            d=vn.cross(vq).mag
+            d=abs(vn.cross(vq))#.mag()
             if abs(d)<=self.maxDist:
                 #project vq on vn
                 l=vn.dot(vq)
                 if l>=0:
                     prj=vn*l
                     #projection length must be shorter than segment lenght vn
-                    prjLen=prj.mag
+                    prjLen=prj.mag()
                     if prjLen>=0 and prjLen<=vLen:
                         return True
         return False
