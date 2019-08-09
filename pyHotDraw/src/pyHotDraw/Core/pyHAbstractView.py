@@ -61,6 +61,7 @@ class pyHAbstractView(object):
             t.sx=t.sy
         t.tx=v.width()/2-cx*t.sx
         t.ty=v.height()/2-cy*t.sy
+        self.update()
     def getEditor(self):
         return self.editor
     def setEditor(self,e):

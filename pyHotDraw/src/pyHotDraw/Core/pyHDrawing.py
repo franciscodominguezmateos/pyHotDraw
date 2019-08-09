@@ -21,6 +21,7 @@ class pyHDrawing(pyHCompositeFigure):
     def addFigure(self,f):
         f.addChangedFigureObserver(self)
         self.figures.append(f)
+        self.notifyDrawingChanged()
     #Figure Observer method
     def figureChanged(self,f):
         self.notifyDrawingChanged()
