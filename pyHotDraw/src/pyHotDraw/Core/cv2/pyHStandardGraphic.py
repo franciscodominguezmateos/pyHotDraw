@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 '''
-Created on 25/03/2013
+Created on 09/08/2019
 
-@author: paco
+@author: Francisco Dominguez
 '''
 import cv2
 
@@ -37,31 +37,35 @@ class pyHStandardGraphic:
         iry=int(ry)
         cv2.rectangle(self.img,(ix0,h-iy0),(ix0+irx,h-iy0-iry),self.color,self.pen_width)
     def drawRoundedRect(self,x0,y0,rx,ry):
-        h=self.v.height()
-        x0,y0=self.getTransformation().transform(x0,y0)
-        rx,ry=self.getTransformation().scale(rx,ry)
-        self.qPainter.drawRoundedRect(x0,h-y0,rx,-ry,20.0,20.0)
+        self.drawRect(x0, y0, rx, ry)
     def drawEllipse(self,x0,y0,rx,ry):
         h=self.v.height()
         x0,y0=self.getTransformation().transform(x0,y0)
         rx,ry=self.getTransformation().scale(rx,ry)
-        #self.qPainter.drawEllipse(x0,h-y0,rx,-ry)
+        x0=x0+rx/2
+        y0=y0+ry/2
+        ix0=int(x0)
+        iy0=int(y0)
+        irx=int(rx/2)
+        iry=int(ry/2)
+        cv2.ellipse(self.img,(x0,h-y0),(irx,iry),0,0,360,self.color,self.pen_width)
     def drawArc(self,x0,y0,rx,ry,ans,ane):
         h=self.v.height()
-        x0,y0=self.t.transform(x0,y0)
+        x0,y0=self.getTransformation().transform(x0,y0)
         rx,ry=self.getTransformation().scale(rx,ry)
-        if ane>ans:
-            anl=ane-ans
-        else:
-            anl=360+(ane-ans)
-            anl=-anl
-            ans=ane
-        #angles are counterclockwise in Qt and unit is 1/16º
-        #self.qPainter.drawArc(x0,h-y0,rx,-ry,ans*16,anl*16)
+        x0=x0+rx/2
+        y0=y0+ry/2
+        ix0=int(x0)
+        iy0=int(y0)
+        irx=int(rx/2)
+        iry=int(ry/2)
+        cv2.ellipse(self.img,(x0,h-y0),(irx,iry),0,ans,ane,self.color,self.pen_width)
     def drawPoint(self,x0, y0):
         h=self.v.height()
         x0,y0=self.t.transform(x0,y0)
-        self.qPainter.drawPoint(x0,h-y0)
+        x0=int(x0)
+        y0=int(h-y0)
+        self.img[y0,x0]=self.color
     def drawText(self,x,y,rx,ry,text):
         h=self.v.height()
         x0,y0=self.getTransformation().transform(x,y)

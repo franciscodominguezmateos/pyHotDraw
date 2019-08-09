@@ -5,44 +5,17 @@ Created on 25/03/2013
 
 @author: paco
 '''
-import sys
-import datetime as dt
-import os
-import serial
+
 import cv2
 import numpy as np
 
-import pyHotDraw
 from pyHotDraw.Core.cv2.pyHStandardView import pyHStandardView
 from pyHotDraw.Core.pyHAbstractEditor import pyHAbstractEditor
-from pyHotDraw.Tools.pyHSelectionTool import pyHSelectionTool
-from pyHotDraw.Figures.pyHPolylineFigure import pyHPolylineFigure
-from pyHotDraw.Figures.pyHSplineFigure import pyHSplineFigure
-from pyHotDraw.Figures.pyHEllipseFigure import pyHEllipseFigure
-from pyHotDraw.Figures.pyHArcFigure import pyHArcFigure
-from pyHotDraw.Figures.pyHRectangleFigure import pyHRectangleFigure
-from pyHotDraw.Geom.pyHPoint import pyHPoint
-from pyHotDraw.Visitors.pyHGcodeGenerator import pyHGcodeGenerator
-from pyHotDraw.Visitors.pyHPLTGenerator import pyHPLTGenerator
-from pyHotDraw.Images.pyHImage import pyHImage
-from pyHotDraw.Figures.pyHImageFigure import pyHImageFigure
-from pyHotDraw.Figures.pyHImageFigure import pyHImageDottedFigure
-from pyHotDraw.Figures.pyHImageFigure import pyHImagesMixedFigure
-from pyHotDraw.Figures.pyHImageFigure import pyHCameraFigure
-from pyHotDraw.Figures.pyHImageFigure import pyHImageFilterFigure
-from pyHotDraw.Figures.pyHImageFigure import pyHImageSecFilterFigure
-from pyHotDraw.Figures.pyHTextFigure import pyHTextFigure
-from pyHotDraw.Images.pyHImageFilters import SobelX
-from pyHotDraw.Images.pyHImageFilters import SobelY
-from pyHotDraw.Images.pyHImageFilters import Gaussian
-from pyHotDraw.Images.pyHImageFilters import OpticalFlow
-from pyHotDraw.Images.pyHImageFilters import FeatureDetector
-from pyHotDraw.Images.pyHImageFilters import FastFeatureDetector
-from pyHotDraw.Images.pyHImageFilters import FlannMacher
-from pyHotDraw.Images.pyHImageFilters import FundamentalMatrix
-from pyHotDraw.Images.pyHImageFilters import HomographyMatrix
-from pyHotDraw.Images.pyHImageFilters import HistogramColor
 from pyHotDraw.Geom.pyHTransform2D import pyHTransform2D
+from pyHotDraw.Figures.pyHRectangleFigure import pyHRectangleFigure
+from pyHotDraw.Figures.pyHImageFigure import pyHImageFigure
+from pyHotDraw.Figures.pyHImageFigure import pyHCameraFigure
+from pyHotDraw.Figures.pyHTextFigure import pyHTextFigure
 
 class pyHStandardEditor(pyHAbstractEditor):
     def __init__(self,title):
