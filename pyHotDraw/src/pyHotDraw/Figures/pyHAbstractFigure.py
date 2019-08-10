@@ -6,6 +6,7 @@ Created on 25/03/2013
 import math
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 from pyHotDraw.Figures.pyHAttributes import pyHAttributeColor
+from pyHotDraw.Figures.pyHAttributes import pyHAttributeFillColor
 
 class pyHAbstractFigure(object):
     def __init__(self):
@@ -26,6 +27,12 @@ class pyHAbstractFigure(object):
         else:
             r=c
             self.setAttribute("COLOR",pyHAttributeColor(r,g,b,a))
+    def setFillColor(self,c,g=None,b=None,a=255):
+        if g==None and b==None:
+            self.setAttribute("FILL",c)
+        else:
+            r=c
+            self.setAttribute("FILL",pyHAttributeFillColor(r,g,b,a))
     def getDisplayBox(self):
         pass
     def setDisplayBox(self,r):

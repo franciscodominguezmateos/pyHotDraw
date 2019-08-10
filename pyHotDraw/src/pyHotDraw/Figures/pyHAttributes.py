@@ -20,6 +20,26 @@ class pyHAttributeColor(object):
         self.a=a
     def draw(self,g):
         g.setColor(self.r,self.g,self.b,self.a)
+
+class pyHAttributeFillColor(object):
+    '''
+    classdocs
+    '''
+
+    def __init__(self, r, g, b, a=255):
+        '''
+        Constructor
+        '''
+        self.r = r
+        self.g = g
+        self.b = b
+        self.a = a
+
+    def values(self):
+        return self.r, self.g, self.b, self.a
+
+    def draw(self, g):
+        g.setFillColor(self.r, self.g, self.b, self.a)
         
 class pyHAttributeWidth(object):
     '''
