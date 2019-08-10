@@ -332,7 +332,7 @@ class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         self.addMenuAndToolBar("&File")
         self.addAction("&File","../images/fileNew.png",'New',self,"Ctrl+N","New document",self.newFile)
         self.addAction("&File","../images/fileOpen.png",'Open',self,"Ctrl+O","Open document",self.openFile)
-        self.addAction("&File","../images/fileSave.png",'Save',self,"Ctrl+Q","Save document",self.selectingFigures)
+        self.addAction("&File","../images/fileSave.png",'Save',self,"Ctrl+Q","Save document",self.saveFile)
         self.addAction("&File","",'Exit',self,"Ctrl+Q","Exit application",self.close)
         self.addMenuAndToolBar("&Edit")
         self.addAction("&Edit","../images/editCopy.png",'Copy',self,"Ctrl+C","Copy",self.copy)
@@ -383,14 +383,23 @@ class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         self.getView().update()
     def openFile(self):
         self.getView().getDrawing().clearFigures()
-        fileNames = QtWidgets.QFileDialog.getOpenFileName(self,("Open Image"), QtCore.QDir.currentPath(), ("Image Files (*.dxf)"))
+        fileNames = QtWidgets.QFileDialog.getOpenFileName(self,("Open GraphSLAM"), QtCore.QDir.currentPath(), ("Files (*.phgs)"))
         if not fileNames:
-            fileName="C:\\Users\\paco\\Desktop\\a4x2laser.dxf"
+            fileName="default.phgs"
         else:
             fileName=fileNames[0]
-        self.openDXF(fileName)
+        self.saveFileName(fileName)
         self.getView().update()
-        
+    def saveFile(self):
+        self.getView().getDrawing().clearFigures()
+        fileNames = QtWidgets.QFileDialog.getSaveFileName(self,("Save GraphSLAM"), QtCore.QDir.currentPath(), ("Files (*.phgs)"))
+        if not fileNames:
+            fileName="default.phgs"
+        else:
+            fileName=fileNames[0]
+        self.saveFileName(fileName)
+        self.getView().update()
+         
     def updateDraw(self,item,col):
         print "item changed "+str(col)+"="+item.data(col,QtCore.Qt.DisplayRole)+" "+item.data(3,QtCore.Qt.ItemDataRole.UserRole).__class__.__name__
 

@@ -3,6 +3,7 @@ Created on 25/03/2013
 
 @author: paco
 '''
+import pickle
 from pyHotDraw.Figures.pyHRectangleFigure import pyHRectangleFigure
 from pyHotDraw.Figures.pyHRectangleRoundedFigure import pyHRectangleRoundedFigure
 from pyHotDraw.Figures.pyHDiamondFigure import pyHDiamondFigure
@@ -42,6 +43,16 @@ class pyHAbstractEditor(object):
         pass
     def addAction(self,icon,name,container,sortCut,statustip,connect):
         pass
+    def saveFileName(self,fileName):
+        drawing=self.getView().getDrawing()
+        ''' picle doesn't work '''
+        pickle_file = file(fileName, 'w')
+        pickle.dump(drawing,pickle_file)
+    def openFileName(self,fileName):
+        pickled_file = open(fileName)
+        drawing = pickle.load(pickled_file)
+        self.getView().setDrawing(drawing)
+        self.getView().update()
     def copy(self):
         self.clipBoard=[]
         v=self.getView()

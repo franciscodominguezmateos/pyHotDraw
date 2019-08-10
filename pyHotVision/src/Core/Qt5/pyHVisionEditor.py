@@ -7,6 +7,7 @@ Created on 13/07/2019
 import sys
 import datetime as dt
 import glob
+import pickle
 import cv2
 import numpy as np
 from PyQt5 import QtGui,QtWidgets, QtCore
@@ -151,7 +152,7 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         self.addMenuAndToolBar("&File")
         self.addAction("&File","../images/fileNew.png",'New',self,"Ctrl+N","New document",self.newFile)
         self.addAction("&File","../images/fileOpen.png",'Open',self,"Ctrl+O","Open document",self.openFile)
-        self.addAction("&File","../images/fileSave.png",'Save',self,"Ctrl+Q","Save document",self.selectingFigures)
+        self.addAction("&File","../images/fileSave.png",'Save',self,"Ctrl+Q","Save document",self.saveFile)
         self.addAction("&File","",'Exit',self,"Ctrl+Q","Exit application",self.close)
         self.addMenuAndToolBar("&Edit")
         self.addAction("&Edit","../images/editCopy.png",'Copy',self,"Ctrl+C","Copy",self.copy)
@@ -208,30 +209,30 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
     def newFile(self):
         self.getView().getDrawing().clearFigures()
         self.getView().update()
+    def saveFile(self):
+        fileNames = QtWidgets.QFileDialog.getSaveFileName(self,("Save file"), QtCore.QDir.currentPath(), ("Image Files (*.phv)"))
+        if not fileNames:
+            fileName="default.phv"
+        else:
+            fileName=fileNames[0]
+        drawing=self.getView().getDrawing()
+        ''' picle doesn't work '''
+        pickle_file = file(fileName, 'w')
+        pickle.dump(drawing,pickle_file)
     def openFile(self):
         self.getView().getDrawing().clearFigures()
-        fileNames = QtWidgets.QFileDialog.getOpenFileName(self,("Open Image"), QtCore.QDir.currentPath(), ("Image Files (*.dxf)"))
+        fileNames = QtWidgets.QFileDialog.getOpenFileName(self,("Open file"), QtCore.QDir.currentPath(), ("Image Files (*.phv)"))
         if not fileNames:
             fileName="C:\\Users\\paco\\Desktop\\a4x2laser.dxf"
         else:
             fileName=fileNames[0]
-        self.openDXF(fileName)
+        pickled_file = open(fileName)
+        drawing = pickle.load(pickled_file)
+        self.getView().setDrawing(drawing)
         self.getView().update()
         
     def updateDraw(self,item,col):
         print "item changed "+str(col)+"="+item.data(col,QtCore.Qt.DisplayRole)+" "+item.data(3,QtCore.Qt.ItemDataRole.UserRole).__class__.__name__
-    def generateCode(self):
-        item=self.treeWidget.currentItem()
-        f=item.data(3,QtCore.Qt.ItemDataRole.UserRole)
-        gc=pyHGcodeGenerator()
-        sgc=f.visit(gc)
-        self.gCodeEditor.setPlainText(sgc)
-    def generatePLT(self):
-        item=self.treeWidget.currentItem()
-        f=item.data(3,QtCore.Qt.ItemDataRole.UserRole)
-        gc=pyHPLTGenerator()
-        sgc=f.visit(gc)
-        self.gCodeEditor.setPlainText(sgc)
     def initUI(self):                       
         self.setView(pyHStandardView(self))
         
