@@ -129,7 +129,7 @@ class StandardEditor(pyHStandardEditor):
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseSheet
         file_name, ext = file_dialog.getOpenFileName(
-            self, 'Open PYHAD project', '', 'PYHAD (*.pyad)', options=options)
+            self, 'Open PYHAD project', QtCore.QDir.currentPath(), 'PYHAD (*.pyad)', options=options)
 
         if file_name:
             print(file_name)

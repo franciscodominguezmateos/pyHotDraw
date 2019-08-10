@@ -31,7 +31,7 @@ class AddNodeFigure(NodeFigure):
         i1 = format_value(v1)
         if is_float(v1) and is_negative(v1):
                 return '%s - %s' % (i0, 1*float(i1))
-        return '%s + %s' % (i0, i1)
+        return '(%s + %s)' % (i0, i1)
 
     def get_partial_expressions(self):
         inputs_nodes = self.get_inputs_nodes()
