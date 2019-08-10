@@ -7,6 +7,7 @@ Created on 17/04/2015
 '''
 import numpy as np
 import cv2
+
 class pyHImage():
     '''
     classdocs
@@ -40,4 +41,21 @@ class pyHImage():
         return self.data.shape[0]
     def getAspectRatio(self):
         return float(self.getWidth())/float(self.getHeight())
+    ''' Fitting figures to size keeping aspectratio '''
+    ''' not sure where to put this code '''
+#     def isPortrait(self):
+#         return self.getWidth() < self.getHeight()
+#     def getPortraitImageFigure(self,height=40):
+#         ar=self.getAspectRatio()
+#         imf=pyHImageFigure(0,0,height*ar,height,self)
+#         return imf
+#     def getLandscapeImageFigure(pyHImg,width=40):
+#         ar=pyHImg.getAspectRatio()
+#         imf=pyHImageFigure(0,0,width,width/ar,pyHImg)
+#         return imf
+#     def bestFitImageFigure(pyHImg,size=40):
+#         if isPortrait(pyHImg):
+#             return getPortraitImageFigure(pyHImg, size)
+#         return getLandscapeImageFigure(pyHImg, size)
+
 

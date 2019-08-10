@@ -3,9 +3,10 @@ Created on 25/03/2013
 
 @author: paco
 '''
+from pyHotDraw.Core.Exceptions import pyHHandleNotFound,pyHFigureNotFound
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 
-class pyHFigureMoveTool(object):
+class pyHViewTranslationTool(object):
     '''
     classdocs
     '''
@@ -14,21 +15,27 @@ class pyHFigureMoveTool(object):
         Constructor
         '''
         self.view=v
+        self.p = None
+
     def getView(self):
         return self.view
+
     def onMouseDown(self,e):
-        self.anchorPoint=pyHPoint(e.getX(),e.getY())
+        self.p=pyHPoint(e.getX(),e.getY())
+
     def onMouseUp(self,e):
-        pass
+        self.p = None
+
     def onMouseMove(self,e):
-        p=pyHPoint(e.getX(),e.getY())
-        dx=e.getX()-self.anchorPoint.getX()
-        dy=e.getY()-self.anchorPoint.getY()
-        for f in self.getView().getSelectedFigures():
-            f.move(dx,dy)
-        self.anchorPoint=p
-    def onMouseDrag(self,e):
-        print "mouse drag event in pyHAreaSelectionTool"
+        if self.p:
+            t=self.view.getTransform()
+            t.tx+=e.getX()-self.p.getX()
+            t.ty+=e.getY()-self.p.getY()
+
+
+
+
+
     def onMouseDobleClick(self,e):
         pass
     def onMouseWheel(self,e):

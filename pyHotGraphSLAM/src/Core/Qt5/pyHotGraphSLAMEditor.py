@@ -24,8 +24,7 @@ from pyHotDraw.Figures.pyHStarFigure import pyHStarFigure
 from pyHotDraw.Figures.pyHTextFigure import pyHTextFigure
 
 from pyHotDraw.Geom.pyHTransform2D import pyHTransform2D
-from pyHotDraw.Visitors.pyHGcodeGenerator import pyHGcodeGenerator
-from pyHotDraw.Visitors.pyHPLTGenerator import pyHPLTGenerator
+
 
 from pyHotDraw.Figures.pyHConnectionFigure import pyHConnectionFigure
 from Figures.pyHLandmarkPredictionFigure import pyHLandmarkPredictionFigure
@@ -169,11 +168,9 @@ num_landmarks      = 4      # number of landmarks
 N                  = 10       # time steps
 world_size         = 100.0    # size of world
 measurement_range  = 50.0     # range at which we can sense landmarks
-motion_noise       = 1.0      # noise in robot motion
+motion_noise       = 5.0      # noise in robot motion
 measurement_noise  = 1.0      # noise in the measurements
 distance           = 20.0     # distance by which robot (intends to) move each iteratation 
-
-
 
 class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
     def __init__(self):
@@ -396,25 +393,10 @@ class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         
     def updateDraw(self,item,col):
         print "item changed "+str(col)+"="+item.data(col,QtCore.Qt.DisplayRole)+" "+item.data(3,QtCore.Qt.ItemDataRole.UserRole).__class__.__name__
-#     def generateCode(self):
-#         item=self.treeWidget.currentItem()
-#         f=item.data(3,QtCore.Qt.ItemDataRole.UserRole)
-#         gc=pyHGcodeGenerator()
-#         sgc=f.visit(gc)
-#         self.gCodeEditor.setPlainText(sgc)
-#     def generatePLT(self):
-#         item=self.treeWidget.currentItem()
-#         f=item.data(3,QtCore.Qt.ItemDataRole.UserRole)
-#         gc=pyHPLTGenerator()
-#         sgc=f.visit(gc)
-#         self.gCodeEditor.setPlainText(sgc)
+
     def initUI(self):                       
         self.setView(pyHStandardView(self))
         self.getView().setTransform(pyHTransform2D(10,10,self.width()/2,self.height()/2))
-
-#         scrollArea = QtWidgets.QScrollArea()
-#         scrollArea.setBackgroundRole(QtWidgets.QPalette.Dark)
-#         scrollArea.setWidget(self.getView())
         
         self.setCentralWidget(self.getView())
         self.setGeometry(300, 30,900,900)
@@ -429,12 +411,8 @@ class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
                                    
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    ex = pyHGraphSLAMEditor()
-    
+    ex = pyHGraphSLAMEditor()  
     ex.timeElapsed=dt.datetime.now()
-    #ex.openDXF("a4x2laser.dxf")
-    #puertos_disponibles=scan(num_ports=20,verbose=True)
-    #ex.openPLT("a4x2laser.plt")
     sys.exit(app.exec_())
 
 if __name__ == '__main__':

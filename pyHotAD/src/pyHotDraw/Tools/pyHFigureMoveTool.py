@@ -21,6 +21,7 @@ class pyHFigureMoveTool(object):
     def onMouseUp(self,e):
         pass
     def onMouseMove(self,e):
+        print ("mouseMove ppyHFigureMovetool")
         p=pyHPoint(e.getX(),e.getY())
         dx=e.getX()-self.anchorPoint.getX()
         dy=e.getY()-self.anchorPoint.getY()
@@ -28,7 +29,7 @@ class pyHFigureMoveTool(object):
             f.move(dx,dy)
         self.anchorPoint=p
     def onMouseDrag(self,e):
-        print "mouse drag event in pyHAreaSelectionTool"
+        print ("mouse drag event in pyHAreaSelectionTool")
     def onMouseDobleClick(self,e):
         pass
     def onMouseWheel(self,e):
