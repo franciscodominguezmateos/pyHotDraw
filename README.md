@@ -8,3 +8,5 @@ It is the framework used on:
 * pyHotGraphSLAM, a visual tool to play with GraphSLAM in order to learn concepts.Inspired by Udacity.
 
 ![Screenshot](TinyCADCAMCNC.png)
+![Screenshot](pyHotAD.png)
+![Screenshot](pyHotVision.png)
