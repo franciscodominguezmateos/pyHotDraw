@@ -15,7 +15,9 @@ class pyHMotionNodeFigure(pyHTextFigure):
     def __init__(self,x0,y0,w,h,text="pyHotDraw",border=False):
         super(pyHMotionNodeFigure,self).__init__(x0,y0,w,h,text,border)
         self.e=pyHEllipseFigure(x0,y0,w,h)
-        self.e.setColor(0,255,0)
+        self.e.setColor(0,100,0)
+        self.e.setFillColor(50, 255, 50, 100)
+        self.e.setWidth(3)
     def draw(self,g):
         super(pyHMotionNodeFigure,self).draw(g)
         self.e.draw(g)

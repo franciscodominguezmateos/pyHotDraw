@@ -187,8 +187,10 @@ class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         print_result(N, num_landmarks, result)
 
         d=self.getView().getDrawing()
+        ''' build information matrix figure '''
         #Units metres
         cellSize=3
+        # HEADER
         gf=pyHGridFigure(100,28*cellSize,1,14,cellSize*2,cellSize*2)
         for i in range(14):
             if i>9:
@@ -198,19 +200,24 @@ class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
                 tf=pyHTextFigure(0,0,cellSize*2,cellSize*2,i)                
             gf.addFigure(tf)
         d.addFigure(gf)
-        OmegaFigure=pyHGridFigure(100,0,28,28,cellSize,cellSize)
+        # BODY
+        # Xi grid figure
         XiFigure=pyHGridFigure(100+28*cellSize,0,28,1,cellSize*2,cellSize)
         d.addFigure(XiFigure)
         for i in range(28):
             if abs(Xi.value[i][0])>0.000001:
                 tf=pyHTextFigure(0,0,cellSize*2,cellSize,Xi.value[i][0])
+                tf.setFillColor(255, 255, 255)
             else:
                 tf=pyHTextFigure(0,0,cellSize*2,cellSize," ")   
-            XiFigure.addFigure(tf)         
+            XiFigure.addFigure(tf)
+        # Omega grid figure       
+        OmegaFigure=pyHGridFigure(100,0,28,28,cellSize,cellSize)
         for i in range(28):
             for j in range(28):
                 if abs(Omega.value[i][j])>0.000001:
                     tf=pyHTextFigure(0,0,cellSize,cellSize,Omega.value[i][j])
+                    tf.setFillColor(255,255,200)
                     if i>19 or j>19:
                         tf.setColor(0,0,255)
                 else:
@@ -224,13 +231,16 @@ class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         txt=pyHTextFigure(45,100,20,3.5," pyHotGraphSLAM ",border=True)
         d.addFigure(txt)
         
+        ''' s h o w   g r a p h  '''
+        ''' show data '''
         rf=pyHStarFigure(r.x,r.y,0.5,1.5,5)
         rf.setColor(0,255,0)
+        rf.setWidth(4)
         d.addFigure(rf)
         
         x=world_size/2
         y=world_size/2
-        fs=pyHMotionNodeFigure(x-0.5,y-0.5,2,2,0)
+        fs=pyHMotionNodeFigure(x-0.5,y-0.5,5,5,0)
         d.addFigure(fs)
         for k in range(len(data)):
 
@@ -248,7 +258,8 @@ class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
                 mx=x+mdx
                 my=y+mdy
                 f=pyHDiamondFigure(mx-0.25,my-0.25,2.0,2.0)
-                f.setColor(100,100,100,100)
+                f.setColor(100,100,100)
+                f.setFillColor(255, 255, 230)
                 d.addFigure(f)
                 cf=pyHConnectionFigure()
                 cf.setColor(0,255,0,100)
@@ -261,25 +272,27 @@ class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
             x+=dx
             y+=dy
             #print x,y,dx,dy
-            fe=pyHMotionNodeFigure(x-0.5,y-0.5,2,2,k+1)
+            fe=pyHMotionNodeFigure(x-0.5,y-0.5,5,5,k+1)
             d.addFigure(fe)
             cf=pyHConnectionFigure()
             cf.setColor(0,100,100)
             cf.connectFigures(fs, fe)
             d.addFigure(cf)
             fs=fe
+        ''' show predictions '''
         # predictions
         self.lanmarkFigures=[]
         i=0
         x=result.value[2*i][0]
         y=result.value[2*i+1][0]
-        fs=pyHLandmarkPredictionFigure(x-0.5,y-0.5,1.5,1.5,i)
+        fs=pyHLandmarkPredictionFigure(x-0.5,y-0.5,3,3,i)
         fs.setColor(255,0,0)
         d.addFigure(fs)
+        # motion prediction
         for i in range(1,N):
             x=result.value[2*i][0]
             y=result.value[2*i+1][0]
-            fe=pyHLandmarkPredictionFigure(x-0.5,y-0.5,1.5,1.5,i)
+            fe=pyHMotionPredictionFigure(x-0.5,y-0.5,3,3,i)
             fe.setColor(255,0,0)
             d.addFigure(fe)
             cf=pyHConnectionFigure()
@@ -287,10 +300,11 @@ class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
             cf.connectFigures(fs, fe)
             d.addFigure(cf)
             fs=fe
+        # landmark prediction
         for i in range(num_landmarks):
             x=result.value[2*(N+i)][0]
             y=result.value[2*(N+i)+1][0]
-            f=pyHMotionPredictionFigure(x-0.5,y-0.5,1.5,1.5,i)
+            f=pyHLandmarkPredictionFigure(x-0.5,y-0.5,4,4,i)
             f.setColor(0,0,255)
             d.addFigure(f)
             

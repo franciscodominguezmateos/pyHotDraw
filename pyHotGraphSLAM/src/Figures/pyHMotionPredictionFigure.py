@@ -13,5 +13,6 @@ class pyHMotionPredictionFigure(pyHTextFigure):
     '''
     def __init__(self,x0,y0,w,h,text="pyHotDraw",border=True):
         super(pyHMotionPredictionFigure,self).__init__(x0,y0,w,h,text,border)
+        self.setFillColor(255,100,0,100)
     def move(self,x,y):
         return

@@ -38,8 +38,8 @@ class pyHGridFigure(pyHCompositeFigure):
         pyHCompositeFigure.addFigure(self,f)
         
     def draw(self,g):
-        pyHCompositeFigure.draw(self,g)
         self.rf.draw(g)
+        pyHCompositeFigure.draw(self,g)
     def move(self,dx,dy):
         self.rf.move(dx,dy)
         pyHCompositeFigure.move(self,dx,dy)     

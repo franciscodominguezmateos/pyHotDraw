@@ -7,13 +7,14 @@ import math
 from pyHotDraw.Geom.pyHPoint import pyHPoint
 from pyHotDraw.Figures.pyHAttributes import pyHAttributeColor
 from pyHotDraw.Figures.pyHAttributes import pyHAttributeFillColor
+from pyHotDraw.Figures.pyHAttributes import pyHAttributeWidth
 
 class pyHAbstractFigure(object):
     def __init__(self):
         self.attributes={}
         self.changedFigureObservers=[]
-        c=pyHAttributeColor(0,0,0)
-        self.setColor(c)
+        self.setColor(0,0,0)
+        self.setFillColor(255, 255, 255,100)
         #this line gives maximun recursiondeep import error
         #self.toolBoxConnectors=pyHLocatorConnector.ToolBoxRectangleConnectors(self)
     def getAtribute(self,k):
@@ -33,6 +34,8 @@ class pyHAbstractFigure(object):
         else:
             r=c
             self.setAttribute("FILL",pyHAttributeFillColor(r,g,b,a))
+    def setWidth(self,n):
+        self.setAttribute("WIDTH", pyHAttributeWidth(n))
     def getDisplayBox(self):
         pass
     def setDisplayBox(self,r):
