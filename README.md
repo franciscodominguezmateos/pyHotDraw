@@ -7,6 +7,7 @@ It is the framework used on:
 * pyHotVision a visual tool to work with Computer Vision. OpenCV and dlib needed.
 * pyHotGraphSLAM, a visual tool to play with GraphSLAM in order to learn concepts.Inspired by Udacity.
 
-![Screenshot](TinyCADCAMCNC.png)
-![Screenshot](pyHotAD.png)
-![Screenshot](pyHotVision.png)
+![TinyCADCAMCNC](TinyCADCAMCNC.png)
+![pyHotAD](pyHotAD.png)
+![pyHotVision](pyHotVision.png)
+![pyHotGraphSLAM](pyHotGraphSLAM.png)
