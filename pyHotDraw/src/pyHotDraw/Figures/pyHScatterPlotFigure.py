@@ -10,7 +10,7 @@ from pyHCompositeTransform2DFigure import pyHCompositeTransform2DFigure
 from pyHotDraw.Figures.pyHTextFigure import pyHTextFigure
 from pyHotDraw.Geom.pyHRectangle import pyHRectangle
 
-class pyHScatterPlot(pyHCompositeTransform2DFigure):
+class pyHScatterPlotFigure(pyHCompositeTransform2DFigure):
     def __init__(self,xdata,ydata,labels=None,figures=None):
         pyHCompositeTransform2DFigure.__init__(self)
         self.maxX=1e-20

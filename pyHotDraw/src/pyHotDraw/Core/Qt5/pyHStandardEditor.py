@@ -34,7 +34,7 @@ from pyHotDraw.Figures.pyHImageFigure import pyHCameraFigure
 from pyHotDraw.Figures.pyHImageFigure import pyHImageFilterFigure
 from pyHotDraw.Figures.pyHImageFigure import pyHImageSecFilterFigure
 from pyHotDraw.Figures.pyHTextFigure import pyHTextFigure
-from pyHotDraw.Figures.pyHScatterPlot import pyHScatterPlot
+from pyHotDraw.Figures.pyHScatterPlotFigure import pyHScatterPlotFigure
 from pyHotDraw.Images.pyHImageFilters import SobelX
 from pyHotDraw.Images.pyHImageFilters import SobelY
 from pyHotDraw.Images.pyHImageFilters import Gaussian
@@ -58,7 +58,7 @@ class pyHStandardEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         d=self.getView().getDrawing()
         xdata=np.linspace(-2*np.pi,2*np.pi,30)
         ydata=[5*sin(x) for x in xdata]
-        f=pyHScatterPlot(xdata,ydata)
+        f=pyHScatterPlotFigure(xdata,ydata)
         d.addFigure(f)
 #         
 #         txt=pyHTextFigure(0,0,20,20,"Hola Caracola")
