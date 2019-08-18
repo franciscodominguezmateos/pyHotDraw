@@ -9,11 +9,13 @@ from pyHRectangleFigure import pyHRectangleFigure
 from pyHCompositeFigure import pyHCompositeFigure
 
 class pyHGridFigure(pyHCompositeFigure):
-    def __init__(self,x=0,y=0,rows=10,cols=20,cellWidth=40,cellHeight=40):
+    def __init__(self,x=0,y=0,rows=10,cols=20,cellWidth=40,cellHeight=None):
         pyHCompositeFigure.__init__(self)
         self.rows=rows
         self.cols=cols
         self.cellWidth =cellWidth
+        if cellHeight==None:
+            cellHeight=cellWidth
         self.cellHeight=cellHeight
         self.width =cols*cellWidth
         self.height=rows*cellHeight

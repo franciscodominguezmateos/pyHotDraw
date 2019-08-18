@@ -100,7 +100,7 @@ class pyHStandardView(pyHAbstractView,QtWidgets.QWidget):
         xm,ym=t.transform(x,y)
         t.tx-=xm-ex
         t.ty-=ym-ey
-        print "ts",t.sx,t.sy,t.tx,t.ty,event.angleDelta().y()
+        #print "ts",t.sx,t.sy,t.tx,t.ty,event.angleDelta().y()
         self.editor.sb.setText("[x%0.2f] %0.0f,%0.0f - %0.2f,%0.2f" % (t.sx,event.x(),event.y(),e.getX(),e.getY()))
         self.update()
         

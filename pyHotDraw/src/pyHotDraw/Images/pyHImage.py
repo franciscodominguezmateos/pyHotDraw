@@ -19,9 +19,10 @@ class pyHImage():
         if civ is None:
             print "Image not found: "+fileName 
             civ=cv2.imread('../images/im2.png')
-        nw=int(civ.shape[1]*scale)
-        nh=int(civ.shape[0]*scale)
-        civ=cv2.resize(civ,(nw,nh))
+        if scale!=1: # better performance
+            nw=int(civ.shape[1]*scale)
+            nh=int(civ.shape[0]*scale)
+            civ=cv2.resize(civ,(nw,nh))
         self.data=civ
     # in GBR format
     def setData(self,npArray):

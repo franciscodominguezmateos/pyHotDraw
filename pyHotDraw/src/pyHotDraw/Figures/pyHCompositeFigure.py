@@ -16,6 +16,10 @@ class pyHCompositeFigure(pyHAbstractFigure):
         '''
         pyHAbstractFigure.__init__(self)
         self.figures=[]
+    def getFigures(self):
+        return self.figures
+    def setFigures(self,figures):
+        self.figures=figures
     def clearFigures(self):
         self.figures=[]
     def addFigure(self,f):

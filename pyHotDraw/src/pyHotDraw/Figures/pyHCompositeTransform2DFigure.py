@@ -16,6 +16,10 @@ class pyHCompositeTransform2DFigure(pyHCompositeFigure):
     def __init__(self,t=pyHTransform2D()):
         pyHCompositeFigure.__init__(self)
         self.t=t
+    def getTransform2D(self):
+        return self.t
+    def setTransform2D(self,t):
+        self.t=t
     def draw(self,g):
         # save trasnformation
         oldt=g.getTransformation()

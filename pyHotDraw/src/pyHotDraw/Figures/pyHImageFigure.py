@@ -40,10 +40,11 @@ class pyHImageFigure(pyHRectangleFigure):
     def getImage(self):
         return self.img
     def draw(self,g):
-        #pyHAbstractFigure.draw(self,g)
-        g.drawImage(self.x0,self.y0,self.w,self.h,self.img)
         if self.border:
             super(pyHImageFigure,self).draw(g)
+        #pyHAbstractFigure.draw(self,g)
+        g.drawImage(self.x0,self.y0,self.w,self.h,self.img)
+
     def imageChanged(self,fImageSource):
         self.setImage(fImageSource.getImage())
     #visitor method
