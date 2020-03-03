@@ -28,7 +28,7 @@ from pyHotDraw.Visitors.pyHGcodeGenerator import pyHGcodeGenerator
 from pyHotDraw.Visitors.pyHPLTGenerator import pyHPLTGenerator
 
 from pyHotDraw.Figures.pyHConnectionFigure import pyHConnectionFigure
-from Figures.pyHLandmarkPredictionFigure import pyHLandmarkPredictionFigure
+from Figures import pyHNodeLandMarkPredictionFigure.pyHLandmarkPredictionFigure
 from Figures.pyHMotionPredictionFigure import pyHMotionPredictionFigure
 from Figures.pyHMotionNodeFigure import pyHMotionNodeFigure
 from pyHotDraw.Figures.pyHGridFigure import pyHGridFigure
@@ -233,13 +233,13 @@ class pyHGraphSLAMEditor(QtGui.QMainWindow,pyHAbstractEditor):
         i=0
         x=result.value[2*i][0]
         y=result.value[2*i+1][0]
-        fs=pyHLandmarkPredictionFigure(x-0.5,y-0.5,1.5,1.5,i)
+        fs=pyHNodeLandmarkPredictionFigure(x-0.5,y-0.5,1.5,1.5,i)
         fs.setColor(255,0,0)
         d.addFigure(fs)
         for i in range(1,N):
             x=result.value[2*i][0]
             y=result.value[2*i+1][0]
-            fe=pyHLandmarkPredictionFigure(x-0.5,y-0.5,1.5,1.5,i)
+            fe=pyHNodeLandmarkPredictionFigure(x-0.5,y-0.5,1.5,1.5,i)
             fe.setColor(255,0,0)
             d.addFigure(fe)
             cf=pyHConnectionFigure()

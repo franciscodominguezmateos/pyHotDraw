@@ -1,9 +1,12 @@
 eclipse.preferences.version=1
 encoding//src/Core/Qt4/pyHotGraphSLAMEditor.py=utf-8
 encoding//src/Core/Qt5/pyHotGraphSLAMEditor.py=utf-8
-encoding//src/Figures/pyHLandmarkPredictionFigure.py=utf-8
-encoding//src/Figures/pyHMeasureNodeFigure.py=utf-8
-encoding//src/Figures/pyHMotionNodeFigure.py=utf-8
-encoding//src/Figures/pyHMotionPredictionFigure.py=utf-8
+encoding//src/Figures/pyHConnectionMeasureFigure.py=utf-8
+encoding//src/Figures/pyHNodeLandMarkFigure.py=utf-8
+encoding//src/Figures/pyHNodeLandMarkMeasureFigure.py=utf-8
+encoding//src/Figures/pyHNodeLandMarkPredictionFigure.py=utf-8
+encoding//src/Figures/pyHNodePoseFigure.py=utf-8
+encoding//src/Figures/pyHNodePoseMeasureFigure.py=utf-8
+encoding//src/Figures/pyHNodePosePredictionFigure.py=utf-8
 encoding//src/matrix.py=utf-8
 encoding//src/robot.py=utf-8
