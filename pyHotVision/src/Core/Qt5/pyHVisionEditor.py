@@ -39,6 +39,7 @@ from pyHotDraw.Images.pyHImageFilters import FlannMacher
 from pyHotDraw.Images.pyHImageFilters import FundamentalMatrix
 from pyHotDraw.Images.pyHImageFilters import HomographyMatrix
 from pyHotDraw.Images.pyHImageFilters import HistogramColor
+from pyHotDraw.Images.pyHImageFilters import Undistorter
 import pyHotDraw
 # def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
 #     # Make a copy of the image
@@ -68,9 +69,21 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         d.addFigure(txt)
         #cam1=pyHCameraFigure(0,200,50,50,0)
         #d.addFigure(cam1)
-        cam=pyHCameraFigure(200,500,80,50,0)
+        camD=pyHCameraFigure(200,500,80,50,0)
+        d.addFigure(camD)
+        camD.addPreviewFigure(d)     
+        
+        cam=pyHImageFilterFigure(240,500,80,50,"UnDistorted")
         d.addFigure(cam)
-        cam.addPreviewFigure(d)     
+        K=np.array([[962.42013601,   0.        , 340.60034923],
+                    [  0.        , 949.00606667, 217.94310531],
+                    [  0.        ,   0.        ,   1.        ]])
+        dist=np.array([[-4.84892530e-01,  1.42225078e+00,
+                         1.03498850e-03, -3.61441295e-03, -7.94542681e+00]])
+        cam.setFilter(Undistorter(K,dist))
+        cam.addPreviewFigure(d)
+        cf=cam.getInputConnectionFigure(camD)
+        d.addFigure(cf)
         
         fimg=pyHImageFilterFigure(500,500,80,40," Gaussian ")
         d.addFigure(fimg)

@@ -41,6 +41,7 @@ from pyHotDraw.Images.pyHImageFilters import FundamentalMatrix
 from pyHotDraw.Images.pyHImageFilters import HomographyMatrix
 from pyHotDraw.Images.pyHImageFilters import HistogramColor
 from pyHotDraw.Images.pyHImageFilters import Undistorter
+from pyHotDraw.Images.pyHImageFilters import Rectify
 from pyHotDraw.Images.pyHImageFilters import StereoSplitLeft
 from pyHotDraw.Images.pyHImageFilters import StereoSplitRight
 from pyHotDraw.Images.pyHImageFilters import FlannMacher
@@ -77,35 +78,71 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         cf=camR.getInputConnectionFigure(camD)
         d.addFigure(cf)        
         
-        ucamL=pyHImageFilterFigure(240,500,80,50,"UnDistorted Left")
+        #CALIBRATIOM INFO
+        KL=np.array([[917.407239  ,   0.        , 328.52914613],
+                     [  0.        , 919.1541511 , 224.78093398],
+                     [  0.        ,   0.        ,   1.        ]])
+        distL=np.array([[-4.51526228e-01,  3.58762955e-01,  1.17374106e-04, -1.83499141e-03, -1.87366908e-01]])
+        KR=np.array([[918.22817005,   0.        , 302.54145304],
+                     [  0.        , 920.02185944, 242.24430011],
+                     [  0.        ,   0.        ,   1.        ]])
+        distR=np.array([[-4.56781581e-01,  6.13760382e-01,  4.19512761e-04,  4.46799077e-04, -1.92449009e+00]])
+        R=np.array([[ 9.99720798e-01,  5.23223467e-04, -2.36231162e-02],
+                    [-1.85366840e-04,  9.99897706e-01,  1.43018752e-02],
+                    [ 2.36281828e-02, -1.42935031e-02,  9.99618630e-01]])
+        T=np.array([[-59.30552545],
+                    [  0.09056016],
+                    [  0.42453778]])
+        E=np.array([[ 2.21846721e-03, -4.25788770e-01,  8.44539355e-02],
+                    [ 1.82570104e+00, -8.47461585e-01,  5.92728792e+01],
+                    [-7.95415963e-02, -5.92995062e+01, -8.46040909e-01]])
+        F=np.array([[-3.40628961e-09,  6.52508079e-07, -2.70309936e-04],
+                    [-2.79783019e-06,  1.29620844e-06, -8.27887809e-02],
+                    [ 7.66496661e-04,  8.28977953e-02,  1.00000000e+00]])
+
+        KL=np.array([[922.45198566,   0.,         317.57070143],
+         [  0.,         924.16244459, 228.66603252],
+         [  0.,           0.,           1.,        ]])
+        distL=np.array([[-0.44497071,  0.20006589,  0.,          0.,          0.51140312]])
+        KR=np.array([[922.45198566,   0.,         306.07490755],
+         [  0.,         924.16244459, 240.69430766],
+         [  0.,           0.,           1.,        ]])
+        distR=np.array([[-0.47532508,  0.81778056,  0.,          0.,         -2.89338016]])
+        R=np.array([[ 9.99942658e-01,  3.81501933e-04, -1.07021197e-02],
+         [-3.69180797e-04,  9.99999267e-01,  1.15323195e-03],
+         [ 1.07025518e-02, -1.14921481e-03,  9.99942066e-01]])
+        T=np.array([[-5.93499276e+01],
+         [ 3.76647220e-02],
+         [ 5.29152796e-01]])
+        E=np.array([[ 5.98461691e-04, -5.29195693e-01,  3.70523040e-02],
+         [ 1.16431813e+00, -6.80039429e-02,  5.93408262e+01],
+         [-1.57517087e-02, -5.93498985e+01, -6.80411407e-02]])
+        F=np.array([[-8.92108636e-10,  7.87395889e-07, -2.30716939e-04],
+         [-1.73240131e-06,  1.00996515e-07, -8.09197674e-02],
+         [ 4.38911905e-04,  8.11939734e-02,  1.00000000e+00]])
+        ucamL=pyHImageFilterFigure(240,500,80,50,"Rectify Left")
         d.addFigure(ucamL)
-        K=np.array([[962.42013601,   0.        , 340.60034923],
-                    [  0.        , 949.00606667, 217.94310531],
-                    [  0.        ,   0.        ,   1.        ]])
-        dist=np.array([[-4.84892530e-01,  1.42225078e+00,
-                         1.03498850e-03, -3.61441295e-03, -7.94542681e+00]])
-        ucamL.setFilter(Undistorter(K,dist))
+        #ucamL.setFilter(Undistorter(KL,distL))
+        ucamL.setFilter(Rectify(KL,distL,KR,distR,R,T,left=True))
         ucamL.addPreviewFigure(d)
         cf=ucamL.getInputConnectionFigure(camL)
         d.addFigure(cf)
 
-        ucamR=pyHImageFilterFigure(240,500,80,50,"UnDistorted Right")
+        ucamR=pyHImageFilterFigure(240,500,80,50,"Rectify Right")
         d.addFigure(ucamR)
-        K=np.array([[965.17979325,   0.        , 278.53449311],
-                    [  0.        , 953.48768895, 254.11165681],
-                    [  0.        ,   0.        ,   1.        ]])
-        dist=np.array([[-4.29087682e-01, -1.49498811e-01, -1.92300763e-03,
-                         2.82821806e-03,  4.38735113e+00]])
-        ucamR.setFilter(Undistorter(K,dist))
+
+        #ucamR.setFilter(Undistorter(K,dist))
+        ucamR.setFilter(Rectify(KL,distL,KR,distR,R,T,left=False))
         ucamR.addPreviewFigure(d)
         cf=ucamR.getInputConnectionFigure(camR)
         d.addFigure(cf)        
        
-        fmf=pyHImages2I1OFilterFigure(400,500,80,50,"FlanMacher")
+        fmf=pyHImages2I1OFilterFigure(400,500,80,50,"FundamentalMatrix")
         d.addFigure(fmf)
         fmf.setImageSourceFigure1(ucamL)
         fmf.setImageSourceFigure2(ucamR)
-        fmf.setFilter(FlannMacher)
+        fmf.setFilter(FundamentalMatrix())
+        fmf.addPreviewFigure(d,2)
        
         self.getView().setTransformFitToDrawing()
 
