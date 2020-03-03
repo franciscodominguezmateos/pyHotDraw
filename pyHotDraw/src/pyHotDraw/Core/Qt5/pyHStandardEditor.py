@@ -56,8 +56,8 @@ class pyHStandardEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         self.initUI()
         
         d=self.getView().getDrawing()
-        xdata=np.linspace(-2*np.pi,2*np.pi,30)
-        ydata=[5*sin(x) for x in xdata]
+        xdata=np.linspace(-2*np.pi,2*np.pi,30)+3
+        ydata=[5*sin(x)+1 for x in xdata]
         f=pyHScatterPlotFigure(xdata,ydata)
         d.addFigure(f)
 #         

@@ -18,6 +18,10 @@ class pyHCompositeFigure(pyHAbstractFigure):
         self.figures=[]
     def getFigures(self):
         return self.figures
+    def getFigure(self,i):
+        if i<len(self.figures):
+            return self.figures[i]
+        return None
     def setFigures(self,figures):
         self.figures=figures
     def clearFigures(self):
@@ -29,8 +33,6 @@ class pyHCompositeFigure(pyHAbstractFigure):
             self.figures.remove(f)
     def getLength(self):
         return len(self.figures)
-    def getFigures(self):
-        return self.figures
     def draw(self,g):
         for f in self.figures:
             f.draw(g)

@@ -6,18 +6,14 @@ Created on 25/04/2015
 @author: Francisco Dominguez
 +03/02/2016
 '''
+import glob
 import numpy as np
 from math import sqrt
 import cv2
 import dlib
+from pip._vendor.distlib import DistlibException
+from pip._vendor import distlib
 
-class Undistor():
-    def __init__(self,mtx,dist):
-        self.mtx=mtx
-        self.dist=dist
-    def process(self,imgcv):
-        ret= cv2.undistort(imgcv, self.mtx, self.dist, None, self.mtx)
-        return ret
 class GrayFilter():
     def process(self,imgcv):
         gray = cv2.cvtColor(imgcv, cv2.COLOR_BGR2GRAY)
@@ -303,6 +299,9 @@ def drawpoints(img1,img2,pts1,pts2):
     out[:rows1,:cols1,:] = img1 
     # Place the next image to the right of it
     out[:rows2,cols1:cols1+cols2,:] = img2 
+    gap=40
+    for i in range(out.shape[0]/gap):
+        cv2.line(out,(0,i*gap), (out.shape[1],i*gap),(255,0,0),1)
     for pt1,pt2 in zip(pts1,pts2):
         color = tuple(np.random.randint(0,255,3).tolist())
         cv2.circle(out,tuple(pt1),5,color,-1)
@@ -317,7 +316,11 @@ class FlannMacher():
         index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
         search_params = dict(checks=50)     
         self.flann = cv2.FlannBasedMatcher(index_params,search_params)
-        self.detector = cv2.FastFeatureDetector()#sSIFT()     
+        #self.detector = cv2.SIFT()#cv2.FastFeatureDetector()#sSIFT()  
+        minHessian = 400
+        self.detector = cv2.xfeatures2d_SURF.create(hessianThreshold=minHessian)   
+        self.imgcv1=None
+        self.imgcv2=None
     def process(self):
         img1 = cv2.cvtColor(self.imgcv1, cv2.COLOR_BGR2GRAY)  #queryimage # left image
         img2 = cv2.cvtColor(self.imgcv2, cv2.COLOR_BGR2GRAY)  #trainimage # right image
@@ -344,7 +347,10 @@ class FundamentalMatrix():
         index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
         search_params = dict(checks=50)     
         self.flann = cv2.FlannBasedMatcher(index_params,search_params)
-        self.detector = cv2.DescriptorExtractor_create("SIFT")#ORB() #FastFeatureDetector()#SIFT()     
+        minHessian = 400
+        self.detector = cv2.xfeatures2d_SURF.create(hessianThreshold=minHessian)     
+        self.imgcv1=None
+        self.imgcv2=None
     def process(self):
         img1 = cv2.cvtColor(self.imgcv1, cv2.COLOR_BGR2GRAY)  #queryimage # left image
         img2 = cv2.cvtColor(self.imgcv2, cv2.COLOR_BGR2GRAY)  #trainimage # right image
@@ -377,6 +383,8 @@ class HomographyMatrix():
         search_params = dict(checks=50)     
         self.flann = cv2.FlannBasedMatcher(index_params,search_params)
         self.detector = cv2.FastFeatureDetector()#.SIFT()     
+        self.imgcv1=None
+        self.imgcv2=None
     def process(self):
         img1 = cv2.cvtColor(self.imgcv1, cv2.COLOR_BGR2GRAY)  #queryimage # left image
         img2 = cv2.cvtColor(self.imgcv2, cv2.COLOR_BGR2GRAY)  #trainimage # right image
@@ -407,6 +415,26 @@ class HomographyMatrix():
         pts1i=np.int32(pts1)
         pts2i=np.int32(pts2)
         return drawpoints(img1,img2,pts1i,pts2i)
+class Undistorter():
+    def __init__(self,mtx,dist):
+        self.mtx=mtx
+        self.dist=dist
+        self.mtxO=mtx
+    def process(self,imgcv):
+        ret= cv2.undistort(imgcv, self.mtx, self.dist, None, self.mtxO)
+        return ret
+class Rectify():
+    def __init__(self,mtxL,distL,mtxR,distR,R,T,left=True):
+        self.left=left
+        rectify_scale = 0 # 0=full crop, 1=no crop
+        R1, R2, P1, P2, Q, roi1, roi2 = cv2.stereoRectify(mtxL, distL, mtxR, distR, (640, 480), R, T, alpha = rectify_scale)
+        self.left_maps  = cv2.initUndistortRectifyMap(mtxL, distL, R1, P1, (640, 480), cv2.CV_16SC2)
+        self.right_maps = cv2.initUndistortRectifyMap(mtxR, distR, R2, P2, (640, 480), cv2.CV_16SC2)
+    def process(self,imgcv):
+        if self.left:
+            return cv2.remap(imgcv, self.left_maps[0], self.left_maps[1], cv2.INTER_LANCZOS4)
+        else:
+            return cv2.remap(imgcv, self.right_maps[0], self.right_maps[1], cv2.INTER_LANCZOS4)
 class Camera():
     def __init__(self,K,dist=None,rvec=None,tvec=None):
         self.rvec=rvec
@@ -417,7 +445,7 @@ class Camera():
         imgPts, jacobian=cv2.projectPoints(pts3D, self.rvec, self.tvec, self.K, self.dist)
         return imgPts
     def undistort(self,imgcv):
-        u=Undistor(self.k,self.dist)
+        u=Undistorter(self.k,self.dist)
         return u.process(imgcv)
 class PespectiveMatrix():
     def __init__(self,src,dst):
@@ -479,3 +507,157 @@ class MixImages():
         self.imgcv2=None
     def process(self):
         return cv2.addWeighted(self.imgcv1,self.factor,self.imgcv2,1.0-self.factor,0)
+    
+# Stereo Filters
+# Take a picture with two images
+# return the left one
+class StereoSplitLeft():
+    def __init__(self):
+        pass
+    def process(self,img):
+        h,w,c=img.shape
+        w2=w/2
+        return img[:,0:w2]
+# Take a picture with two images
+# return the right one
+class StereoSplitRight():
+    def __init__(self):
+        pass
+    def process(self,img):
+        h,w,c=img.shape
+        w2=w/2
+        return img[:,w2+1:]
+# TASKS
+# Calibrate
+# Load / save calibrarted data
+# Rectify
+# 
+class StereoCamera():
+    def __init__(self):
+        pass
+    def setCalibrationData(self,KL,distL,KR,distR,R,T,E,F):
+        imgSize=(640,480)
+        self.KL=KL
+        self.distL=distL
+        self.KR=KR
+        self.distR=distR
+        self.R=R
+        self.T=T
+        self.E=E
+        self.F=F
+        rectify_scale = 0 # 0=full crop, 1=no crop
+        self.R1, self.R2, self.P1, self.P2, self.Q, self.roi1, self.roi2 = cv2.stereoRectify(KL, distL, KR, distR, imgSize, R, T, alpha = rectify_scale)
+        self.left_maps  = cv2.initUndistortRectifyMap(KL, distL, self.R1, self.P1, imgSize, cv2.CV_16SC2)
+        self.right_maps = cv2.initUndistortRectifyMap(KR, distR, self.R2, self.P2, imgSize, cv2.CV_16SC2)
+    def calibrate(self, cal_path):
+        images_right = glob.glob(cal_path + '/right/*.jpg')
+        images_left = glob.glob(cal_path + '/left/*.jpg')
+        images_left.sort()
+        images_right.sort()
+        
+        # prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0)
+        self.cw=9 #9
+        self.ch=6 #6
+        square_size=24 #22.23 # mm
+        self.objp = np.zeros((self.ch*self.cw, 3), np.float32)
+        self.objp[:, :2] = np.mgrid[0:self.cw, 0:self.ch].T.reshape(-1, 2)*square_size
+
+        # Arrays to store object points and image points from all the images.
+        self.objpoints = []  # 3d point in real world space
+        self.imgpoints_l = []  # 2d points in image plane.
+        self.imgpoints_r = []  # 2d points in image plane.
+
+        for i, fname in enumerate(images_right):
+            img_l = cv2.imread(images_left[i])
+            img_r = cv2.imread(images_right[i])
+
+            gray_l = cv2.cvtColor(img_l, cv2.COLOR_BGR2GRAY)
+            gray_r = cv2.cvtColor(img_r, cv2.COLOR_BGR2GRAY)
+
+            # Find the chess board corners
+            ret_l, corners_l = cv2.findChessboardCorners(gray_l, (self.cw, self.ch), None)
+            ret_r, corners_r = cv2.findChessboardCorners(gray_r, (self.cw, self.ch), None)
+
+            if not ret_l or not ret_r:
+                print("Imagen %i no detectada en %s"%(i,fname))
+                continue
+
+            # If found, add object points, image points (after refining them)
+            self.objpoints.append(self.objp)
+            
+            rt = cv2.cornerSubPix(gray_l, corners_l, (11, 11),
+                                  (-1, -1), self.criteria)
+            self.imgpoints_l.append(corners_l)
+
+            # Draw and display the corners
+            ret_l = cv2.drawChessboardCorners(img_l, (self.cw, self.ch),
+                                              corners_l, ret_l)
+            cv2.imshow("left", img_l)
+
+            rt = cv2.cornerSubPix(gray_r, corners_r, (11, 11),
+                                  (-1, -1), self.criteria)
+            self.imgpoints_r.append(corners_r)
+
+            # Draw and display the corners
+            ret_r = cv2.drawChessboardCorners(img_r, (self.cw, self.ch),
+                                              corners_r, ret_r)
+            cv2.imshow("right", img_r)
+            cv2.waitKey(50)
+
+            img_shape = gray_l.shape[::-1]
+
+        self.retL, self.M1, self.d1, self.r1, self.t1 = cv2.calibrateCamera(
+            self.objpoints, self.imgpoints_l, img_shape, None, None)
+        self.retR, self.M2, self.d2, self.r2, self.t2 = cv2.calibrateCamera(
+            self.objpoints, self.imgpoints_r, img_shape, None, None)
+
+        dims=img_shape
+        flags = 0
+        #flags |= cv2.CALIB_FIX_INTRINSIC
+        # flags |= cv2.CALIB_FIX_PRINCIPAL_POINT
+        #flags |= cv2.CALIB_USE_INTRINSIC_GUESS
+        #flags |= cv2.CALIB_FIX_FOCAL_LENGTH
+        # flags |= cv2.CALIB_FIX_ASPECT_RATIO
+        flags |= cv2.CALIB_ZERO_TANGENT_DIST
+        # flags |= cv2.CALIB_RATIONAL_MODEL
+        flags |= cv2.CALIB_SAME_FOCAL_LENGTH
+        # flags |= cv2.CALIB_FIX_K3
+        # flags |= cv2.CALIB_FIX_K4
+        # flags |= cv2.CALIB_FIX_K5
+
+        stereocalib_criteria = (cv2.TERM_CRITERIA_MAX_ITER +
+                                cv2.TERM_CRITERIA_EPS, 100, 1e-5)
+        self.ret, M1, d1, M2, d2, R, T, E, F = cv2.stereoCalibrate(
+            self.objpoints, self.imgpoints_l,
+            self.imgpoints_r, self.M1, self.d1, self.M2,
+            self.d2, dims,
+            criteria=stereocalib_criteria, flags=flags)
+        self.setCalibrationData(M1, d1, M2, d2, R, T, E, F)
+        
+        
+# class Rectify():
+#     def __init__(self,mtxL,distL,mtxR,distR,R,T,left=True):
+#         self.left=left
+#         rectify_scale = 0 # 0=full crop, 1=no crop
+#         R1, R2, P1, P2, Q, roi1, roi2 = cv2.stereoRectify(mtxL, distL, mtxR, distR, (640, 480), R, T, alpha = rectify_scale)
+#         self.left_maps  = cv2.initUndistortRectifyMap(mtxL, distL, R1, P1, (640, 480), cv2.CV_16SC2)
+#         self.right_maps = cv2.initUndistortRectifyMap(mtxR, distR, R2, P2, (640, 480), cv2.CV_16SC2)
+#     def process(self,imgcv):
+#         if self.left:
+#             return cv2.remap(imgcv, self.left_maps[0], self.left_maps[1], cv2.INTER_LANCZOS4)
+#         else:
+#             return cv2.remap(imgcv, self.right_maps[0], self.right_maps[1], cv2.INTER_LANCZOS4)
+# class Camera():
+#     def __init__(self,K,dist=None,rvec=None,tvec=None):
+#         self.rvec=rvec
+#         self.tvec=tvec
+#         self.K=K
+#         self.dist=dist
+#     def project3DPoints(self,pts3D):
+#         imgPts, jacobian=cv2.projectPoints(pts3D, self.rvec, self.tvec, self.K, self.dist)
+#         return imgPts
+#     def undistort(self,imgcv):
+#         u=Undistorter(self.k,self.dist)
+#         return u.process(imgcv)
+
+    

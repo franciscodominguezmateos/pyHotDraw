@@ -132,10 +132,10 @@ class pyHImageFilterFigure(pyHArrowFigure):
         pyHArrowFigure.draw(self,g)
         self.textFigure.setDisplayBox(self.getDisplayBox())
         self.textFigure.draw(g)
-    def addPreviewFigure(self,drawing):
+    def addPreviewFigure(self,drawing,stereo=1):
         r=self.getDisplayBox()
         pc=r.getCenterPoint()
-        img0=pyHImageFigure(pc.getX()-240/2,pc.getY()-r.getHeight()-320-10,320,240)
+        img0=pyHImageFigure(pc.getX()-240/2,pc.getY()-r.getHeight()-320-10,320*stereo,240)
         drawing.addFigure(img0)
         #cam.addChangedImageObserver(img0)
         cf=self.getOutputConnectionFigure(img0)
@@ -223,10 +223,11 @@ class pyHImageFilterFigure(pyHArrowFigure):
         if self.imageSink!=None:
             for fo in self.changedImageObservers:
                 fo.imageChanged(self)   
+
 class pyHImageSecFilterFigure(pyHImageFilterFigure):
     """ Apply a two input filter to the actual image and previous image """
-    def __init__(self,x0,y0,w,h):
-        super(pyHImageSecFilterFigure,self).__init__(x0,y0,w,h)
+    def __init__(self,x0,y0,w,h,text="ImageFilter"):
+        super(pyHImageSecFilterFigure,self).__init__(x0,y0,w,h,text)
     def launchFilter(self,hImg1,hImg2):
         mat1=hImg1.getData()
         mat2=hImg2.getData()
@@ -239,10 +240,11 @@ class pyHImageSecFilterFigure(pyHImageFilterFigure):
     def imageChanged(self,fImageSource):
         self.imageSink=self.launchFilter(fImageSource.getImagePrev(),fImageSource.getImage())
         self.notifyImageChanged()
+
 class pyHImages2I1OFilterFigure(pyHImageSecFilterFigure):
     """ This class filter has two images as input and one image as output """
-    def __init__(self,x0,y0,w,h):
-        super(pyHImages2I1OFilterFigure,self).__init__(x0,y0,w,h)
+    def __init__(self,x0,y0,w,h,text="ImageFilter"):
+        super(pyHImages2I1OFilterFigure,self).__init__(x0,y0,w,h,text)
         self.imageSourceFigure=None
         self.imageSourceFigure2=None
     def setImageSourceFigure1(self,imageSourceFigure):
@@ -257,12 +259,15 @@ class pyHImages2I1OFilterFigure(pyHImageSecFilterFigure):
         imageSourceFigure.addChangedImageObserver(self)
     def imageChanged(self,fImageSource):
         """ TO FINISH """
-        if fImageSource==self.imageSourceFigure:
-            self.setImage(fImageSource.getImage())
-        if fImageSource==self.imageSourceFigure2:
-            self.setImage2(fImageSource.getImage())
-        self.imageSink=self.launchFilter(fImageSource.getImagePrev(),fImageSource.getImage())
-        self.notifyImageChanged()
+        #if fImageSource==self.imageSourceFigure:
+        #    self.setImage(fImageSource.getImage())
+        #if fImageSource==self.imageSourceFigure2:
+        #    self.setImage2(fImageSource.getImage())
+        hImg1=self.imageSourceFigure.getImage()
+        hImg2=self.imageSourceFigure2.getImage()
+        if hImg1!=None and hImg2!=None:
+            self.imageSink=self.launchFilter(hImg1,hImg2)
+            self.notifyImageChanged()
 
 class pyHImageSourceFigure(pyHEllipseFigure):  
     def __init__(self,x,y,w,h):
@@ -279,10 +284,10 @@ class pyHImageSourceFigure(pyHEllipseFigure):
         return self.hImg
     def getImagePrev(self):
         return self.hImgPrev
-    def addPreviewFigure(self,drawing):
+    def addPreviewFigure(self,drawing,stereo=1):
         r=self.getDisplayBox()
         pc=r.getCenterPoint()
-        img0=pyHImageFigure(pc.getX()-240/2,pc.getY()-r.getHeight()-320-10,320,240)
+        img0=pyHImageFigure(pc.getX()-240/2,pc.getY()-r.getHeight()-320-10,320*stereo,240)
         drawing.addFigure(img0)
         #cam.addChangedImageObserver(img0)
         cf=self.getOutputConnectionFigure(img0)
@@ -321,7 +326,7 @@ class pyHImageSourceFigure(pyHEllipseFigure):
         for fo in self.changedImageObservers:
             fo.imageChanged(self)        
 class pyHCameraFigure(pyHImageSourceFigure):
-    def __init__(self,x,y,w=80,h=40,camID=0,text=" Camera "):
+    def __init__(self,x,y,w=80,h=40,camID=0,text=" Camera ",width=640,hight=480):
         super(pyHCameraFigure,self).__init__(x,y,w,h)
         #pyHImageSourceFigure.__init__(self, x, y, w, h)
         """Initialize camera."""
@@ -330,6 +335,8 @@ class pyHCameraFigure(pyHImageSourceFigure):
         #figure width and height same that image width and hegight. ????
         #self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
         #self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
+        self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+        self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT,hight)
 #         self.timer = QtCore.QTimer()
 #         self.timer.timeout.connect(self.displayVideoStream)
 #         self.timer.start(200)

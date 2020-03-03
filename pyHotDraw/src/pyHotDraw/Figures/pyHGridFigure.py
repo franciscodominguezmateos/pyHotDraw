@@ -38,7 +38,11 @@ class pyHGridFigure(pyHCompositeFigure):
         offsetPos=drawPos-fr.getOriginPoint()
         f.move(offsetPos.getX(),offsetPos.getY())
         pyHCompositeFigure.addFigure(self,f)
-        
+    # return figure in pos i row and j colum
+    def getFigure(self,i,j):
+        if i>=self.rows or j>=self.cols or i<0 or j<0:
+            return None
+        return self.getFigure(i*self.cols+j)
     def draw(self,g):
         self.rf.draw(g)
         pyHCompositeFigure.draw(self,g)
