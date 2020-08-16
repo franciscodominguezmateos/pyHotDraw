@@ -5,12 +5,18 @@ Created on 8 Jul 2018
 '''
 import random
 import colorsys
-import xmlrpc.client
 import cv2
 from pyDetector import DetectorSSD
 
-from xmlrpc.server import SimpleXMLRPCServer
-from xmlrpc.server import SimpleXMLRPCRequestHandler
+#python 3
+#import xmlrpc.client
+#from xmlrpc.server import SimpleXMLRPCServer
+#from xmlrpc.server import SimpleXMLRPCRequestHandler
+
+#python 2.7
+import xmlrpclib
+from SimpleXMLRPCServer import SimpleXMLRPCServer
+
 
 ssd=DetectorSSD()
 

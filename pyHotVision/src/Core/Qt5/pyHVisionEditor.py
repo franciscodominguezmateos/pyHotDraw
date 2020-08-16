@@ -41,7 +41,7 @@ from pyHotDraw.Images.pyHImageFilters import FundamentalMatrix
 from pyHotDraw.Images.pyHImageFilters import HomographyMatrix
 from pyHotDraw.Images.pyHImageFilters import HistogramColor
 from pyHotDraw.Images.pyHImageFilters import Undistorter
-from Images.pyHDetectorSSD import pyHDetectorSSD
+from Images.pyHDetector import pyHDetector
 
 import pyHotDraw
 # def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
@@ -72,11 +72,11 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         d.addFigure(txt)
         #cam1=pyHCameraFigure(0,200,50,50,0)
         #d.addFigure(cam1)
-        camD=pyHCameraFigure(200,500,80,50,0)
+        camD=pyHCameraFigure(0,520,80,50,0)
         d.addFigure(camD)
         camD.addPreviewFigure(d)     
         
-        cam=pyHImageFilterFigure(240,500,80,50,"UnDistorted")
+        cam=pyHImageFilterFigure(330,520,80,50,"UnDistorted")
         d.addFigure(cam)
         K=np.array([[962.42013601,   0.        , 340.60034923],
                     [  0.        , 949.00606667, 217.94310531],
@@ -88,21 +88,21 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         cf=cam.getInputConnectionFigure(camD)
         d.addFigure(cf)
         
-        fimg=pyHImageFilterFigure(500,500,80,40," Gaussian ")
+        fimg=pyHImageFilterFigure(660,520,80,40," Gaussian ")
         d.addFigure(fimg)
         fimg.setFilter(Gaussian())
         fimg.addPreviewFigure(d)
         cf=fimg.getInputConnectionFigure(cam)
         d.addFigure(cf)
         
-        fImgDetec=pyHImageFilterFigure(700,500,80,40," Object Detector SSD")
+        fImgDetec=pyHImageFilterFigure(330,60,80,40," Object Detector SSD")
         d.addFigure(fImgDetec)
-        fImgDetec.setFilter(pyHDetectorSSD())
+        fImgDetec.setFilter(pyHDetector())
         fImgDetec.addPreviewFigure(d)
         cf=fImgDetec.getInputConnectionFigure(cam)
         d.addFigure(cf)
         
-        fimg1=pyHImageFilterFigure(800,500,80,40," Face Detector ")
+        fimg1=pyHImageFilterFigure(660,60,80,40," Face Detector ")
         d.addFigure(fimg1)
         fimg1.addPreviewFigure(d)
         #cam.addChangedImageObserver(fimg1)
@@ -118,7 +118,7 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
 #         d.addFigure(imgH)
 #         fimgH.addChangedImageObserver(imgH)
 #         
-        fimg2=pyHImageFilterFigure(800,800,80,40,"SobelX  ")
+        fimg2=pyHImageFilterFigure(990,800,80,40,"SobelX  ")
         fimg2.setColor(0,100,0,100)
         d.addFigure(fimg2)
         fimg2.setFilter(SobelX())
@@ -126,7 +126,7 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         cf=fimg2.getInputConnectionFigure(fimg)
         d.addFigure(cf)
        
-        fimg2y=pyHImageFilterFigure(800,300,80,40,"SobelY  ")
+        fimg2y=pyHImageFilterFigure(990,330,80,40,"SobelY  ")
         fimg2y.setColor(0,100,0,255)
         d.addFigure(fimg2y)
         fimg2y.setFilter(SobelY())
@@ -134,14 +134,14 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         cf=fimg2y.getInputConnectionFigure(fimg)
         d.addFigure(cf)
 
-        fimg4=pyHImageFilterFigure(0,600,80,40,"OpticalFlowLK")
+        fimg4=pyHImageFilterFigure(1350,60,80,40,"OpticalFlowLK")
         d.addFigure(fimg4)
         fimg4.setFilter(OpticalFlowPyrLK())
         fimg4.addPreviewFigure(d)
         cf=fimg4.getInputConnectionFigure(fimg)
         d.addFigure(cf)
         
-        fimg4=pyHImageFilterFigure(800,600,80,40," OpticalFlow ")
+        fimg4=pyHImageFilterFigure(1700,330,80,40," OpticalFlow ")
         d.addFigure(fimg4)
         fimg4.setFilter(OpticalFlow())
         fimg4.addPreviewFigure(d)

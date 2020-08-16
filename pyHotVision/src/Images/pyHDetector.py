@@ -5,12 +5,14 @@ Created on 16 Aug 2020
 '''
 import cv2
 import colorsys
-from Detection.pyDetector import DetectorSSD
+#this doesn't seem to work for kind of cuda context problem
+#from Detection.pyDetector import DetectorSSD
+from Detection.pyDetectorRemote import DetectorRemote
 
-class pyHDetectorSSD():
-    def __init__(self):
-        self.colors=self.getDistinctColors(21)
-        self.ssd=DetectorSSD()
+class pyHDetector():
+    def __init__(self,detector=DetectorRemote()):
+        self.detector=detector
+        self.colors=self.getDistinctColors(len(self.detector.labels))
     
     def HSVToRGB(self,h, s, v):
         (r, g, b) = colorsys.hsv_to_rgb(h, s, v)
@@ -21,9 +23,10 @@ class pyHDetectorSSD():
         return [self.HSVToRGB(huePartition * value, 1.0, 1.0) for value in range(0, n)]
     
     def process(self,img):
-        self.data=self.ssd.detect(img)
+        img=img.copy()
+        self.data=self.detector.detect(img)
         for label,score,xmin,ymin,xmax,ymax in self.data:
-            label_name = self.ssd.labels[label - 1]
+            label_name = self.detector.labels[label - 1]
             display_txt = '{:0.2f}, {}'.format(score, label_name)
             color = self.colors[label-1]
             cv2.putText(img,display_txt,(xmin,ymin-10),cv2.FONT_HERSHEY_SIMPLEX,0.5,color)

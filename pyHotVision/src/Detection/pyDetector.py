@@ -19,7 +19,7 @@ from ssd_utils import BBoxUtility
 
 class Detector(object):
     '''
-    classdocs
+    Abstract class for detectors
     '''
 
     def __init__(self, params):
@@ -29,7 +29,7 @@ class Detector(object):
         self.labels=[]
     def detect(self,cvImage):
         pass
-        
+
 '''
 from: https://github.com/rykov8/ssd_keras
 dependences: `Keras` v1.2.2, `Tensorflow` v1.0.0, `OpenCV` v3.1.0-dev
