@@ -33,6 +33,7 @@ from pyHotDraw.Images.pyHImageFilters import SobelX
 from pyHotDraw.Images.pyHImageFilters import SobelY
 from pyHotDraw.Images.pyHImageFilters import Gaussian
 from pyHotDraw.Images.pyHImageFilters import OpticalFlow
+from pyHotDraw.Images.pyHImageFilters import OpticalFlowPyrLK
 from pyHotDraw.Images.pyHImageFilters import FeatureDetector
 from pyHotDraw.Images.pyHImageFilters import FastFeatureDetector
 from pyHotDraw.Images.pyHImageFilters import FlannMacher
@@ -40,6 +41,8 @@ from pyHotDraw.Images.pyHImageFilters import FundamentalMatrix
 from pyHotDraw.Images.pyHImageFilters import HomographyMatrix
 from pyHotDraw.Images.pyHImageFilters import HistogramColor
 from pyHotDraw.Images.pyHImageFilters import Undistorter
+from Images.pyHDetectorSSD import pyHDetectorSSD
+
 import pyHotDraw
 # def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
 #     # Make a copy of the image
@@ -92,11 +95,18 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         cf=fimg.getInputConnectionFigure(cam)
         d.addFigure(cf)
         
+        fImgDetec=pyHImageFilterFigure(700,500,80,40," Object Detector SSD")
+        d.addFigure(fImgDetec)
+        fImgDetec.setFilter(pyHDetectorSSD())
+        fImgDetec.addPreviewFigure(d)
+        cf=fImgDetec.getInputConnectionFigure(cam)
+        d.addFigure(cf)
+        
         fimg1=pyHImageFilterFigure(800,500,80,40," Face Detector ")
         d.addFigure(fimg1)
         fimg1.addPreviewFigure(d)
         #cam.addChangedImageObserver(fimg1)
-        cf=fimg1.getInputConnectionFigure(cam)
+        cf=fimg1.getInputConnectionFigure(fImgDetec)
         d.addFigure(cf)
         #fimg1.addChangedImageObserver(img3)
 #         
@@ -124,9 +134,9 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         cf=fimg2y.getInputConnectionFigure(fimg)
         d.addFigure(cf)
 
-        fimg4=pyHImageFilterFigure(0,600,80,40,"OpticalFlow  ")
+        fimg4=pyHImageFilterFigure(0,600,80,40,"OpticalFlowLK")
         d.addFigure(fimg4)
-        fimg4.setFilter(OpticalFlow())
+        fimg4.setFilter(OpticalFlowPyrLK())
         fimg4.addPreviewFigure(d)
         cf=fimg4.getInputConnectionFigure(fimg)
         d.addFigure(cf)

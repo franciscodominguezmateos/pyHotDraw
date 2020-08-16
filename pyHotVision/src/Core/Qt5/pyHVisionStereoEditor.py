@@ -10,6 +10,7 @@ import glob
 import pickle
 import cv2
 import numpy as np
+import sys
 from PyQt5 import QtGui,QtWidgets, QtCore
 from pyHotDraw.Core.Qt5.pyHStandardView import pyHStandardView
 from pyHotDraw.Core.pyHAbstractEditor import pyHAbstractEditor
@@ -37,7 +38,7 @@ from pyHotDraw.Images.pyHImageFilters import OpticalFlow
 from pyHotDraw.Images.pyHImageFilters import FeatureDetector
 from pyHotDraw.Images.pyHImageFilters import FastFeatureDetector
 from pyHotDraw.Images.pyHImageFilters import FlannMacher
-from pyHotDraw.Images.pyHImageFilters import FundamentalMatrix
+from pyHotDraw.Images.pyHImageFilters import FundamentalMatrixStereo
 from pyHotDraw.Images.pyHImageFilters import HomographyMatrix
 from pyHotDraw.Images.pyHImageFilters import HistogramColor
 from pyHotDraw.Images.pyHImageFilters import Undistorter
@@ -50,6 +51,11 @@ import pyHotDraw
 
 class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
     def __init__(self):
+        print("Python version")
+        print (sys.version)
+        print("Version info.")
+        print (sys.version_info)
+
         super(pyHVisionEditor, self).__init__()
         pyHAbstractEditor.__init__(self)
         self.initActionMenuToolBars()
@@ -114,6 +120,9 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         T=np.array([[-5.93499276e+01],
          [ 3.76647220e-02],
          [ 5.29152796e-01]])
+        #T=np.array([[-60],
+        # [ 0],
+        # [ 5.29152796e-01]])
         E=np.array([[ 5.98461691e-04, -5.29195693e-01,  3.70523040e-02],
          [ 1.16431813e+00, -6.80039429e-02,  5.93408262e+01],
          [-1.57517087e-02, -5.93498985e+01, -6.80411407e-02]])
@@ -137,11 +146,11 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         cf=ucamR.getInputConnectionFigure(camR)
         d.addFigure(cf)        
        
-        fmf=pyHImages2I1OFilterFigure(400,500,80,50,"FundamentalMatrix")
+        fmf=pyHImages2I1OFilterFigure(400,500,80,50,"FundamentalMatrixStereo")
         d.addFigure(fmf)
         fmf.setImageSourceFigure1(ucamL)
         fmf.setImageSourceFigure2(ucamR)
-        fmf.setFilter(FundamentalMatrix())
+        fmf.setFilter(FundamentalMatrixStereo())
         fmf.addPreviewFigure(d,2)
        
         self.getView().setTransformFitToDrawing()
@@ -251,7 +260,7 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         self.getView().update()
         
     def updateDraw(self,item,col):
-        print "item changed "+str(col)+"="+item.data(col,QtCore.Qt.DisplayRole)+" "+item.data(3,QtCore.Qt.ItemDataRole.UserRole).__class__.__name__
+        print("item changed "+str(col)+"="+item.data(col,QtCore.Qt.DisplayRole)+" "+item.data(3,QtCore.Qt.ItemDataRole.UserRole).__class__.__name__)
     def initUI(self):                       
         self.setView(pyHStandardView(self))
         
