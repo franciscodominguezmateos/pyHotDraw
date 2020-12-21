@@ -18,7 +18,8 @@ class pyHImage():
         civ=cv2.imread(fileName)
         if civ is None:
             print "Image not found: "+fileName 
-            civ=cv2.imread('../images/im2.png')
+            civ=255 * np.ones((200,400,3), np.uint8)
+            cv2.putText(civ,fileName+" not found.", (10,100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 255)
         if scale!=1: # better performance
             nw=int(civ.shape[1]*scale)
             nh=int(civ.shape[0]*scale)

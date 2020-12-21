@@ -10,7 +10,7 @@ import glob
 import numpy as np
 from math import sqrt
 import cv2
-import dlib
+#import dlib
 from pip._vendor.distlib import DistlibException
 from pip._vendor import distlib
 from __builtin__ import False

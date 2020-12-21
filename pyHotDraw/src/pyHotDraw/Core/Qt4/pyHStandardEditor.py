@@ -13,7 +13,7 @@ import numpy as np
 #from pydxfreader import dxfreader
 #from pypltreader import pltreader
 from PyQt4 import QtGui, QtCore
-from pyHotDraw.Core.Qt.pyHStandardView import pyHStandardView
+from pyHotDraw.Core.Qt4.pyHStandardView import pyHStandardView
 from pyHotDraw.Core.pyHAbstractEditor import pyHAbstractEditor
 from pyHotDraw.Tools.pyHSelectionTool import pyHSelectionTool
 from pyHotDraw.Figures.pyHPolylineFigure import pyHPolylineFigure

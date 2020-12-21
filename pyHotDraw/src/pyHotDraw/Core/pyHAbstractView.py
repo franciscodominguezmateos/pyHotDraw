@@ -29,6 +29,7 @@ class pyHAbstractView(object):
         self.setDrawing(pyHDrawing(self))
         self.transform=pyHTransform2D(1.0,1.0)
         self.background=None
+        self.drawingGrid=True
     def getTransform(self):
         return self.transform
     def setTransform(self,t):
@@ -37,6 +38,8 @@ class pyHAbstractView(object):
     def setBackground(self,b):
         b.addChangedFigureObserver(self)
         self.background=b
+    def setDrawingGrid(self,b):
+        self.drawingGrid=b
     def figureChanged(self,f):
         self.update()
     def getBackground(self):
@@ -103,7 +106,7 @@ class pyHAbstractView(object):
                 g.drawLine(xs,y,xe,y)
         xi=xg*10
         yi=xg*10
-        g.setColor(200,200,210)
+        g.setColor(200,200,210,100)
         if xi>5 and yi>5:
             for x in drange(0,xe,10):
                 g.drawLine(x,ys,x,ye)
@@ -115,7 +118,7 @@ class pyHAbstractView(object):
                 g.drawLine(xs,y,xe,y)
         xi=xg*100
         yi=xg*100
-        g.setColor(180,180,190)
+        g.setColor(180,180,190,100)
         if xi>3 and yi>3:
             for x in drange(0,xe,100):
                 g.drawLine(x,ys,x,ye)
@@ -128,7 +131,7 @@ class pyHAbstractView(object):
         xi=xg*1000
         yi=xg*1000
         if xi>3 and yi>3:
-            g.setColor(125,200,125)
+            g.setColor(125,200,125,100)
             for x in drange(0,xe,1000):
                 g.drawLine(x,ys,x,ye)
             for x in dirange(0,xs,-1000):
@@ -146,7 +149,8 @@ class pyHAbstractView(object):
     def draw(self,g):
         if self.background!=None:
             self.background.draw(g)
-        self.drawGrid(g)
+        if self.drawingGrid:
+            self.drawGrid(g)
         self.drawing.draw(g) 
         for f in self.getSelectedFigures():
             for h in f.getHandles():
