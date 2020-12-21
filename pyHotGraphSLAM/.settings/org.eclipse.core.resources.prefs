@@ -8,5 +8,6 @@ encoding//src/Figures/pyHNodeLandMarkPredictionFigure.py=utf-8
 encoding//src/Figures/pyHNodePoseFigure.py=utf-8
 encoding//src/Figures/pyHNodePoseMeasureFigure.py=utf-8
 encoding//src/Figures/pyHNodePosePredictionFigure.py=utf-8
+encoding//src/Handles/pyHCreateLandMarkMeasureHandle.py=utf-8
 encoding//src/matrix.py=utf-8
 encoding//src/robot.py=utf-8

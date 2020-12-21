@@ -160,11 +160,11 @@ def print_result(N, num_landmarks, result):
 
 N                  = 5       # time steps
 num_landmarks      = 2#int(N/3) # number of landmarks
-world_size         = 100.0    # size of world
+world_size         = 200.0    # size of world
 measurement_range  = 50.0     # range at which we can sense landmarks
 motion_noise       = 5.0      # noise in robot motion
 measurement_noise  = 1.0      # noise in the measurements
-distance           = 20.0     # distance by which robot (intends to) move each iteratation 
+distance           = 50.0     # distance by which robot (intends to) move each iteratation 
 
 class pyHInformationMatrixFigure(pyHCompositeFigure):
     def __init__(self,g):
@@ -224,7 +224,7 @@ class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         self.statusBar()        
         self.initUI()
         pyImg=pyHImage("itc_corridors_2020030301.jpg")
-        bf=pyHImageFigure(0,0,160,120,pyImg)
+        bf=pyHImageFigure(0,0,160*1.4,120,pyImg)
         self.getView().setBackground(bf)
         # Init data
         self.data,self.r = make_data(N, num_landmarks, world_size, measurement_range, motion_noise, measurement_noise, distance)
@@ -247,6 +247,7 @@ class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         rf.setWidth(4)
         d.addFigure(rf)
         ''' s h o w landmarks groundtruth  '''
+        ''' Just the map '''
         landmarks=[]
         for i,(x,y) in enumerate(self.r.landmarks):
             #x=result.value[2*(N+i)][0]

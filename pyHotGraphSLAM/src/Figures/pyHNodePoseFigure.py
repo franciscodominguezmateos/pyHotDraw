@@ -1,10 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
-Created on 3 Aug 2019
+Created on 21 Aug 2020
 
 @author: Francisco Dominguez
 '''
+import pyHotDraw
+from pyHotDraw.Geom.pyHPoint import pyHPoint
 from pyHotDraw.Figures.pyHTextFigure import pyHTextFigure
 from pyHotDraw.Figures.pyHEllipseFigure import pyHEllipseFigure
 
@@ -26,3 +28,15 @@ class pyHNodePoseFigure(pyHTextFigure):
         self.e.move(x,y)
     def getConnectors(self):
         return self.e.getConnectors()
+    def getHandles(self):
+        handles=super(pyHNodePoseFigure,self).getHandles()
+        #handles=[]
+        r=self.getDisplayBox()
+        x=r.getX()
+        y=r.getY()
+        w=r.getWidth()
+        h=r.getHeight()
+        handles.append(pyHCreateLandMarkMeasureHandle(self,pyHPoint(x,y+h/2)))
+        return handles
+
+from Handles.pyHCreateLandMarkMeasureHandle import pyHCreateLandMarkMeasureHandle
