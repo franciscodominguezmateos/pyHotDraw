@@ -19,8 +19,8 @@ class pyHAbstractHandle(object):
         '''
         self.view=None
         # in pixel
-        self.width=8
-        self.height=8
+        self.width=4
+        self.height=4
     def setView(self,v):
         self.view=v
     # TODO try to make handles zoom independent

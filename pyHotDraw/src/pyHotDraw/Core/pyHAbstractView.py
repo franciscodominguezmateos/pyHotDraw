@@ -51,7 +51,7 @@ class pyHAbstractView(object):
         h=r.getHeight()
         cx=r.getX()+w/2
         cy=r.getY()+h/2
-        print "cxcy",cx,cy
+        print("cxcy",cx,cy)
         t.sx=v.width()/w
         t.sy=v.height()/h
         #just keep aspect ratio
@@ -168,7 +168,7 @@ class pyHAbstractView(object):
             rdb=f.getDisplayBox()
             if r.contains(rdb):
                 self.selectFigure(f)
-        print "Seleccionadas ",len(self.getSelectedFigures())
+        print("Seleccionadas ",len(self.getSelectedFigures()))
     def isThisFigureInSelectedFigures(self,f):
         for fs in self.getSelectedFigures():
             if fs==f:

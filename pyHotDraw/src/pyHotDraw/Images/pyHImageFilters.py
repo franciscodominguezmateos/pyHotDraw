@@ -13,6 +13,7 @@ import cv2
 import dlib
 from pip._vendor.distlib import DistlibException
 from pip._vendor import distlib
+from __builtin__ import False
 
 class GrayFilter():
     def process(self,imgcv):
@@ -67,6 +68,25 @@ class Laplacian():
         sobel_8u = np.uint8(abs_sobel64f)
         ret=cv2.cvtColor(sobel_8u,cv2.COLOR_GRAY2BGR)
         return ret
+class GoodFeaturesToTrack():
+    def __init__(self):
+        # params for ShiTomasi corner detection
+        self.feature_params = dict( maxCorners = 100,
+                       qualityLevel = 0.3,
+                       minDistance = 7,
+                       blockSize = 7 )
+        # Create some random colors
+        self.color = np.random.randint(0,255,(100,3))
+    def process(self,imgcv):
+        gray = cv2.cvtColor(imgcv, cv2.COLOR_BGR2GRAY)
+        p = cv2.goodFeaturesToTrack(gray, mask = None, **self.feature_params)
+        self.pts=p.reshape(-1,2)
+        ret=imgcv.copy()
+        for i,pt in enumerate(self.pts):
+            cv2.circle(ret,tuple(pt),5,self.color[i].tolist(),-1)
+        return ret
+    def getPoints(self):
+        return self.pts       
 class FastFeatureDetector():
     def __init__(self):
         self.fast=cv2.FastFeatureDetector_create()
@@ -122,7 +142,9 @@ class FaceShapeDetection():
         # These files must be on the same folder of the .py source where this class is used source
         self.predictor_path="shape_predictor_68_face_landmarks.dat"
         face_rec_model_path="dlib_face_recognition_resnet_model_v1.dat"
-        self.detector = dlib.get_frontal_face_detector()
+        detector_path="mmod_human_face_detector.dat"
+        #self.detector = dlib.get_frontal_face_detector()
+        self.detector = dlib.cnn_face_detection_model_v1(detector_path)
         self.sp       = dlib.shape_predictor(self.predictor_path)
         self.facerec  = dlib.face_recognition_model_v1(face_rec_model_path)
         self.detections=None
@@ -132,12 +154,10 @@ class FaceShapeDetection():
     def shape_to_np(self,shape, dtype="int"):
         # initialize the list of (x, y)-coordinates
         coords = np.zeros((68, 2), dtype=dtype)
-     
         # loop over the 68 facial landmarks and convert them
         # to a 2-tuple of (x, y)-coordinates
         for i in range(0, 68):
             coords[i] = (shape.part(i).x, shape.part(i).y)
-     
         # return the list of (x, y)-coordinates
         return coords
     
@@ -193,14 +213,13 @@ class FaceShapeDetection():
     def process(self,frameI):
         img=cv2.cvtColor(frameI, cv2.COLOR_BGR2RGB)
         #Face detection
-        self.dections = self.detector(img, 1)
+        self.detections = self.detector(img, 1)
         #print("Number of faces detected: {}".format(len(dets)))
-        
         # Now process each face we found.
         self.shapes=[]
         self.descriptors=[]
-        for k, dr in enumerate(self.dections):
-    
+        for k, d in enumerate(self.detections):
+            dr=d.rect
             #print center_row,center_col,center_row_g,center_col_g
             #print center_row_g,center_col_g
             # Get the landmarks/parts for the face in box d.
@@ -216,7 +235,7 @@ class FaceShapeDetection():
     def getShapes(self):
         return self.shapes
     def getDetections(self):
-        return self.dections
+        return self.detections
     def getDescriptors(self):
         return self.descriptors
 class ColorSpace():
@@ -284,7 +303,57 @@ class OpticalFlow():
         #return self.draw_flow(gray,flow)
         #vis=cv2.cvtColor(gray,cv2.COLOR_GRAY2BGR)
         return cv2.addWeighted(bgr,0.9,self.draw_flow(gray,flow),0.5,0)
-    
+
+#01/08/2020 TO FINISH
+class OpticalFlowPyrLK():
+    def __init__(self):
+        self.p0=np.zeros((1,2))
+        self.old_gray=None
+        # Parameters for lucas kanade optical flow
+        self.lk_params = dict( winSize  = (15,15),
+                  maxLevel = 2,
+                  criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
+        # params for ShiTomasi corner detection
+        self.feature_params = dict( maxCorners = 100,
+                       qualityLevel = 0.3,
+                       minDistance = 7,
+                       blockSize = 7 )
+        # Create some random colors
+        self.color = np.random.randint(0,255,(100,3))
+        self.gft=GoodFeaturesToTrack()
+        self.minFeatures=20
+        
+    def process(self,imgcv):
+        frame_gray = cv2.cvtColor(imgcv, cv2.COLOR_BGR2GRAY)
+        frame=imgcv.copy()
+        if self.p0.shape[0]<self.minFeatures:
+            img=self.gft.process(imgcv)
+            self.p0=self.gft.getPoints()
+            self.old_gray=frame_gray
+            # Create a mask image for drawing purposes
+            self.mask = np.zeros_like(imgcv)
+        else:
+            # calculate optical flow
+            p1, st, _ = cv2.calcOpticalFlowPyrLK(self.old_gray, frame_gray, self.p0, None, **self.lk_params)
+            st=st.reshape(-1,)
+        
+            # Select good points
+            good_new = p1[st==1]
+            good_old = self.p0[st==1]
+        
+            # draw the tracks
+            for i,(new,old) in enumerate(zip(good_new,good_old)):
+                a,b = new.ravel()
+                c,d = old.ravel()
+                self.mask = cv2.line(self.mask, (a,b),(c,d), self.color[i].tolist(), 2)
+                frame = cv2.circle(frame,(a,b),5,self.color[i].tolist(),-1)
+                # Now update the previous frame and previous points
+            self.old_gray = frame_gray.copy()
+            self.p0 = good_new.reshape(-1,1,2)
+
+            img = cv2.add(frame,self.mask)
+        return img
+
 def drawpoints(img1,img2,pts1,pts2):
     img1 = cv2.cvtColor(img1,cv2.COLOR_GRAY2BGR)
     img2 = cv2.cvtColor(img2,cv2.COLOR_GRAY2BGR)
@@ -299,9 +368,11 @@ def drawpoints(img1,img2,pts1,pts2):
     out[:rows1,:cols1,:] = img1 
     # Place the next image to the right of it
     out[:rows2,cols1:cols1+cols2,:] = img2 
-    gap=40
+    gap=32
     for i in range(out.shape[0]/gap):
         cv2.line(out,(0,i*gap), (out.shape[1],i*gap),(255,0,0),1)
+    for i in range(out.shape[1]/gap*2):
+        cv2.line(out,(i*gap,0), (i*gap,out.shape[0]),(255,0,0),1)
     for pt1,pt2 in zip(pts1,pts2):
         color = tuple(np.random.randint(0,255,3).tolist())
         cv2.circle(out,tuple(pt1),5,color,-1)
@@ -375,6 +446,50 @@ class FundamentalMatrix():
         pts1i=np.int32(pts1)
         pts2i=np.int32(pts2)
         return drawpoints(img1,img2,pts1i,pts2i)
+class FundamentalMatrixStereo():
+    def __init__(self):
+        # FLANN parameters
+        FLANN_INDEX_KDTREE = 0
+        index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
+        search_params = dict(checks=50)     
+        self.flann = cv2.FlannBasedMatcher(index_params,search_params)
+        minHessian = 400
+        self.detector = cv2.xfeatures2d_SURF.create(hessianThreshold=minHessian)     
+        self.imgcv1=None
+        self.imgcv2=None
+    def process(self):
+        img1 = cv2.cvtColor(self.imgcv1, cv2.COLOR_BGR2GRAY)  #queryimage # left image
+        img2 = cv2.cvtColor(self.imgcv2, cv2.COLOR_BGR2GRAY)  #trainimage # right image
+        # find the keypoints and descriptors with SIFT
+        kp1, des1 = self.detector.detectAndCompute(img1,None)
+        kp2, des2 = self.detector.detectAndCompute(img2,None)      
+        matches = self.flann.knnMatch(des1,des2,k=2)       
+        pts1 = []
+        pts2 = []        
+        # ratio test as per Lowe's paper
+        for i,(m,n) in enumerate(matches):
+            if m.distance < 0.8*n.distance:
+                pts2.append(kp2[m.trainIdx].pt)
+                pts1.append(kp1[m.queryIdx].pt)
+        pts1 = np.float32(pts1)
+        pts2 = np.float32(pts2)
+        F, mask = cv2.findFundamentalMat(pts1,pts2,cv2.RANSAC)     
+        # We select only inlier points
+        pts1 = pts1[mask.ravel()==1]
+        pts2 = pts2[mask.ravel()==1]
+        l=pts1.shape[0]
+        mask=np.array([True]*l)
+        for i in range(l):
+            x1,y1=pts1[i]
+            x2,y2=pts2[i]
+            if abs(y2-y1)>2: # or abs(y2-y1)<3:
+                mask[i]=False
+        pts1=pts1[mask]
+        pts2=pts2[mask]
+        self.data=(F,pts1,pts2)
+        pts1i=np.int32(pts1)
+        pts2i=np.int32(pts2)
+        return drawpoints(img1,img2,pts1i,pts2i)
 class HomographyMatrix():
     def __init__(self):
         # FLANN parameters
@@ -426,7 +541,7 @@ class Undistorter():
 class Rectify():
     def __init__(self,mtxL,distL,mtxR,distR,R,T,left=True):
         self.left=left
-        rectify_scale = 0 # 0=full crop, 1=no crop
+        rectify_scale = 1 # 0=full crop, 1=no crop
         R1, R2, P1, P2, Q, roi1, roi2 = cv2.stereoRectify(mtxL, distL, mtxR, distR, (640, 480), R, T, alpha = rectify_scale)
         self.left_maps  = cv2.initUndistortRectifyMap(mtxL, distL, R1, P1, (640, 480), cv2.CV_16SC2)
         self.right_maps = cv2.initUndistortRectifyMap(mtxR, distR, R2, P2, (640, 480), cv2.CV_16SC2)
@@ -441,12 +556,12 @@ class Camera():
         self.tvec=tvec
         self.K=K
         self.dist=dist
+        self.u=Undistorter(self.k,self.dist)
     def project3DPoints(self,pts3D):
         imgPts, jacobian=cv2.projectPoints(pts3D, self.rvec, self.tvec, self.K, self.dist)
         return imgPts
     def undistort(self,imgcv):
-        u=Undistorter(self.k,self.dist)
-        return u.process(imgcv)
+        return self.u.process(imgcv)
 class PespectiveMatrix():
     def __init__(self,src,dst):
         self.src=src

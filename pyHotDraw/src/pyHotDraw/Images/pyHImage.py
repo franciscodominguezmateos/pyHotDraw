@@ -35,7 +35,11 @@ class pyHImage():
     def getData(self):
         return self.data
     def getRGBData(self):
-        return cv2.cvtColor(self.getData(), cv2.COLOR_BGR2RGB)
+        cvimg=self.getData()
+        if(cvimg is None):
+            cvimg=cv2.imread('../images/im2.png')    
+            cv2.putText(cvimg,"NONE image in pyHImage",(10,100),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)        
+        return cv2.cvtColor(cvimg, cv2.COLOR_BGR2RGB)
     def getWidth(self):
         return self.data.shape[1]
     def getHeight(self):

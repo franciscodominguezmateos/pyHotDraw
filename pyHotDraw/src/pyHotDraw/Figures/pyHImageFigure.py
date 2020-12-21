@@ -211,8 +211,8 @@ class pyHImageFilterFigure(pyHArrowFigure):
         #set internal image to this pyHImage
         hImgO.setData(matO)
         return hImgO     
-    def imageChanged(self,img):
-        self.imageSink=self.launchFilter(img.getImage())
+    def imageChanged(self,phImg):
+        self.imageSink=self.launchFilter(phImg.getImage())
         self.notifyImageChanged()
 # Observer pattern methods
     def addChangedImageObserver(self,fo):  
@@ -247,6 +247,7 @@ class pyHImages2I1OFilterFigure(pyHImageSecFilterFigure):
         super(pyHImages2I1OFilterFigure,self).__init__(x0,y0,w,h,text)
         self.imageSourceFigure=None
         self.imageSourceFigure2=None
+        self.inputConnectionFigure2=None
     def setImageSourceFigure1(self,imageSourceFigure):
         if self.imageSourceFigure!=None:
             self.imageSourceFigure.removeChangedImageObserver(self)
@@ -257,6 +258,37 @@ class pyHImages2I1OFilterFigure(pyHImageSecFilterFigure):
             self.imageSourceFigure2.removeChangedImageObserver(self)
         self.imageSourceFigure2=imageSourceFigure
         imageSourceFigure.addChangedImageObserver(self)
+    def getInputConnectionFigure1(self,f):
+        self.setImageSourceFigure1(f)
+        return self.getInputConnectionFigure(f)
+    def getInputConnectionFigure2(self,f):
+        if self.inputConnectionFigure2!=None:
+            raise Exception("inputConnectionFigure already exist")
+        #if not 'imageChanged' in set(dir(f)):
+        #    raise pyHFigureNotFound("Figure is not an image observer")
+        #this may not be necessary
+        f.addChangedImageObserver(self)
+        self.setImageSourceFigure2(f)
+        
+        cf=pyHConnectionFigure()
+        self.inputConnectionFigure2=cf
+
+        fr=f.getDisplayBox()
+        fpc=fr.getCenterPoint()
+        cEnd=self.findConnector(fpc) 
+        cEnd.getOwner().addChangedFigureObserver(cf)
+        cf.setConnectorEnd(cEnd)
+        p0=cEnd.findStart(cf)
+        cf.addPoint(p0)
+        
+        sr=self.getDisplayBox()
+        spc=sr.getCenterPoint()
+        cStart=f.findConnector(spc)
+        cStart.getOwner().addChangedFigureObserver(cf)
+        cf.setConnectorStart(cStart)
+        p1=cStart.findStart(self)
+        cf.addPoint(p1)
+        return cf
     def imageChanged(self,fImageSource):
         """ TO FINISH """
         #if fImageSource==self.imageSourceFigure:
@@ -324,7 +356,15 @@ class pyHImageSourceFigure(pyHEllipseFigure):
         self.changedImageObservers.remove(fo)
     def notifyImageChanged(self):
         for fo in self.changedImageObservers:
-            fo.imageChanged(self)        
+            fo.imageChanged(self) 
+class pyHImageSourceFolderFigure(pyHImageSourceFigure):       
+    def __init__(self,x,y,w=80,h=40,folder="./",text=" Folder: ",width=640,hight=480):
+        super(pyHCameraFigure,self).__init__(x,y,w,h)
+        self.textFigure=pyHTextFigure(x,y,w,h,text+folder,border=False)
+    def draw(self,g):
+        super(pyHImageSourceFolderFigure,self).draw(g)
+        self.textFigure.setDisplayBox(self.getDisplayBox())
+        self.textFigure.draw(g)
 class pyHCameraFigure(pyHImageSourceFigure):
     def __init__(self,x,y,w=80,h=40,camID=0,text=" Camera ",width=640,hight=480):
         super(pyHCameraFigure,self).__init__(x,y,w,h)
@@ -340,10 +380,11 @@ class pyHCameraFigure(pyHImageSourceFigure):
 #         self.timer = QtCore.QTimer()
 #         self.timer.timeout.connect(self.displayVideoStream)
 #         self.timer.start(200)
-        self.timer = Timer(0.2,self.displayVideoStream)
+        self.timer = Timer(0.5,self.displayVideoStream)
         self.timer.start()
         self.textFigure=pyHTextFigure(x,y,w,h,text,border=False)
         self.inputConnectionFigure=None
+        self.flip=False
     def draw(self,g):
         super(pyHCameraFigure,self).draw(g)
         self.textFigure.setDisplayBox(self.getDisplayBox())
@@ -360,6 +401,8 @@ class pyHCameraFigure(pyHImageSourceFigure):
             ret, frame = self.capture.read()
             print "displayVideoStream capture error"
         #save this image to previous image
+        if(self.flip):
+            frame=cv2.flip(frame,0)
         img=self.getImage().getData()
         self.getImagePrev().setData(img)
         self.getImage().setData(frame)
