@@ -6,10 +6,12 @@ Created on 31/03/2013
 @author: paco
 '''
 from pyHotDraw.Geom.pyHPoint import pyHPoint
+from pyHotDraw.Core.pyHExceptions import pyHFigureNotFound
 from pyHotDraw.Figures.pyHRectangleFigure import pyHRectangleFigure
 from pyHotDraw.Figures.pyHEllipseFigure import pyHEllipseFigure
 from pyHotDraw.Handles.pyHAbstractHandle import pyHAbstractHandle
 from pyHotDraw.Figures.pyHConnectionFigure import pyHConnectionFigure
+from pyHotDraw.Figures.pyHPolylineFigure import pyHPolylineFigure
 
 from Figures.pyHNodeLandMarkMeasureFigure import pyHNodeLandMarkMeasureFigure
 from Figures.pyHNodeLandMarkFigure import pyHNodeLandMarkFigure
@@ -45,39 +47,69 @@ class pyHCreateLandMarkMeasureHandle(pyHAbstractHandle):
 #Tool methods
     def onMouseDown(self,e):
         self.anchorPoint=pyHPoint(e.getX(),e.getY())
-        self.lmmf=pyHNodeLandMarkMeasureFigure(self.anchorPoint.getX()-1,self.anchorPoint.getY()-1,2,2,"?")
-        self.view.getDrawing().addFigure(self.lmmf)
+        self.f=pyHPolylineFigure()
+        p=pyHPoint(e.getX(),e.getY())
+        self.f.addPoint(p)
+        p=pyHPoint(e.getX(),e.getY())
+        self.f.addPoint(p)
+        self.view.getDrawing().addFigure(self.f)
     def onMouseUp(self,e):
         ex=e.getX()
         ey=e.getY()
         d=self.view.getDrawing()
-        d.removeFigure(self.lmmf)
-        lmf=self.view.findFigure(pyHPoint(ex,ey))
-        if(isinstance(lmf,pyHNodeLandMarkFigure)):
-                d.addFigure(self.lmmf)
+        d.removeFigure(self.f)
+        try:                
+            nf=self.view.findFigure(pyHPoint(ex,ey))
+            if isinstance(nf,pyHNodeLandMarkFigure):
+                cnf=nf.getDisplayBox().getCenterPoint()
+                cow=self.owner.getDisplayBox().getCenterPoint()
+                pf=cnf*0.5+cow*0.5
+                lmmf=pyHNodeLandMarkMeasureFigure(pf.getX()-1,pf.getY()-1,2,2,"?")
+                d.addFigure(lmmf)
                 cf=pyHConnectionFigure()
                 cf.setColor(0,0,255,100)
-                cf.connectFigures(self.owner,self.lmmf)
+                cf.connectFigures(self.owner,lmmf)
                 d.addFigure(cf)
-                cf.connectFigures(self.lmmf, lmf )
+                cf=pyHConnectionFigure()
                 cf.setColor(100,0,0,100)
-                self.lmmf.setText(lmf.getText())
+                cf.connectFigures(lmmf, nf )
                 d.addFigure(cf)
-        if(isinstance(lmf,pyHNodePoseFigure)):
-                d.addFigure(self.lmmf)
+                lmmf.setText(nf.getText())
+                d.addFigure(cf)
+            if isinstance(nf,pyHNodePoseFigure):
+                cnf=nf.getDisplayBox().getCenterPoint()
+                cow=self.owner.getDisplayBox().getCenterPoint()
+                pf=cnf*0.5+cow*0.5
+                npf=pyHNodePoseFigure(pf.getX()-1,pf.getY()-1,2,2,"?")
+                d.addFigure(npf)
                 cf=pyHConnectionFigure()
                 cf.setColor(0,0,255,100)
-                cf.connectFigures(self.owner,self.lmmf)
+                cf.connectFigures(self.owner,npf)
                 d.addFigure(cf)
-                cf.connectFigures(self.lmmf, lmf )
+                cf=pyHConnectionFigure()
                 cf.setColor(100,0,0,100)
-                self.lmmf.setText(lmf.getText())
+                cf.connectFigures(npf, nf )
                 d.addFigure(cf)
+                npf.setText(nf.getText())
+                d.addFigure(cf)
+        except pyHFigureNotFound:
+            print "No figure found"
     def onMouseMove(self,e):
-        print "mouseMove ppyHNullHandle"
-        p=pyHPoint(e.getX(),e.getY())
-        dx=e.getX()-self.anchorPoint.getX()
-        dy=e.getY()-self.anchorPoint.getY()
-        self.lmmf.move(dx,dy)
-        self.anchorPoint=p
-    
+        ex=e.getX()
+        ey=e.getY()
+        d=self.view.getDrawing()
+        d.removeFigure(self.f)
+        try:
+            nf=self.view.findFigure(pyHPoint(ex,ey))
+            if isinstance(nf,pyHNodeLandMarkFigure):
+                self.f.setColor(0,0,255)
+            else: 
+                if isinstance(nf,pyHNodePoseFigure):
+                    self.f.setColor(0,255,0)
+        except pyHFigureNotFound:
+            self.f.setColor(0,0,0)
+        if(self.f.getLenght()>0):
+            p=self.f.getLastPoint()
+            p.setX(e.getX())
+            p.setY(e.getY())
+        d.addFigure(self.f)

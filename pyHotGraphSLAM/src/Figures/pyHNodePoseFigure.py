@@ -29,8 +29,8 @@ class pyHNodePoseFigure(pyHTextFigure):
     def getConnectors(self):
         return self.e.getConnectors()
     def getHandles(self):
-        handles=super(pyHNodePoseFigure,self).getHandles()
-        #handles=[]
+        #handles=super(pyHNodePoseFigure,self).getHandles()
+        handles=[]
         r=self.getDisplayBox()
         x=r.getX()
         y=r.getY()
