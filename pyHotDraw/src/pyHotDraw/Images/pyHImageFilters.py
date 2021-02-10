@@ -10,7 +10,7 @@ import glob
 import numpy as np
 from math import sqrt
 import cv2
-#import dlib
+import dlib
 from pip._vendor.distlib import DistlibException
 from pip._vendor import distlib
 from __builtin__ import False
@@ -160,21 +160,43 @@ class FaceShapeDetection():
             coords[i] = (shape.part(i).x, shape.part(i).y)
         # return the list of (x, y)-coordinates
         return coords
-    
+    #This is not the chin is the face contour
+    def getChin(self,shape):
+        return shape[:16]
+    def getLeftEyebrow(self,shape):
+        return shape[17:21]
+    def getRightEyebrow(self,shape):
+        return shape[22:26]
+    #I should split this in two functions
+    def getNose(self,shape):
+        return shape[27:30]+shape[31:35]
+    def getNosetip(self,shape):
+        #I don't know if this is the actual point
+        return shape[30]
+    def getLeftEye(self,shape):
+        return shape[36:41]
+    def getRightEye(self,shape):
+        return shape[42:47]
+    def getUpperLip(self,shape):
+        return shape[48:59]
+    def getLowerLip(self,shape):
+        return shape[60:67]
+    def getMouth(self,shape):
+        return self.getUpperLip(shape)+self.getLowerLip(shape)
     def draw_shape(self,image,shape):
             # loop over the (x, y)-coordinates for the facial landmarks
         # and draw them on the image
         for (x, y) in shape:
             cv2.circle(image, (x, y), 3, (0, 0, 255), 2)
-        for i,(x,y) in enumerate(shape[:16]):
+        for i,(x,y) in enumerate(self.getChin(shape)):
             x1,y1=shape[i+1]
             cv2.line(image,(x,y),(x1,y1),(255,255,0),2)
         # left eyebrow
-        for i,(x,y) in enumerate(shape[17:21]):
+        for i,(x,y) in enumerate(self.getLeftEyebrow(shape)):
             x1,y1=shape[17+i+1]
             cv2.line(image,(x,y),(x1,y1),(255,255,0),2)
         # right eyebrow
-        for i,(x,y) in enumerate(shape[22:26]):
+        for i,(x,y) in enumerate(self.getRightEyebrow(shape)):
             x1,y1=shape[22+i+1]
             cv2.line(image,(x,y),(x1,y1),(255,255,0),2)
         # nose
@@ -185,26 +207,26 @@ class FaceShapeDetection():
             x1,y1=shape[31+i+1]
             cv2.line(image,(x,y),(x1,y1),(255,255,0),2)
         # left eye
-        for i,(x,y) in enumerate(shape[36:41]):
+        for i,(x,y) in enumerate(self.getLeftEye(shape)):
             x1,y1=shape[36+i+1]
             cv2.line(image,(x,y),(x1,y1),(255,255,0),2)
         x,y=shape[36]
         cv2.line(image,(x1,y1),(x,y),(255,255,0),2)
         # right eye
-        for i,(x,y) in enumerate(shape[42:47]):
+        for i,(x,y) in enumerate(self.getRightEye(shape)):
             x1,y1=shape[42+i+1]
             cv2.line(image,(x,y),(x1,y1),(255,255,0),2)
         x,y=shape[42]
         cv2.line(image,(x1,y1),(x,y),(255,255,0),2)
         # mouth
         # upper lip
-        for i,(x,y) in enumerate(shape[48:59]):
+        for i,(x,y) in enumerate(self.getUpperLip(shape)):
             x1,y1=shape[48+i+1]
             cv2.line(image,(x,y),(x1,y1),(255,255,0),2)
         x,y=shape[48]
         cv2.line(image,(x1,y1),(x,y),(255,255,0),2)
         # lower lip
-        for i,(x,y) in enumerate(shape[60:67]):
+        for i,(x,y) in enumerate(self.getLowerLip(shape)):
             x1,y1=shape[60+i+1]
             cv2.line(image,(x,y),(x1,y1),(255,0,255),2)
         x,y=shape[60]
