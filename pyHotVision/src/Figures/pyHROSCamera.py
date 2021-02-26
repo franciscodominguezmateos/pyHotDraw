@@ -27,7 +27,7 @@ class pyHROSCameraFigure(pyHImageSourceFigure):
         self.inputConnectionFigure=None
         self.flip=False
         self.bridge = CvBridge()
-        self.image_sub = rospy.Subscriber(topic,Image,self.callback)
+        self.image_sub = rospy.Subscriber(topic,Image,self.callback,None,1)
         rospy.init_node('pyHROSCameraFigure', anonymous=True)
         #self.timer = Timer(0.2,self.rosSpin)
         #self.timer.start()
@@ -47,8 +47,8 @@ class pyHROSCameraFigure(pyHImageSourceFigure):
 #         if cols > 60 and rows > 60 :
 #             cv2.line(cv_image, (0,480/4),(640,480/4),(255,0,0), 1)
     
-        cv2.imshow("Image window", cv_image)
-        cv2.waitKey(1)
+        #cv2.imshow("pyHROSCameraFigure", cv_image)
+        #cv2.waitKey(1)
 
         frame=cv_image
         if(self.flip):

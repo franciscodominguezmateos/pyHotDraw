@@ -224,8 +224,8 @@ class pyHGraphSLAMEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         self.statusBar()        
         self.initUI()
         self.getView().setDrawingGrid(False)
-        #pyImg=pyHImage("itc_corridors_2020030301.jpg")
-        pyImg=pyHImage("../images/20200923_095151.jpg")
+        pyImg=pyHImage("itc_corridors_2020030301.jpg")
+        #pyImg=pyHImage("../images/20200923_095151.jpg")
         bf=pyHImageFigure(0,0,160*2,140,pyImg)
         self.getView().setBackground(bf)
         # Init data

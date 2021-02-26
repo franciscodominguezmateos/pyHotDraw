@@ -28,6 +28,7 @@ from pyHotDraw.Figures.pyHImageFigure import pyHImagesMixedFigure
 from pyHotDraw.Figures.pyHImageFigure import pyHCameraFigure
 from pyHotDraw.Figures.pyHImageFigure import pyHImageFilterFigure
 from pyHotDraw.Figures.pyHImageFigure import pyHImageSecFilterFigure
+from pyHotDraw.Figures.pyHImageFigure import pyHImages2I1OFilterFigure
 from pyHotDraw.Figures.pyHTextFigure import pyHTextFigure
 from pyHotDraw.Images.pyHImageFilters import SobelX
 from pyHotDraw.Images.pyHImageFilters import SobelY
@@ -41,6 +42,8 @@ from pyHotDraw.Images.pyHImageFilters import FundamentalMatrix
 from pyHotDraw.Images.pyHImageFilters import HomographyMatrix
 from pyHotDraw.Images.pyHImageFilters import HistogramColor
 from pyHotDraw.Images.pyHImageFilters import Undistorter
+from pyHotDraw.Images.pyHImageFilters import FundamentalMatrixStereo
+
 from Images.pyHDetector import pyHDetector
 from Figures.pyHROSCamera import pyHROSCameraFigure
 
@@ -72,10 +75,12 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         #cam1=pyHCameraFigure(0,200,50,50,0)
         #d.addFigure(cam1)
         #camD=pyHCameraFigure(0,520,80,40,0)
-        camD=pyHROSCameraFigure(0,520,80,40)
-        d.addFigure(camD)
-        camD.addPreviewFigure(d)     
-        
+        camL=pyHROSCameraFigure(0,520,80,40,"/stereo/left/image_rect_color"," ROS CameraL ")
+        d.addFigure(camL)
+        #camL.addPreviewFigure(d)     
+        camR=pyHROSCameraFigure(0, 40,80,40,"/stereo/right/image_rect_color"," ROS CameraR ")
+        d.addFigure(camR)
+        #camR.addPreviewFigure(d)     
 #         cam=pyHImageFilterFigure(330,520,80,50,"UnDistorted")
 #         d.addFigure(cam)
 #         K=np.array([[962.42013601,   0.        , 340.60034923],
@@ -87,20 +92,30 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
 #         cam.addPreviewFigure(d)
 #         cf=cam.getInputConnectionFigure(camD)
 #         d.addFigure(cf)
-               
-#         fImgDetec=pyHImageFilterFigure(330,60,80,40," Object Detector SSD")
-#         d.addFigure(fImgDetec)
-#         fImgDetec.setFilter(pyHDetector())
-#         fImgDetec.addPreviewFigure(d)
-#         cf=fImgDetec.getInputConnectionFigure(cam)
-#         d.addFigure(cf)
-        
-        fimg1=pyHImageFilterFigure(330,520,80,40," Face Detector ")
-        d.addFigure(fimg1)
-        fimg1.addPreviewFigure(d)
-        #cam.addChangedImageObserver(fimg1)
-        cf=fimg1.getInputConnectionFigure(camD)
+        fImgDetec=pyHImageFilterFigure(100,520,80,40," Object Detector SSD  ")
+        d.addFigure(fImgDetec)
+        fImgDetec.setFilter(pyHDetector())
+        fImgDetec.addPreviewFigure(d)
+        cf=fImgDetec.getInputConnectionFigure(camL)
         d.addFigure(cf)
+        
+        #fimg1=pyHImageFilterFigure(200,520,80,40," Face Detector ")
+        #d.addFigure(fimg1)
+        #fimg1.addPreviewFigure(d)
+        #cam.addChangedImageObserver(fimg1)
+        #cf=fimg1.getInputConnectionFigure(fImgDetec)
+        #d.addFigure(cf)
+        
+        fmf=pyHImages2I1OFilterFigure(100,500/2,80,50,"  FundamentalMatrixStereo  ")
+        d.addFigure(fmf)
+        fmf.setFilter(FundamentalMatrixStereo())
+        cf=fmf.getInputConnectionFigure1(camL)
+        d.addFigure(cf)
+        cf=fmf.getInputConnectionFigure2(camR)
+        d.addFigure(cf)
+        #fmf.setImageSourceFigure1(camL)
+        #fmf.setImageSourceFigure2(camR)
+        fmf.addPreviewFigure(d,2)
         #fimg1.addChangedImageObserver(img3)
 #         
 #         fimgH=pyHImageFilterFigure(400,500,30,30)

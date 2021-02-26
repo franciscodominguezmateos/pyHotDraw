@@ -31,4 +31,4 @@ class pyHDetector():
             color = self.colors[label-1]
             cv2.putText(img,display_txt,(xmin,ymin-10),cv2.FONT_HERSHEY_SIMPLEX,0.5,color)
             cv2.rectangle(img,(xmin,ymin),(xmax,ymax),color,1)
-            return img
+        return img

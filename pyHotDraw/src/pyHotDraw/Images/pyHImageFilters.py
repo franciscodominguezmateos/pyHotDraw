@@ -170,7 +170,7 @@ class FaceShapeDetection():
     #I should split this in two functions
     def getNose(self,shape):
         return shape[27:30]+shape[31:35]
-    def getNosetip(self,shape):
+    def getNoseTip(self,shape):
         #I don't know if this is the actual point
         return shape[30]
     def getLeftEye(self,shape):

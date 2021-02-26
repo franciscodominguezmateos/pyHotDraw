@@ -73,8 +73,8 @@ class pyHVisionEditor(QtWidgets.QMainWindow,pyHAbstractEditor):
         d.addFigure(txt)
         #cam1=pyHCameraFigure(0,200,50,50,0)
         #d.addFigure(cam1)
-        #camD=pyHCameraFigure(0,520,80,50,0)
-        camD=pyHROSCameraFigure(0,520,80,50)
+        camD=pyHCameraFigure(0,520,80,50,0)
+        #camD=pyHROSCameraFigure(0,520,80,50,"/stereo/left/image_color")
         d.addFigure(camD)
         camD.addPreviewFigure(d)     
         

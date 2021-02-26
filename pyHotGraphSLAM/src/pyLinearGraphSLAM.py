@@ -99,7 +99,7 @@ class pyLinearGraphSLAM(object):
             #grow matrices
             self.allocMeasurement()
         if pe>L:
-            raise Exception("Meaurement end must exists or be L+1 in order to insert new node")            
+            raise Exception("Measurement end must exists or be L+1 in order to insert new node")            
         self.setSubmatrix(ps,N+pe,1.0/noise,values/noise)
         self.pose2MeasurementEdges.append((ps,pe,values,noise))
 
